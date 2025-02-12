@@ -13,7 +13,7 @@ namespace User.Managment.Service.Repository
         {
             _emailConfiguration = emailConfiguration;
         }
-        public void SendEmail(Message message)
+        public void SendEmail(EmailContent message)
         {
             var createEmail = CreateEmailMessage(message);
             Send(createEmail);
@@ -60,7 +60,7 @@ namespace User.Managment.Service.Repository
 
         }
 
-        private MimeMessage CreateEmailMessage(Message message)
+        private MimeMessage CreateEmailMessage(EmailContent message)
         {
             var email = new MimeMessage();
             email.From.Add(new MailboxAddress("email", _emailConfiguration.From));

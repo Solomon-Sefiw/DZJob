@@ -1,12 +1,14 @@
-﻿using HCMS.ApplicationLayer.UserAccount;
-using HCMS.Domain.User;
+﻿using System.Text;
+using DZJobs.Domain.User;
+using DZJobs.Persistence.DBContext;
 using HCMS.Services.DataService;
-using HCMS.Services.EmailService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+
 
 namespace HCMS.Persistance.DBContext
 {
@@ -15,17 +17,8 @@ namespace HCMS.Persistance.DBContext
         public static IServiceCollection AddPersistenceService(this IServiceCollection services, IConfiguration configuration)
         {
 
-            services.AddDbContext<HCMSDBContext>(item => item.UseSqlServer(configuration.GetConnectionString("HCMSConnectionString")));
-            services.AddScoped<IDataService, HCMSDBContext>();
-            services.AddScoped<IExchangeEmail, Exchange>();
-            services.AddScoped<IUserAccount, UserAccountRegister>();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            });
-            services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
+            services.AddDbContext<DZJobsDBContext>(item => item.UseSqlServer(configuration.GetConnectionString("DZJobsConnectionString")));
+            services.AddScoped<IDataService, DZJobsDBContext>();
             return services;
         }
     }

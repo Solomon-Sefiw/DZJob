@@ -1,31 +1,30 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using User.Managment.Service.Models.Authentication;
 using User.Managment.Service.Models.Authentication.Login;
 using User.Managment.Service.Models.Authentication.Signup;
 using User.Managment.Service.Models.DTO;
 using User.Managment.Service.Services;
-using Microsoft.AspNetCore.Mvc;
-using System.Web.Http.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using DZJobs.Domain.User;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace User.Managment.Service.Repository
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<DZJobUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<DZJobUser> _signInManager;
 
-        public UserService(UserManager<IdentityUser> userManager,
+        public UserService(UserManager<DZJobUser> userManager,
             RoleManager<IdentityRole> roleManager, IConfiguration configuration,
-            SignInManager<IdentityUser> signInManager)
+            SignInManager<DZJobUser> signInManager)
         {
             _userManager = userManager;
             _roleManager = roleManager;
@@ -36,8 +35,8 @@ namespace User.Managment.Service.Repository
         public async Task<ResponseDto> SeedRoleAsync()
         {
             bool isAdminExist = await _roleManager.RoleExistsAsync(StaticUserRole.ADMIN);
-            bool isOwnerExist = await _roleManager.RoleExistsAsync(StaticUserRole.OWNER);
-            bool isUserExist = await _roleManager.RoleExistsAsync(StaticUserRole.USER);
+            bool isOwnerExist = await _roleManager.RoleExistsAsync(StaticUserRole.EMPLOYER);
+            bool isUserExist = await _roleManager.RoleExistsAsync(StaticUserRole.FREELANCER);
 
             if (isAdminExist && isOwnerExist && isUserExist)
             {
@@ -47,9 +46,10 @@ namespace User.Managment.Service.Repository
                     Message = "Role Seeding Allready Exist !!"
                 };
             }
-            await _roleManager.CreateAsync(new IdentityRole(StaticUserRole.USER));
+           
             await _roleManager.CreateAsync(new IdentityRole(StaticUserRole.ADMIN));
-            await _roleManager.CreateAsync(new IdentityRole(StaticUserRole.OWNER));
+            await _roleManager.CreateAsync(new IdentityRole(StaticUserRole.EMPLOYER));
+            await _roleManager.CreateAsync(new IdentityRole(StaticUserRole.FREELANCER));
 
             return new ResponseDto
             {
@@ -68,7 +68,7 @@ namespace User.Managment.Service.Repository
                     Message = "Invalid User Email or User Not Exist"
                 };
             }
-            await _userManager.AddToRoleAsync(user, StaticUserRole.USER);
+            await _userManager.AddToRoleAsync(user, StaticUserRole.FREELANCER);
             return new ResponseDto()
             {
                 Status = true,
@@ -111,7 +111,7 @@ namespace User.Managment.Service.Repository
                     Message = "Invalid User Email or User Not Exist"
                 };
             }
-            await _userManager.AddToRoleAsync(user, StaticUserRole.OWNER);
+            await _userManager.AddToRoleAsync(user, StaticUserRole.EMPLOYER);
             return new ResponseDto()
             {
                 Status = true,
@@ -173,7 +173,7 @@ namespace User.Managment.Service.Repository
             var userExist = await _userManager.FindByEmailAsync(registerUser.Email);
             if (userExist != null)
                 return new ResponseDto { Status = false, Message = $"User Email {userExist.Email} Already Registerd", StatusCode = StatusCodes.Status302Found };
-            var newUser = new IdentityUser()
+            var newUser = new DZJobUser()
             {
                 Email = registerUser.Email,
                 UserName = registerUser.Username,
@@ -275,7 +275,7 @@ namespace User.Managment.Service.Repository
 
         }
 
-        private async Task<JwtSecurityToken> GetToken(IdentityUser user)
+        private async Task<JwtSecurityToken> GetToken(DZJobUser user)
         {
             var authClimes = new List<Claim>
                 {
@@ -300,6 +300,6 @@ namespace User.Managment.Service.Repository
             return token;
         }
 
-        public async Task<ICollection<IdentityUser>> GetAllUserAsync() => await _userManager.Users.ToListAsync();
+        public async Task<ICollection<DZJobUser>> GetAllUserAsync() => await _userManager.Users.ToListAsync();
     }
 }

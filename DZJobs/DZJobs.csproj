@@ -8,12 +8,16 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DZJobs.Application\DZJobs.Application.csproj" />
-    <ProjectReference Include="..\DZJobs.Infrastructure\DZJobs.Infrastructure.csproj" />
+    <ProjectReference Include="..\DZJobs.Persistence\DZJobs.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

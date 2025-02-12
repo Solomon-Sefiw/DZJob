@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DZJobs.Domain.User;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,6 @@ namespace User.Managment.Service.Services
         Task<ResponseDto> MakeAdminAsync(UpdatePermissionDto updatePermissionDto);
         Task<ResponseDto> MakeOwnerAsync(UpdatePermissionDto updatePermissionDto);
         Task<ResponseDto> MakeUserAsync(UpdatePermissionDto updatePermissionDto);
-        Task<ICollection<IdentityUser>> GetAllUserAsync();
+        Task<ICollection<DZJobUser>> GetAllUserAsync();
     }
 }
