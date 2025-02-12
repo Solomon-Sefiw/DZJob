@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DZJobs.Application\DZJobs.Application.csproj" />
+    <ProjectReference Include="..\DZJobs.Infrastructure\DZJobs.Infrastructure.csproj" />
     <ProjectReference Include="..\DZJobs.Persistence\DZJobs.Persistence.csproj" />
   </ItemGroup>
 

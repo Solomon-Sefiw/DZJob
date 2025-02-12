@@ -22,10 +22,8 @@ public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, int>
             Salary = request.Salary,
             EmployerId = request.EmployerId
         };
-
-        _context.Jobs.Add(job);
+        await _context.Jobs.AddAsync(job);
         await _context.SaveAsync(cancellationToken);
-
         return job.Id;
     }
 }

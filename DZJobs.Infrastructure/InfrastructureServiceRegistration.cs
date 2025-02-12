@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using DZJobs.Domain.User;
 using DZJobs.Persistence.DBContext;
 using HCMS.Services.DataService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -30,7 +31,7 @@ public static class InfrastructureServiceRegistration
         services.Configure<IdentityOptions>(opts => opts.SignIn.RequireConfirmedEmail = true);
 
 
-        services.AddIdentity<IdentityUser, IdentityRole>(options =>
+        services.AddIdentity<DZJobUser, IdentityRole>(options =>
         {
             //options.Password.RequireDigit = false; // No numeric requirement
             //  options.Password.RequireLowercase = false; // No lowercase requirement

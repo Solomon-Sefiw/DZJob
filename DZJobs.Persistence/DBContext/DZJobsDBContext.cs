@@ -17,20 +17,20 @@ namespace DZJobs.Persistence.DBContext
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Contract>()
-         .HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
-   .WithMany(j => j.Contracts)
-   .HasForeignKey(c => c.JobId)
-     .OnDelete(DeleteBehavior.Restrict);
+                        .HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
+                        .WithMany(j => j.Contracts)
+                        .HasForeignKey(c => c.JobId)
+                        .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<Review>()
-         .HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
-   .WithMany(j => j.Reviews)
-   .HasForeignKey(c => c.JobId)
-     .OnDelete(DeleteBehavior.Restrict);
+                        .HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
+                        .WithMany(j => j.Reviews)
+                        .HasForeignKey(c => c.JobId)
+                        .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<JobApplication>()
-.HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
-.WithMany(j => j.Applications)
-.HasForeignKey(c => c.JobId)
-.OnDelete(DeleteBehavior.Restrict);
+                        .HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
+                        .WithMany(j => j.Applications)
+                        .HasForeignKey(c => c.JobId)
+                        .OnDelete(DeleteBehavior.Restrict);
         }
 
         public DbSet<Job> Jobs { get; set; }

@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using DZJobs.Domain.User;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using Org.BouncyCastle.Crypto;
 
 namespace User.Managment.Service.Repository
 {
@@ -175,13 +176,23 @@ namespace User.Managment.Service.Repository
                 return new ResponseDto { Status = false, Message = $"User Email {userExist.Email} Already Registerd", StatusCode = StatusCodes.Status302Found };
             var newUser = new DZJobUser()
             {
-                Email = registerUser.Email,
                 UserName = registerUser.Username,
+                IsVerified = registerUser.IsVerified,
+                DateOfBirth = registerUser.DateOfBirth,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                TwoFactorEnabled = true
-            };
+                TwoFactorEnabled = true,
 
-            var random = new Random();
+                FirstName = registerUser.FirstName,
+                LastName = registerUser.LastName,
+                PhoneNumber = registerUser.PhoneNumber,
+                Location = registerUser.Location,
+                Bio = registerUser.Bio,
+                Email = registerUser.Email,
+                Skills = registerUser.Skills,
+                Rating = registerUser.Rating,
+
+            };
+        var random = new Random();
             var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var password = new string(Enumerable.Repeat(chars, random.Next(8, 12))
                 .Select(s => s[random.Next(s.Length)]).ToArray());
@@ -229,31 +240,74 @@ namespace User.Managment.Service.Repository
         public async Task<ResponseDto> LoginAsync(Login login)
         {
             var user = await _userManager.FindByNameAsync(login.Username);
-            // Auth With 2FA
-            if (user!.TwoFactorEnabled)
+            if (user == null)
             {
-                if (user != null && await _userManager.CheckPasswordAsync(user, login.Password))
-                {
-                    await _signInManager.SignOutAsync();
-                    await _signInManager.PasswordSignInAsync(user, login.Password, false, true);
-                    var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
-                    return new ResponseDto { Status = true, Message = $"We Have Send OTP to your Email {user.Email} Please Comfirm ASAP.", StatusCode = StatusCodes.Status202Accepted, Email = user.Email!, Token = token };
-                }
-                else
-                    return new ResponseDto { Status = false, Message = $"User Account on Email {user!.Email} Not Exist", StatusCode = StatusCodes.Status404NotFound };
+                return new ResponseDto { Status = false, Message = "Invalid username or password", StatusCode = StatusCodes.Status401Unauthorized };
             }
-            else
-            //With Out 2FA
-            if (user != null && await _userManager.CheckPasswordAsync(user, login.Password))
-            {
 
-                var jwtToken = await GetToken(user);
-                return new ResponseDto { Status = true, Message = $"Login Successfully ", StatusCode = StatusCodes.Status200OK, Email = user.Email!, Token = new JwtSecurityTokenHandler().WriteToken(jwtToken) };
+            if (!await _userManager.CheckPasswordAsync(user, login.Password))
+            {
+                return new ResponseDto { Status = false, Message = "Invalid username or password", StatusCode = StatusCodes.Status401Unauthorized };
             }
-            //if not Exist
-            else
-                return new ResponseDto { Status = false, Message = $"User Account Not Exist on Email {user!.Email}", StatusCode = StatusCodes.Status404NotFound };
+
+            if (user.TwoFactorEnabled)
+            {
+                var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+                return new ResponseDto
+                {
+                    Status = true,
+                    Message = $"We have sent an OTP to {user.Email}. Please confirm ASAP.",
+                    StatusCode = StatusCodes.Status202Accepted,
+                    Token = token
+                };
+            }
+
+            var signInResult = await _signInManager.PasswordSignInAsync(user, login.Password, false, false);
+            if (signInResult.Succeeded)
+            {
+                var jwtToken = await GetToken(user);
+                return new ResponseDto
+                {
+                    Status = true,
+                    Message = "Login successful",
+                    StatusCode = StatusCodes.Status200OK,
+                    Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
+                    Email = user.Email
+                };
+            }
+
+            return new ResponseDto { Status = false, Message = "Login failed", StatusCode = StatusCodes.Status401Unauthorized };
         }
+
+
+        //public async Task<ResponseDto> LoginAsync(Login login)
+        //{
+        //    var user = await _userManager.FindByNameAsync(login.Username);
+        //    // Auth With 2FA
+        //    if (user!.TwoFactorEnabled)
+        //    {
+        //        if (user != null && await _userManager.CheckPasswordAsync(user, login.Password))
+        //        {
+        //            await _signInManager.SignOutAsync();
+        //            await _signInManager.PasswordSignInAsync(user, login.Password, false, true);
+        //            var token = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+        //            return new ResponseDto { Status = true, Message = $"We Have Send OTP to your Email {user.Email} Please Comfirm ASAP.", StatusCode = StatusCodes.Status202Accepted, Email = user.Email!, Token = token };
+        //        }
+        //        else
+        //            return new ResponseDto { Status = false, Message = $"User Account on Email {user!.Email} Not Exist", StatusCode = StatusCodes.Status404NotFound };
+        //    }
+        //    else
+        //    //With Out 2FA
+        //    if (user != null && await _userManager.CheckPasswordAsync(user, login.Password))
+        //    {
+
+        //        var jwtToken = await GetToken(user);
+        //        return new ResponseDto { Status = true, Message = $"Login Successfully ", StatusCode = StatusCodes.Status200OK, Email = user.Email!, Token = new JwtSecurityTokenHandler().WriteToken(jwtToken) };
+        //    }
+        //    //if not Exist
+        //    else
+        //        return new ResponseDto { Status = false, Message = $"User Account Not Exist on Email {user!.Email}", StatusCode = StatusCodes.Status404NotFound };
+        //}
 
         public async Task<ResponseDto> ResetPasswordAsync(ResetPassword resetPassword)
         {
