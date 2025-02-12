@@ -1,0 +1,6 @@
+@DZJobs_HostAddress = http://localhost:5178
+
+GET {{DZJobs_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
