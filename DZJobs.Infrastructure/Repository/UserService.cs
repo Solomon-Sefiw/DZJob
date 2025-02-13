@@ -178,18 +178,12 @@ namespace User.Managment.Service.Repository
             {
                 UserName = registerUser.Username,
                 IsVerified = registerUser.IsVerified,
-                DateOfBirth = registerUser.DateOfBirth,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 TwoFactorEnabled = true,
-
                 FirstName = registerUser.FirstName,
                 LastName = registerUser.LastName,
-                PhoneNumber = registerUser.PhoneNumber,
-                Location = registerUser.Location,
-                Bio = registerUser.Bio,
                 Email = registerUser.Email,
-                Skills = registerUser.Skills,
-                Rating = registerUser.Rating,
+
 
             };
         var random = new Random();
@@ -202,7 +196,7 @@ namespace User.Managment.Service.Repository
                 password = password + new string(Enumerable.Repeat("0123456789", random.Next(1, 3))
                .Select(s => s[random.Next(s.Length)]).ToArray());
             }
-            var response = await _userManager.CreateAsync(newUser, password);
+            var response = await _userManager.CreateAsync(newUser, registerUser.password);
             if (response.Succeeded)
             {
                 // Verfy Email by Conformation Link
@@ -239,7 +233,9 @@ namespace User.Managment.Service.Repository
 
         public async Task<ResponseDto> LoginAsync(Login login)
         {
-            var user = await _userManager.FindByNameAsync(login.Username);
+           // var user = await _userManager.FindByEmailAsync(login.Email);
+            var normalizedEmail = login.Email?.Trim().ToUpper();
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
             if (user == null)
             {
                 return new ResponseDto { Status = false, Message = "Invalid username or password", StatusCode = StatusCodes.Status401Unauthorized };
@@ -269,7 +265,7 @@ namespace User.Managment.Service.Repository
                 return new ResponseDto
                 {
                     Status = true,
-                    Message = "Login successful",
+                    Message = user.UserName,
                     StatusCode = StatusCodes.Status200OK,
                     Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
                     Email = user.Email

@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using User.Managment.Service.Models;
@@ -27,7 +28,7 @@ namespace ANCIA.Controllers
 
         [HttpPost]
         [Route("seed-Roles")]
-        public async Task<IActionResult> SeedRoles()
+        public async Task<ActionResult<Response>> SeedRoles()
         {
             var seedRole = await _userService.SeedRoleAsync();
             return Ok(new Response { Status= seedRole.Status,Message = seedRole.Message, StatusCode=seedRole.StatusCode});
@@ -35,7 +36,7 @@ namespace ANCIA.Controllers
         // Route Make User Admin
         [HttpPost]
         [Route("Give-User-Role")]
-        public async Task<IActionResult> MakeUser([FromBody] UpdatePermissionDto updatePermissionDto)
+        public async Task<ActionResult<Response>> MakeUser([FromBody] UpdatePermissionDto updatePermissionDto)
         {
             var response = await _userService.MakeUserAsync(updatePermissionDto);
             if (response.Status)
@@ -49,7 +50,7 @@ namespace ANCIA.Controllers
         }
         [HttpPost]
         [Route("Give-Admin-Role")]
-        public async Task<IActionResult> MakeUserAdmin([FromBody] UpdatePermissionDto updatePermissionDto)
+        public async Task<ActionResult<Response>> MakeUserAdmin([FromBody] UpdatePermissionDto updatePermissionDto)
         {
             var response = await _userService.MakeAdminAsync(updatePermissionDto);
             if (response.Status)
@@ -63,7 +64,7 @@ namespace ANCIA.Controllers
         }
         [HttpPost]
         [Route("Give-Owner-Role")]
-        public async Task<IActionResult> MakeUserOwner(UpdatePermissionDto updatePermissionDto)
+        public async Task<ActionResult<Response>> MakeUserOwner(UpdatePermissionDto updatePermissionDto)
         {
             var response = await _userService.MakeOwnerAsync(updatePermissionDto);
             if (response.Status)
@@ -75,7 +76,7 @@ namespace ANCIA.Controllers
             return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
         }
         [HttpGet("GetAllUser")]
-        public async Task<IActionResult> GetAllUser()
+        public async Task<ActionResult<Response>> GetAllUser()
         {
             var response = await _userService.GetAllUserAsync();
             return Ok(response);
@@ -95,27 +96,39 @@ namespace ANCIA.Controllers
         }
 
         [HttpGet("Confirem Email/Auto")]
-        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        public async Task<ActionResult<Response>> ConfirmEmail(string token, string email)
         {
             var response = await _userService.ConfirmEmailAsync(token, email);
             return Ok(new Response { Status = response.Status, Message = response.Message,StatusCode = response.StatusCode });
 
         }
-
         [HttpPost("Login")]
-        public async Task<IActionResult> Login(Login login) { 
-
-        var response = await _userService.LoginAsync(login);
+        public async Task<IActionResult> Login([FromBody] Login login)
+        {
+            var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
                 var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
                 _emailService.SendEmail(message);
+
             }
-                return Ok(new Response { Status = response.Status, Message = response.Message,StatusCode = response.StatusCode });
+            return Ok(new { token = response.Token, name = response.Message });
         }
 
+        //[HttpPost("Login")]
+        //public async Task<ActionResult<Response>> Login(Login login) { 
+
+        //var response = await _userService.LoginAsync(login);
+        //    if (response.Status == true)
+        //    {
+        //        var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+        //        _emailService.SendEmail(message);
+        //    }
+        //        return Ok(new Response { Status = response.Status, Message = response.Message,StatusCode = response.StatusCode });
+        //}
+
         [HttpPost("Confirm-OTP")]
-        public async Task<IActionResult> ConfirmOTP(string code, string username)
+        public async Task<ActionResult<Response>> ConfirmOTP(string code, string username)
         {
             var response = await _userService.ConfirmOTPAsync(code,username);
              return BadRequest(new Response { Status = response.Status,Message = response.Token,StatusCode = response.StatusCode });
@@ -123,7 +136,7 @@ namespace ANCIA.Controllers
 
 
         [HttpPost("Forgot-Password")]
-        public async Task<IActionResult> ForgetPassword([Required] string email)
+        public async Task<ActionResult<Response>> ForgetPassword([Required] string email)
         {
             var response = await _userService.ForgetPasswordAsync(email);
             var forgotePasswordlink = Url.Action(nameof(ResetPassword), "Authentication", new { token = response.Token, email = response.Email }, Request.Scheme);
@@ -132,7 +145,7 @@ namespace ANCIA.Controllers
             return NotFound(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
         }
         [HttpGet("Reset-Password/Auto")]
-        public IActionResult ResetPassword(string token, string email)
+        public async Task<ActionResult<ResetPassword>> ResetPassword(string token, string email)
         {
             var model = new ResetPassword { Token = token, Email = email };
             return Ok(new { model });
@@ -148,7 +161,7 @@ namespace ANCIA.Controllers
 
 
         [HttpGet("Test Email")]
-        public async Task<IActionResult> TestEmail()
+        public async Task<ActionResult<Response>> TestEmail()
         {
             var message = new EmailContent(new string[] { "solomonsefiw91@gmail.com","solayemam1234@gmail.com" }, "Melti Msg Test Message", "this is test message");
             _emailService.SendEmail(message);

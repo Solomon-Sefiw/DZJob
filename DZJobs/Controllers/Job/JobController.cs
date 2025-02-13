@@ -12,14 +12,14 @@ namespace DZJobs.Api.Controllers.Job
     public class JobController : BaseController<JobController>
     {
         [HttpPost("create")]
-        public async Task<IActionResult> CreateJob([FromBody] CreateJobCommand command)
+        public async Task<ActionResult<int>> CreateJob([FromBody] CreateJobCommand command)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null) return Unauthorized();
+            //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            //if (userId == null) return Unauthorized();
 
-            command.EmployerId = userId;
+            //command.EmployerId = userId;
             var jobId = await mediator.Send(command);
-            return Ok(new { JobId = jobId, Message = "Job created successfully!" });
+            return Ok(jobId);
         }
         [HttpGet]
         public async Task<ActionResult<List<JobDto>>> GetAllJobs()
