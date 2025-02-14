@@ -124,7 +124,9 @@ namespace User.Managment.Service.Repository
 
         public async Task<ResponseDto> ConfirmEmailAsync(string token, string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+           // var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+
             if (user != null)
             {
                 var result = await _userManager.ConfirmEmailAsync(user, token);
@@ -171,7 +173,9 @@ namespace User.Managment.Service.Repository
             //if (user == null) 
             //    throw new ArgumentNullException(nameof(user));
 
-            var userExist = await _userManager.FindByEmailAsync(registerUser.Email);
+            //var userExist = await _userManager.FindByEmailAsync(registerUser.Email);
+            var userExist = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == registerUser.Email);
+
             if (userExist != null)
                 return new ResponseDto { Status = false, Message = $"User Email {userExist.Email} Already Registerd", StatusCode = StatusCodes.Status302Found };
             var newUser = new DZJobUser()
@@ -183,6 +187,7 @@ namespace User.Managment.Service.Repository
                 FirstName = registerUser.FirstName,
                 LastName = registerUser.LastName,
                 Email = registerUser.Email,
+                NormalizedEmail = registerUser.Email?.Trim().ToUpper()
 
 
             };
@@ -219,7 +224,9 @@ namespace User.Managment.Service.Repository
 
         public async Task<ResponseDto> ForgetPasswordAsync(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+          //  var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+
             if (user != null)
             {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -234,8 +241,8 @@ namespace User.Managment.Service.Repository
         public async Task<ResponseDto> LoginAsync(Login login)
         {
            // var user = await _userManager.FindByEmailAsync(login.Email);
-            var normalizedEmail = login.Email?.Trim().ToUpper();
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.NormalizedEmail == normalizedEmail);
+            //var normalizedEmail = login.Email?.Trim().ToUpper();
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == login.Email);
             if (user == null)
             {
                 return new ResponseDto { Status = false, Message = "Invalid username or password", StatusCode = StatusCodes.Status401Unauthorized };
@@ -252,6 +259,7 @@ namespace User.Managment.Service.Repository
                 return new ResponseDto
                 {
                     Status = true,
+                    Email = user.Email,
                     Message = $"We have sent an OTP to {user.Email}. Please confirm ASAP.",
                     StatusCode = StatusCodes.Status202Accepted,
                     Token = token
@@ -307,7 +315,9 @@ namespace User.Managment.Service.Repository
 
         public async Task<ResponseDto> ResetPasswordAsync(ResetPassword resetPassword)
         {
-            var user = await _userManager.FindByEmailAsync(resetPassword.Email);
+          //  var user = await _userManager.FindByEmailAsync(resetPassword.Email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == resetPassword.Email);
+
             if (user != null)
             {
                 var passwordResset = await _userManager.ResetPasswordAsync(user, resetPassword.Token, resetPassword.Password);
