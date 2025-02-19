@@ -9,9 +9,9 @@ public class Contract : BaseEntity
     public string FreelancerId { get; set; }
     [ForeignKey("FreelancerId")]
     public DZJobUser Freelancer { get; set; }
-    //public string EmployerId { get; set; }
-    //[ForeignKey("EmployerId")]
-    //public User Employer { get; set; }
+    public string EmployerId { get; set; }
+    [ForeignKey("EmployerId")]
+    public DZJobUser Employer { get; set; }
     public decimal AgreedSalary { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }

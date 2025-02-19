@@ -5,7 +5,7 @@ namespace HCMS.Application.Jobs.Commands
 {
     public class UpdateJobCommand : IRequest<int>
     {
-        public Guid JobId { get; set; }
+        public int JobId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Category { get; set; }
