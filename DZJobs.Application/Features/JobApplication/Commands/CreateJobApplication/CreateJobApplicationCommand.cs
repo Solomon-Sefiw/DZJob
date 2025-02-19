@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using DZJobs.Domain.Entities;
-using HCMS.Services.DataService;
+using HCMS.Services.DataService; // Replace with your actual DbContext namespace
 
-namespace DZJobs.Application.Features.JobApplication.Commands.CreateJobApplication
+namespace HCMS.Application.JobApplications.Commands
 {
     public class CreateJobApplicationCommand : IRequest<int>
     {
@@ -36,7 +36,7 @@ namespace DZJobs.Application.Features.JobApplication.Commands.CreateJobApplicati
             };
 
             _context.JobApplications.Add(jobApplication);
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveAsync(cancellationToken);
 
             return jobApplication.Id;
         }

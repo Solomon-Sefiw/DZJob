@@ -1,44 +1,2 @@
-﻿using MediatR;
-using DZJobs.Domain.Entities;
-using HCMS.Services.DataService; // Replace with your actual DbContext namespace
-
-namespace HCMS.Application.JobApplications.Commands
-{
-    public class CreateJobApplicationCommand : IRequest<int>
-    {
-        public int JobId { get; set; }
-        public string FreelancerId { get; set; }
-        public string CoverLetter { get; set; }
-        public decimal ProposedSalary { get; set; }
-    }
-
-    public class CreateJobApplicationCommandHandler : IRequestHandler<CreateJobApplicationCommand, int>
-    {
-        private readonly IDataService _context;
-
-        public CreateJobApplicationCommandHandler(IDataService context)
-        {
-            _context = context;
-        }
-
-        public async Task<int> Handle(CreateJobApplicationCommand request, CancellationToken cancellationToken)
-        {
-            var jobApplication = new JobApplication
-            {
-                JobId = request.JobId,
-                FreelancerId = request.FreelancerId,
-                CoverLetter = request.CoverLetter,
-                ProposedSalary = request.ProposedSalary,
-                AppliedDate = DateTime.UtcNow,
-                Status = ApplicationStatus.Pending,  // Assuming Pending is the default
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
-            };
-
-            _context.JobApplications.Add(jobApplication);
-            await _context.SaveAsync(cancellationToken);
-
-            return jobApplication.Id;
-        }
-    }
-}
+﻿using HCMS.Services.DataService;using MediatR;public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, int>{    private readonly IDataService _context;    public CreateJobCommandHandler(IDataService context)    {        _context = context;    }    public async Task<int> Handle(CreateJobCommand request, CancellationToken cancellationToken)    {        var job = new Job        {            Title = request.Title,            Description = request.Description,            Category = request.Category,            JobType = request.JobType,            Salary = request.Salary,            EmployerId = request.EmployerId,
+            PostedDate = DateTime.UtcNow,            Status = DZJobs.Domain.Entities.JobStatus.Open        };        await _context.Jobs.AddAsync(job);        await _context.SaveAsync(cancellationToken);        return job.Id;    }}
