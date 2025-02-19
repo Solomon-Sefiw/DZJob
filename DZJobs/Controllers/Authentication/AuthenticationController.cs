@@ -1,12 +1,12 @@
 ﻿
+using DZJobs.Application.Models.Authentication.Login;
+using DZJobs.Application.Models.Authentication.Signup;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using User.Managment.Service.Models;
 using User.Managment.Service.Models.Authentication;
-using User.Managment.Service.Models.Authentication.Login;
-using User.Managment.Service.Models.Authentication.Signup;
 using User.Managment.Service.Models.DTO;
 using User.Managment.Service.Services;
 
@@ -35,13 +35,13 @@ namespace ANCIA.Controllers
         }
         // Route Make User Admin
         [HttpPost]
-        [Route("Give-User-Role")]
-        public async Task<ActionResult<Response>> MakeUser([FromBody] UpdatePermissionDto updatePermissionDto)
+        [Route("Give-Freelancer-Role")]
+        public async Task<ActionResult<Response>> MakeUserFreelancer([FromBody] UpdatePermissionDto updatePermissionDto)
         {
-            var response = await _userService.MakeUserAsync(updatePermissionDto);
+            var response = await _userService.MakeFreelancerAsync(updatePermissionDto);
             if (response.Status)
             {
-                    var message = new EmailContent(new string[] { response.Email },"Congratulation","you have Guaranted for <b>User Role</b> As Requested");
+                    var message = new EmailContent(new string[] { response.Email },"Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
                      _emailService.SendEmail(message);
 
                 return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
@@ -55,7 +55,7 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeAdminAsync(updatePermissionDto);
             if (response.Status)
             {
-                var message = new EmailContent(new string[] { response.Email }, "Congratulation", "you have Guaranted for <b>Admin Role</b> As Requested");
+                var message = new EmailContent(new string[] { response.Email }, "Congratulation", "you have Guaranted for <b>ADMIN Role</b> As Requested");
                 _emailService.SendEmail(message);
 
                 return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
@@ -63,13 +63,13 @@ namespace ANCIA.Controllers
             return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
         }
         [HttpPost]
-        [Route("Give-Owner-Role")]
-        public async Task<ActionResult<Response>> MakeUserOwner(UpdatePermissionDto updatePermissionDto)
+        [Route("Give-Employer-Role")]
+        public async Task<ActionResult<Response>> MakeUserEmployer(UpdatePermissionDto updatePermissionDto)
         {
-            var response = await _userService.MakeOwnerAsync(updatePermissionDto);
+            var response = await _userService.MakeEmployerAsync(updatePermissionDto);
             if (response.Status)
             {
-                var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>Owner Role</b> As Requested");
+                var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
                 _emailService.SendEmail(message);
                 return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
             }
@@ -88,7 +88,7 @@ namespace ANCIA.Controllers
             if (response.Status == true)
             {
                 var conformationLink = Url.Action(nameof(ConfirmEmail), "Authentication", new { token = response.Token, email = response.Email }, Request.Scheme);
-                var message = new EmailContent(new string[] { response.Email }, " Password And Conformation Link", " <h4> Well Come to Our Org, your Password is :<H2> " + response.Password + ".</H2> <br></br>!!! Please Comfirm with this Link <b>Unless you are not conformed./b> </H4>" + conformationLink);
+                var message = new EmailContent(new string[] { response.Email }, " Password And Conformation Link", " <h4> Well Come to DZ-Jobs , your Password is :<H2> " + response.Password + ".</H2> <br></br>!!! Please Comfirm with this Link <b>Unless you are not conformed./b> </H4>" + conformationLink);
                 _emailService.SendEmail(message);
             }
             return Ok(new Response { Status = response.Status,Message = response.Message,StatusCode = response.StatusCode});
@@ -128,10 +128,14 @@ namespace ANCIA.Controllers
         //}
 
         [HttpPost("Confirm-OTP")]
-        public async Task<ActionResult<Response>> ConfirmOTP(string code, string username)
+        public async Task<ActionResult<Response>> ConfirmOTP(string code, string email)
         {
-            var response = await _userService.ConfirmOTPAsync(code,username);
-             return BadRequest(new Response { Status = response.Status,Message = response.Token,StatusCode = response.StatusCode });
+            var response = await _userService.ConfirmOTPAsync(code,email);
+            if(response.Status)
+             return Ok(new Response { Status = response.Status,Message = response.Token,StatusCode = response.StatusCode });
+            else
+                return BadRequest(new Response { Status = response.Status, Message = response.Token, StatusCode = response.StatusCode });
+
         }
 
 

@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using User.Managment.Service.Models.Authentication;
-using User.Managment.Service.Models.Authentication.Login;
-using User.Managment.Service.Models.Authentication.Signup;
 using User.Managment.Service.Models.DTO;
 using User.Managment.Service.Services;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +11,8 @@ using DZJobs.Domain.User;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Org.BouncyCastle.Crypto;
+using DZJobs.Application.Models.Authentication.Login;
+using DZJobs.Application.Models.Authentication.Signup;
 
 namespace User.Managment.Service.Repository
 {
@@ -58,31 +58,47 @@ namespace User.Managment.Service.Repository
                 Message = "User Seeding Successfully"
             };
         }
-        public async Task<ResponseDto> MakeUserAsync(UpdatePermissionDto updatePermissionDto)
+        public async Task<ResponseDto> MakeFreelancerAsync(UpdatePermissionDto updatePermissionDto)
         {
-            var user = await _userManager.FindByEmailAsync(updatePermissionDto.Email);
+            // Try to find the user by email.
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == updatePermissionDto.Email);
             if (user is null)
             {
-                return new ResponseDto()
+                return new ResponseDto
                 {
                     Status = false,
-                    Message = "Invalid User Email or User Not Exist"
+                    Message = "Invalid FREELANCER Email or user does not exist."
                 };
             }
-            await _userManager.AddToRoleAsync(user, StaticUserRole.FREELANCER);
-            return new ResponseDto()
+
+            // Add the user to the FREELANCER role and check the result.
+            var result = await _userManager.AddToRoleAsync(user, StaticUserRole.FREELANCER);
+            if (!result.Succeeded)
+            {
+                // If there are errors, join the error messages.
+                var errorMessage = string.Join(" | ", result.Errors.Select(e => e.Description));
+                return new ResponseDto
+                {
+                    Status = false,
+                    Message = $"Failed to add role: {errorMessage}"
+                };
+            }
+
+            return new ResponseDto
             {
                 Status = true,
-                Message = $"You Have Add new Role : User Role And User is Confirmd on Email {user.Email} ",
+                Message = $"You have added a new role: FREELANCER. The role has been confirmed for email {user.Email}.",
                 StatusCode = StatusCodes.Status200OK,
                 Email = user.Email!
             };
-
         }
+
         public async Task<ResponseDto> MakeAdminAsync(UpdatePermissionDto updatePermissionDto)
         {
 
-            var user = await _userManager.FindByEmailAsync(updatePermissionDto.Email);
+            // var user = await _userManager.FindByEmailAsync(updatePermissionDto.Email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == updatePermissionDto.Email);
+
             if (user is null)
             {
                 return new ResponseDto()
@@ -95,15 +111,17 @@ namespace User.Managment.Service.Repository
             return new ResponseDto()
             {
                 Status = true,
-                Message = $"You Have Add new Role : Admin Role And User is Confirmd on Email {user.Email} ",
+                Message = $"You Have Add new Role : ADMIN Role And User is Confirmd on Email {user.Email} ",
                 StatusCode = StatusCodes.Status200OK,
                 Email = user.Email!
             };
         }
 
-        public async Task<ResponseDto> MakeOwnerAsync(UpdatePermissionDto updatePermissionDto)
+        public async Task<ResponseDto> MakeEmployerAsync(UpdatePermissionDto updatePermissionDto)
         {
-            var user = await _userManager.FindByEmailAsync(updatePermissionDto.Email);
+            // var user = await _userManager.FindByEmailAsync(updatePermissionDto.Email);
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == updatePermissionDto.Email);
+
             if (user is null)
             {
                 return new ResponseDto()
@@ -116,7 +134,7 @@ namespace User.Managment.Service.Repository
             return new ResponseDto()
             {
                 Status = true,
-                Message = $"You Have Add new Role : Owner Role And User is Confirmd on Email {user.Email} ",
+                Message = $"You Have Add new Role : EMPLOYER Role And User is Confirmd on Email {user.Email} ",
                 StatusCode = StatusCodes.Status200OK,
                 Email = user.Email!
             };
@@ -146,27 +164,67 @@ namespace User.Managment.Service.Repository
                 return new ResponseDto { Status = false, Message = "User Not Exist", StatusCode = StatusCodes.Status404NotFound };
         }
 
-        public async Task<ResponseDto> ConfirmOTPAsync(string code, string username)
+
+        public async Task<ResponseDto> ConfirmOTPAsync(string code, string email)
         {
-            var user = await _userManager.FindByNameAsync(username);
-            var signIn = await _signInManager.TwoFactorSignInAsync("Email", code, false, false);
-            if (user != null)
+            // Find the user by email
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (user == null)
             {
-                if (signIn.Succeeded)
+                return new ResponseDto
                 {
-                    var jwtToken = await GetToken(user);
-
-                    return new ResponseDto { Status = true, Message = "Login Success ", StatusCode = StatusCodes.Status200OK, Email = user.Email!, Token = new JwtSecurityTokenHandler().WriteToken(jwtToken) };
-                }
-                //if not Exist
-                else
-                    return new ResponseDto { Status = false, Message = $"Incorrect OTP Please Check Your Email {user.Email} And Try Again !!", StatusCode = StatusCodes.Status401Unauthorized };
+                    Status = false,
+                    Message = $"Email {email} does not exist. Please check it.",
+                    StatusCode = StatusCodes.Status404NotFound
+                };
             }
-            //if not Exist
-            else
-                return new ResponseDto { Status = false, Message = $"your Email {user!.Email} Is Not Exist Please Check It.", StatusCode = StatusCodes.Status404NotFound };
 
+            // Validate the OTP using the VerifyTwoFactorTokenAsync method
+            var isValid = await _userManager.VerifyTwoFactorTokenAsync(user, "Email", code);
+            if (!isValid)
+            {
+                return new ResponseDto
+                {
+                    Status = false,
+                    Message = $"Incorrect OTP. Please check your email {user.Email} and try again.",
+                    StatusCode = StatusCodes.Status401Unauthorized
+                };
+            }
+
+            // If valid, generate the JWT token and return success
+            var jwtToken = await GetToken(user);
+            return new ResponseDto
+            {
+                Status = true,
+                Message = "Login Success",
+                StatusCode = StatusCodes.Status200OK,
+                Email = user.Email,
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
+            };
         }
+
+
+        //public async Task<ResponseDto> ConfirmOTPAsync(string code, string email)
+        //{
+        //    //var user = await _userManager.FindByEmailAsync(email);
+        //    var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+        //    var signIn = await _signInManager.TwoFactorSignInAsync("Email", code, false, false);
+        //    if (user != null)
+        //    {
+        //        if (signIn.Succeeded)
+        //        {
+        //            var jwtToken = await GetToken(user);
+        //            return new ResponseDto { Status = true, Message = "Login Success ", StatusCode = StatusCodes.Status200OK, Email = user.Email!, Token = new JwtSecurityTokenHandler().WriteToken(jwtToken) };
+        //        }
+        //        //if not Exist
+        //        else
+        //            return new ResponseDto { Status = false, Message = $"Incorrect OTP Please Check Your Email {user.Email} And Try Again !!", StatusCode = StatusCodes.Status401Unauthorized };
+        //    }
+        //    //if not Exist
+        //    else
+        //        return new ResponseDto { Status = false, Message = $"your Email {user!.Email} Is Not Exist Please Check It.", StatusCode = StatusCodes.Status404NotFound };
+
+        //}
 
         public async Task<ResponseDto> CreateuserAsync(RegisterUser registerUser)
         {
@@ -191,16 +249,16 @@ namespace User.Managment.Service.Repository
 
 
             };
-        var random = new Random();
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            var password = new string(Enumerable.Repeat(chars, random.Next(8, 12))
-                .Select(s => s[random.Next(s.Length)]).ToArray());
+        //var random = new Random();
+        //    var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        //    var password = new string(Enumerable.Repeat(chars, random.Next(8, 12))
+        //        .Select(s => s[random.Next(s.Length)]).ToArray());
 
-            while (!password.Any(char.IsDigit))
-            {
-                password = password + new string(Enumerable.Repeat("0123456789", random.Next(1, 3))
-               .Select(s => s[random.Next(s.Length)]).ToArray());
-            }
+        //    while (!password.Any(char.IsDigit))
+        //    {
+        //        password = password + new string(Enumerable.Repeat("0123456789", random.Next(1, 3))
+        //       .Select(s => s[random.Next(s.Length)]).ToArray());
+        //    }
             var response = await _userManager.CreateAsync(newUser, registerUser.password);
             if (response.Succeeded)
             {
@@ -214,7 +272,7 @@ namespace User.Managment.Service.Repository
                     StatusCode = StatusCodes.Status201Created,
                     Token = token,
                     Email = newUser.Email,
-                    Password = password
+                    Password = registerUser.password
                 };
             }
             else

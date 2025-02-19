@@ -1,4 +1,6 @@
-﻿using DZJobs.Domain.User;
+﻿using DZJobs.Application.Models.Authentication.Login;
+using DZJobs.Application.Models.Authentication.Signup;
+using DZJobs.Domain.User;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -7,8 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 using User.Managment.Service.Models.Authentication;
-using User.Managment.Service.Models.Authentication.Login;
-using User.Managment.Service.Models.Authentication.Signup;
 using User.Managment.Service.Models.DTO;
 
 namespace User.Managment.Service.Services
@@ -23,8 +23,8 @@ namespace User.Managment.Service.Services
         Task<ResponseDto> ForgetPasswordAsync(string email);
         Task<ResponseDto> ResetPasswordAsync(ResetPassword resetPassword);
         Task<ResponseDto> MakeAdminAsync(UpdatePermissionDto updatePermissionDto);
-        Task<ResponseDto> MakeOwnerAsync(UpdatePermissionDto updatePermissionDto);
-        Task<ResponseDto> MakeUserAsync(UpdatePermissionDto updatePermissionDto);
+        Task<ResponseDto> MakeEmployerAsync(UpdatePermissionDto updatePermissionDto);
+        Task<ResponseDto> MakeFreelancerAsync(UpdatePermissionDto updatePermissionDto);
         Task<ICollection<DZJobUser>> GetAllUserAsync();
     }
 }

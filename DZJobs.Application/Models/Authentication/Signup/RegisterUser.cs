@@ -1,4 +1,4 @@
-﻿namespace User.Managment.Service.Models.Authentication.Signup
+﻿namespace DZJobs.Application.Models.Authentication.Signup
 {
     public class RegisterUser
     {

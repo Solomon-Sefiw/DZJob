@@ -1,4 +1,4 @@
-﻿namespace User.Managment.Service.Models.Authentication.Login
+﻿namespace DZJobs.Application.Models.Authentication.Login
 {
     public class Login
     {
