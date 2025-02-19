@@ -1,4 +1,5 @@
-﻿using HCMS.API.Controllers;
+﻿using DZJobs.Application.Features.JobApplication.Commands.CreateJobApplication;
+using HCMS.API.Controllers;
 using HCMS.Application.JobApplications.Commands;
 using HCMS.Application.JobApplications.Queries;
 using Microsoft.AspNetCore.Http;
