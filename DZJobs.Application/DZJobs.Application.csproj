@@ -21,4 +21,9 @@
     <ProjectReference Include="..\DZJobs.Domain\DZJobs.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\JobApplication\Models\" />
+    <Folder Include="Features\Job\NewFolder\" />
+  </ItemGroup>
+
 </Project>

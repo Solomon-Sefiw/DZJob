@@ -1,12 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HCMS.Services.DataService;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace DZJobs.Application.Features.JobApplication.Queries.GetAllJobApplication
+namespace HCMS.Application.JobApplications.Queries
 {
-    internal class GetAllJobApplicationsQuery
+    public class GetAllJobApplicationsQuery : IRequest<List<JobApplication>> { }
+
+    public class GetAllJobApplicationsQueryHandler : IRequestHandler<GetAllJobApplicationsQuery, List<JobApplication>>
     {
+        private readonly IDataService _context;
+
+        public GetAllJobApplicationsQueryHandler(IDataService context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<JobApplication>> Handle(GetAllJobApplicationsQuery request, CancellationToken cancellationToken)
+        {
+            return await _context.JobApplications
+                                 .Include(ja => ja.Job)
+                                 .Include(ja => ja.Freelancer)
+                                 .ToListAsync(cancellationToken);
+        }
     }
 }

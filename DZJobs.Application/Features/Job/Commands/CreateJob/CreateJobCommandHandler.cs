@@ -1,31 +1,44 @@
-﻿using HCMS.Services.DataService;
-using MediatR;
+﻿using MediatR;
+using DZJobs.Domain.Entities;
+using HCMS.Services.DataService; // Replace with your actual DbContext namespace
 
-
-public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, int>
+namespace HCMS.Application.JobApplications.Commands
 {
-    private readonly IDataService _context;
-
-    public CreateJobCommandHandler(IDataService context)
+    public class CreateJobApplicationCommand : IRequest<int>
     {
-        _context = context;
+        public int JobId { get; set; }
+        public string FreelancerId { get; set; }
+        public string CoverLetter { get; set; }
+        public decimal ProposedSalary { get; set; }
     }
 
-    public async Task<int> Handle(CreateJobCommand request, CancellationToken cancellationToken)
+    public class CreateJobApplicationCommandHandler : IRequestHandler<CreateJobApplicationCommand, int>
     {
-        var job = new Job
+        private readonly IDataService _context;
+
+        public CreateJobApplicationCommandHandler(IDataService context)
         {
-            Title = request.Title,
-            Description = request.Description,
-            Category = request.Category,
-            JobType = request.JobType,
-            Salary = request.Salary,
-            EmployerId = request.EmployerId,
-             PostedDate = DateTime.UtcNow,
-            Status = DZJobs.Domain.Entities.JobStatus.Open
-        };
-        await _context.Jobs.AddAsync(job);
-        await _context.SaveAsync(cancellationToken);
-        return job.Id;
+            _context = context;
+        }
+
+        public async Task<int> Handle(CreateJobApplicationCommand request, CancellationToken cancellationToken)
+        {
+            var jobApplication = new JobApplication
+            {
+                JobId = request.JobId,
+                FreelancerId = request.FreelancerId,
+                CoverLetter = request.CoverLetter,
+                ProposedSalary = request.ProposedSalary,
+                AppliedDate = DateTime.UtcNow,
+                Status = ApplicationStatus.Pending,  // Assuming Pending is the default
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            _context.JobApplications.Add(jobApplication);
+            await _context.SaveAsync(cancellationToken);
+
+            return jobApplication.Id;
+        }
     }
 }
