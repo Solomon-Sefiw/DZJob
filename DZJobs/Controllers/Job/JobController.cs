@@ -2,6 +2,8 @@
 using DZJobs.Application.Jobs.DTOs;
 using DZJobs.Application.Jobs.Queries;
 using HCMS.API.Controllers;
+using HCMS.Application.Jobs.Commands;
+using HCMS.Application.Jobs.Queries;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +28,18 @@ namespace DZJobs.Api.Controllers.Job
         {
             var jobs = await mediator.Send(new GetAllJobsQuery());
             return Ok(jobs);
+        }
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<JobDto>> GetJobById(int id)
+        {
+            var job = await mediator.Send(new GetJobByIdQuery(id));
+            return Ok(job);
+        }
+        [HttpPut]
+        public async Task<ActionResult<int>> UpdateJob([FromBody] UpdateJobCommand command)
+        {
+            var JobId = await mediator.Send(command);
+            return JobId;
         }
     }
 }

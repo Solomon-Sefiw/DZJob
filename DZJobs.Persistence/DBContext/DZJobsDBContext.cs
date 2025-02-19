@@ -34,6 +34,7 @@ namespace DZJobs.Persistence.DBContext
         }
 
         public DbSet<Job> Jobs { get; set; }
+        public DbSet<JobApplication> JobApplications { get; set; }
 
         public void Save()
         {

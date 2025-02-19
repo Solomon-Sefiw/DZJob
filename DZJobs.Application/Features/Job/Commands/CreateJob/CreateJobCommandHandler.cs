@@ -20,7 +20,9 @@ public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, int>
             Category = request.Category,
             JobType = request.JobType,
             Salary = request.Salary,
-            EmployerId = request.EmployerId
+            EmployerId = request.EmployerId,
+             PostedDate = DateTime.UtcNow,
+            Status = DZJobs.Domain.Entities.JobStatus.Open
         };
         await _context.Jobs.AddAsync(job);
         await _context.SaveAsync(cancellationToken);
