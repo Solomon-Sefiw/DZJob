@@ -1,6 +1,7 @@
 ﻿
 using DZJobs.Application.Models.Authentication.Login;
 using DZJobs.Application.Models.Authentication.Signup;
+using DZJobs.Domain.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -76,7 +77,7 @@ namespace ANCIA.Controllers
             return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
         }
         [HttpGet("GetAllUser")]
-        public async Task<ActionResult<Response>> GetAllUser()
+        public async Task<ActionResult<List<DZJobUser>>> GetAllUser()
         {
             var response = await _userService.GetAllUserAsync();
             return Ok(response);
