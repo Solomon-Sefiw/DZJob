@@ -4,7 +4,7 @@ using HCMS.Services.DataService; // Replace with your actual DbContext namespace
 
 namespace HCMS.Application.JobApplications.Commands
 {
-    internal class CreateJobApplicationCommand
+    public class CreateJobApplicationCommand : IRequest<int>
     {
         public int JobId { get; set; }
         public string FreelancerId { get; set; }
