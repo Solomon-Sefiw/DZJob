@@ -21,7 +21,7 @@ public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, int>
             JobType = request.JobType,
             Salary = request.Salary,
             EmployerId = request.EmployerId,
-             PostedDate = DateTime.UtcNow,
+            PostedDate = DateTime.UtcNow,
             Status = DZJobs.Domain.Entities.JobStatus.Open
         };
         await _context.Jobs.AddAsync(job);

@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Job\NewFolder\**" />
+    <EmbeddedResource Remove="Features\Job\NewFolder\**" />
+    <None Remove="Features\Job\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
@@ -19,11 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DZJob.Service\DZJob.Service.csproj" />
     <ProjectReference Include="..\DZJobs.Domain\DZJobs.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\JobApplication\Models\" />
-    <Folder Include="Features\Job\NewFolder\" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,7 @@
 ﻿
 
 using System.Reflection.Emit;
+using DZJobs.Domain.Entities;
 using DZJobs.Domain.User;
 using HCMS.Services.DataService;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -16,6 +17,7 @@ namespace DZJobs.Persistence.DBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Contract>()
                         .HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
                         .WithMany(j => j.Contracts)
@@ -31,10 +33,44 @@ namespace DZJobs.Persistence.DBContext
                         .WithMany(j => j.Applications)
                         .HasForeignKey(c => c.JobId)
                         .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Contract>()
+                        .HasOne(c => c.Employer) // Navigation property in Contract
+                        .WithMany(u => u.Contracts) // Navigation property in DZJobUser
+                        .HasForeignKey(c => c.EmployerId); // Foreign key in Contract
+            modelBuilder.Entity<Message>()
+                        .HasOne(m => m.Sender) // Navigation property in Message
+                        .WithMany(u => u.Messages) // Navigation property in DZJobUser
+                        .HasForeignKey(m => m.SenderId) // Foreign key in Message
+
+                        .OnDelete(DeleteBehavior.Restrict); // Optional: Set delete behavior
+
+            modelBuilder.Entity<Message>()
+                        .HasOne(m => m.Receiver)
+                        .WithMany() // You can add a collection to DZJobUser for received messages if needed
+                        .HasForeignKey(m => m.ReceiverId)
+                        .OnDelete(DeleteBehavior.Restrict); // Optional: Set delete behavior
+
+            modelBuilder.Entity<Contract>()
+                        .HasOne(c => c.Employer)
+                        .WithMany(u => u.Contracts)
+                        .HasForeignKey(c => c.EmployerId)
+                        .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            modelBuilder.Entity<Contract>()
+                        .HasOne(c => c.Freelancer)
+                        .WithMany() // You can define this if JobSeeker has Contracts
+                        .HasForeignKey(c => c.FreelancerId)
+                        .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
         }
 
         public DbSet<Job> Jobs { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
+        public DbSet<FreelancerProfile> FreelancerProfiles { get; set; }
+        public DbSet<EmployerProfile> EmployerProfiles { get; set; }
+        public DbSet<Skill> Skills { get; set; }
+        public DbSet<Education> Educations { get; set; }
+        public DbSet<Geolocation> Geolocations { get; set; }
 
         public void Save()
         {

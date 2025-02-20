@@ -1,4 +1,4 @@
-﻿using DZJobs.Application.Features.JobApplication.Commands.CreateJobApplication;
+﻿using DZJobs.Application.Features.JobApplication.Models;
 using HCMS.API.Controllers;
 using HCMS.Application.JobApplications.Commands;
 using HCMS.Application.JobApplications.Queries;
@@ -26,7 +26,7 @@ namespace DZJobs.Controllers.JobApplication
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllJobApplications()
+        public async Task<ActionResult<List<JobApplicationDto>>> GetAllJobApplications()
         {
             var applications = await mediator.Send(new GetAllJobApplicationsQuery());
             return Ok(applications);
