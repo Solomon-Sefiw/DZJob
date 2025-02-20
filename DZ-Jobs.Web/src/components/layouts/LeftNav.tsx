@@ -25,6 +25,7 @@ import {
   MouseEventHandler,
   useCallback,
   useEffect,
+  useMemo,
   useState
 } from "react";
 import { useNavigate } from "react-router-dom";
@@ -237,24 +238,24 @@ const NavItem = ({
 export const LeftNav = ({ opened, onClose }: Props) => {
  // const permissions = usePermission();
 
-  // const menuItems = useMemo(() => {
-  //   return navMenuItems.filter(
-  //     (item) =>
-  //       (item.url !== "/sys-admin" || permissions.canCreateOrUpdateUser) &&
-  //       (item.url !== "/endofday" || permissions.canProcessEndOfDay)
-  //   );
-  // }, [permissions.canCreateOrUpdateUser, permissions.canProcessEndOfDay]);
+  const menuItems = useMemo(() => {
+    return navMenuItems.filter(
+      (item) =>
+        (item.url !== "/sys-admin" ) &&
+        (item.url !== "/endofday")
+    );
+  }, []);
 
   return (
     <List>
-      {/* {menuItems.map((item, label) => (
+       {menuItems.map((item, label) => (
         <NavItem
           menuItem={item}
           key={label}
           onClose={onClose}
           opened={opened}
         />
-      ))} */}
+      ))} 
     </List>
   );
 };

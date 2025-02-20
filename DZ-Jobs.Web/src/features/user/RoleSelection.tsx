@@ -1,18 +1,18 @@
 import {
-    Box,
-    Card,
-    CardActionArea,
-    CardContent,
-    Container,
-    Grid,
-    Typography,
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Container,
+  Grid,
+  Typography,
 } from "@mui/material";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    UpdatePermissionDto,
-    usePostApiAuthenticationGiveEmployerRoleMutation,
-    usePostApiAuthenticationGiveFreelancerRoleMutation,
+  UpdatePermissionDto,
+  usePostApiAuthenticationGiveEmployerRoleMutation,
+  usePostApiAuthenticationGiveFreelancerRoleMutation,
 } from "../../app/api";
   
   // Assume this interface exists (adjust as needed)
@@ -44,7 +44,7 @@ import {
             await giveEmployerRole({ updatePermissionDto }).unwrap();
           }
           useFullName && localStorage.setItem("welcomeMSg", "WellCome Dear, " + useFullName + ", You Have Created DZ-Jobs Account, with "+selectedRole+" Role." );
-          navigate("/dashboard");
+          navigate("/frelancer-profile");
         } catch (error) {
           console.error("Error updating user role:", error);
         }

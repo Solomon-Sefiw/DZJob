@@ -15,6 +15,7 @@ import {
 import { Dashboard, Login } from "../features";
 import { MFA } from "../features/user/mfa";
 import { RoleSelection } from "../features/user/RoleSelection";
+import { RegisterFreelancerProfile } from "../features/userProfile/freelancerProfile/RegisterFreelancerProfile";
 import { useAuth } from "../hooks";
 
 
@@ -35,6 +36,7 @@ const AppRoutes = () => {
       <Route index path="login" element={<Login />} />
       <Route path="verify" element={<MFA />} />
       <Route path="new-user" element={<RegisterNewUser />} />
+      <Route path="frelancer-profile" element={<RegisterFreelancerProfile />} />
       <Route path="role-selection" element={<RoleSelection />} />
   
       <Route path="dashboard" element={<Dashboard />} />

@@ -2,7 +2,7 @@ import { useState } from "react";
 //import { useCurrentUserInfoQuery, UserDto } from "../app/api";
 
 export const useAuth = () => {
-  const [state, setState] = useState<{
+  const [state,] = useState<{
     loggedIn?: boolean;
     user?: any;
     isLoading?: boolean;

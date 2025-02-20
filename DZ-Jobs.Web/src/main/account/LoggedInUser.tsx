@@ -17,7 +17,7 @@ export const LoggedInUser = () => {
   const { user } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const [openChangePwdDialog, setOpenChangePwdDialog] = useState(false);
+  // const [openChangePwdDialog, setOpenChangePwdDialog] = useState(false);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };

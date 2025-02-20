@@ -1,0 +1,49 @@
+import { Box, Container, Paper, Typography } from "@mui/material";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { FreelancerProfileDto, usePostApiFreelancerProfileMutation } from "../../../app/api";
+import { FreelancerProfileForm } from "./FreelancerProfileForm";
+
+export const RegisterFreelancerProfile = () => {
+  const navigate = useNavigate();
+  const [createProfile, { error: createProfileError }] = usePostApiFreelancerProfileMutation();
+
+  const onCancel = useCallback(() => {
+    navigate("/role-selection"); // Adjust navigation based on your application structure
+  }, [navigate]);
+
+  const onSubmit = useCallback(
+    async (profile: FreelancerProfileDto) => {
+      try {
+        await createProfile({createFreelancerProfileCommand : profile}).unwrap();
+        //navigate(`/profile-success`); // Adjust navigation based on your application structure
+        navigate("/dashboard");
+      } catch (error) {
+        console.error("Profile creation error:", error);
+      }
+    },
+    [navigate, createProfile]
+  );
+
+  const errors = (createProfileError as any)?.data;
+
+  return (
+    <Container maxWidth="sm">
+      <Paper elevation={3} sx={{ mt: 8, p: 4, borderRadius: 2 }}>
+        <Box sx={{ textAlign: "center", mb: 3 }}>
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{ fontWeight: "bold", color: "#0073b1" }}
+          >
+            Create Your Freelancer Profile
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary" sx={{ mt: 1 }}>
+            Fill in your details to start your journey with DZ-Jobs
+          </Typography>
+        </Box>
+        <FreelancerProfileForm onCancel={onCancel} onSubmit={onSubmit} errors={errors} />
+      </Paper>
+    </Container>
+  );
+};
