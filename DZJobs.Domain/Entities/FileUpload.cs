@@ -6,6 +6,6 @@ public class FileUpload : BaseEntity
     public DZJobUser User { get; set; }
     public string FileName { get; set; }
     public string FilePath { get; set; }
-    public string FileType { get; set; }  // e.g., PDF, DOCX, Image
+    public string FileType { get; set; }  // e.g., PDF, DOCX, Image11
     public DateTime UploadedDate { get; set; }
 }
