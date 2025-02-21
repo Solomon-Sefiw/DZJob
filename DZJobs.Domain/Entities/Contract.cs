@@ -12,7 +12,7 @@ public class Contract : BaseEntity
     public string EmployerId { get; set; }
     [ForeignKey("EmployerId")]
     public DZJobUser Employer { get; set; }
-    public decimal AgreedSalary { get; set; }
+    public decimal AgreedAmount { get; set; } // More appropriate name
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public ContractStatus Status { get; set; }  // Enum: Ongoing, Completed, Terminated

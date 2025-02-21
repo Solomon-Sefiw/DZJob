@@ -16,6 +16,7 @@ namespace HCMS.Application.FreelancerProfiles.Commands
         public string DZJobUserId { get; set; }
     }
 
+
     public class CreateFreelancerProfileCommandHandler : IRequestHandler<CreateFreelancerProfileCommand, int>
     {
         private readonly IDataService _context;
