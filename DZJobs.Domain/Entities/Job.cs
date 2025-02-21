@@ -2,8 +2,6 @@
 using HCMS.Domain;
 using System.Diagnostics.Contracts;
 using DZJobs.Domain.Entities;
-using DZJobs.Domain.User;
-
 public class Job : BaseEntity
 {
     public string Title { get; set; }

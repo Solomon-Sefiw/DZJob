@@ -15,6 +15,7 @@ namespace HCMS.Services.DataService
         public DbSet<Skill>  Skills { get; set; }
         public DbSet<Education>  Educations { get; set; }
         public DbSet<Geolocation> Geolocations { get; set; }
+        public DbSet<EmploymentHistory> EmploymentHistories { get; set; }
 
         void Save();
         Task SaveAsync(CancellationToken cancellationToken);
