@@ -181,6 +181,38 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({ url: `/api/EmployerProfile/${queryArg.id}` }),
     }),
+    postApiEmploymentHistory: build.mutation<
+      PostApiEmploymentHistoryApiResponse,
+      PostApiEmploymentHistoryApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/EmploymentHistory`,
+        method: "POST",
+        body: queryArg.createEmploymentHistoryCommand,
+      }),
+    }),
+    getApiEmploymentHistory: build.query<
+      GetApiEmploymentHistoryApiResponse,
+      GetApiEmploymentHistoryApiArg
+    >({
+      query: () => ({ url: `/api/EmploymentHistory` }),
+    }),
+    putApiEmploymentHistoryById: build.mutation<
+      PutApiEmploymentHistoryByIdApiResponse,
+      PutApiEmploymentHistoryByIdApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/EmploymentHistory/${queryArg.id}`,
+        method: "PUT",
+        body: queryArg.updateEmploymentHistoryCommand,
+      }),
+    }),
+    getApiEmploymentHistoryById: build.query<
+      GetApiEmploymentHistoryByIdApiResponse,
+      GetApiEmploymentHistoryByIdApiArg
+    >({
+      query: (queryArg) => ({ url: `/api/EmploymentHistory/${queryArg.id}` }),
+    }),
     postApiFreelancerProfile: build.mutation<
       PostApiFreelancerProfileApiResponse,
       PostApiFreelancerProfileApiArg
@@ -418,6 +450,23 @@ export type GetApiEmployerProfileByIdApiResponse =
 export type GetApiEmployerProfileByIdApiArg = {
   id: number;
 };
+export type PostApiEmploymentHistoryApiResponse = /** status 200 OK */ number;
+export type PostApiEmploymentHistoryApiArg = {
+  createEmploymentHistoryCommand: CreateEmploymentHistoryCommand;
+};
+export type GetApiEmploymentHistoryApiResponse =
+  /** status 200 OK */ EmploymentHistoryDto[];
+export type GetApiEmploymentHistoryApiArg = void;
+export type PutApiEmploymentHistoryByIdApiResponse = unknown;
+export type PutApiEmploymentHistoryByIdApiArg = {
+  id: number;
+  updateEmploymentHistoryCommand: UpdateEmploymentHistoryCommand;
+};
+export type GetApiEmploymentHistoryByIdApiResponse =
+  /** status 200 OK */ EmploymentHistoryDto;
+export type GetApiEmploymentHistoryByIdApiArg = {
+  id: number;
+};
 export type PostApiFreelancerProfileApiResponse = /** status 200 OK */ number;
 export type PostApiFreelancerProfileApiArg = {
   createFreelancerProfileCommand: CreateFreelancerProfileCommand;
@@ -501,6 +550,7 @@ export type Response = {
 export type UpdatePermissionDto = {
   email: string;
 };
+export type JobCategory = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
 export type JobType = 1 | 2 | 3 | 4;
 export type JobStatus = 1 | 2 | 3 | 4;
 export type ApplicationStatus = 1 | 2 | 3;
@@ -540,7 +590,7 @@ export type Contract = {
   freelancer?: DzJobUser;
   employerId?: string | null;
   employer?: DzJobUser;
-  agreedSalary?: number;
+  agreedAmount?: number;
   startDate?: string;
   endDate?: string;
   status?: ContractStatus;
@@ -564,7 +614,7 @@ export type Job = {
   updatedAt?: string;
   title?: string | null;
   description?: string | null;
-  category?: string | null;
+  jobCategory?: JobCategory;
   jobType?: JobType;
   salary?: number;
   postedDate?: string;
@@ -603,6 +653,7 @@ export type DzJobUser = {
   id?: string | null;
   userName?: string | null;
   normalizedUserName?: string | null;
+  email?: string | null;
   normalizedEmail?: string | null;
   emailConfirmed?: boolean;
   passwordHash?: string | null;
@@ -616,8 +667,9 @@ export type DzJobUser = {
   accessFailedCount?: number;
   firstName?: string | null;
   lastName?: string | null;
-  email?: string | null;
   isVerified?: boolean;
+  profilePictureUrl?: string | null;
+  bio?: string | null;
   jobsPosted?: Job[] | null;
   jobApplications?: JobApplication[] | null;
   contracts?: Contract[] | null;
@@ -714,6 +766,31 @@ export type EmployerProfileDto = {
   averageRating?: number;
   dzJobUserId?: string | null;
 };
+export type CreateEmploymentHistoryCommand = {
+  userId?: string | null;
+  companyName?: string | null;
+  jobTitle?: string | null;
+  startDate?: string;
+  endDate?: string;
+  description?: string | null;
+};
+export type EmploymentHistoryDto = {
+  id?: number;
+  userId?: string | null;
+  companyName?: string | null;
+  jobTitle?: string | null;
+  startDate?: string;
+  endDate?: string;
+  description?: string | null;
+};
+export type UpdateEmploymentHistoryCommand = {
+  id?: number;
+  companyName?: string | null;
+  jobTitle?: string | null;
+  startDate?: string;
+  endDate?: string;
+  description?: string | null;
+};
 export type CreateFreelancerProfileCommand = {
   bio?: string | null;
   skills?: string | null;
@@ -765,7 +842,7 @@ export type GeolocationDto = {
 export type CreateJobCommand = {
   title?: string | null;
   description?: string | null;
-  category?: string | null;
+  jobCategory?: JobCategory;
   jobType?: JobType;
   salary?: number;
   employerId?: string | null;
@@ -774,7 +851,7 @@ export type JobDto = {
   id?: number;
   title?: string | null;
   description?: string | null;
-  category?: string | null;
+  jobCategory?: JobCategory;
   jobType?: string | null;
   salary?: number;
   postedDate?: string;
@@ -786,7 +863,7 @@ export type UpdateJobCommand = {
   jobId?: number;
   title?: string | null;
   description?: string | null;
-  category?: string | null;
+  jobCategory?: JobCategory;
   jobType?: number;
   salary?: number;
   status?: number;
@@ -860,6 +937,12 @@ export const {
   useLazyGetApiEmployerProfileQuery,
   useGetApiEmployerProfileByIdQuery,
   useLazyGetApiEmployerProfileByIdQuery,
+  usePostApiEmploymentHistoryMutation,
+  useGetApiEmploymentHistoryQuery,
+  useLazyGetApiEmploymentHistoryQuery,
+  usePutApiEmploymentHistoryByIdMutation,
+  useGetApiEmploymentHistoryByIdQuery,
+  useLazyGetApiEmploymentHistoryByIdQuery,
   usePostApiFreelancerProfileMutation,
   useGetApiFreelancerProfileQuery,
   useLazyGetApiFreelancerProfileQuery,
