@@ -28,7 +28,7 @@ namespace DZJobs.Application.Jobs.Queries
                 Id = job.Id,
                 Title = job.Title,
                 Description = job.Description,
-                Category = job.Category,
+                JobCategory = job.JobCategory,
                 JobType = job.JobType.ToString(),
                 Salary = job.Salary,
                 PostedDate = job.PostedDate,

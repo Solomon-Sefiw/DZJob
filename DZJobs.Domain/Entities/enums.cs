@@ -95,6 +95,22 @@ namespace DZJobs.Domain.Entities
         Contract = 3,
         Freelance = 4
     }
+    public enum JobCategory
+    {
+        IT = 1,
+        Marketing,
+        Finance,
+        Healthcare,
+        Education,
+        Engineering,
+        Sales,
+        CustomerService,
+        Writing,
+        Design,
+        Legal,
+        Consulting,
+        Others
+    }
     public enum JobPaymentType
     {
         Hourly = 1,

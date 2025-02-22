@@ -1,4 +1,5 @@
-﻿using HCMS.Services.DataService;
+﻿using DZJobs.Domain.Entities;
+using HCMS.Services.DataService;
 using MediatR;
 
 namespace HCMS.Application.Jobs.Commands
@@ -8,7 +9,7 @@ namespace HCMS.Application.Jobs.Commands
         public int JobId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Category { get; set; }
+        public JobCategory JobCategory { get; set; }
         public int JobType { get; set; } // Same note as before regarding enum conversion
         public decimal Salary { get; set; }
         public int Status { get; set; } // For example, 0=Open, 1=InProgress, 2=Closed (or use enum)
@@ -33,10 +34,10 @@ namespace HCMS.Application.Jobs.Commands
 
             job.Title = request.Title;
             job.Description = request.Description;
-            job.Category = request.Category;
-            job.JobType = (DZJobs.Domain.Entities.JobType)request.JobType;
+            job.JobCategory = request.JobCategory;
+            job.JobType = (JobType)request.JobType;
             job.Salary = request.Salary;
-            job.Status = (DZJobs.Domain.Entities.JobStatus)request.Status;
+            job.Status = (JobStatus)request.Status;
 
             _context.Jobs.Update(job);
            await _context.SaveAsync(cancellationToken);

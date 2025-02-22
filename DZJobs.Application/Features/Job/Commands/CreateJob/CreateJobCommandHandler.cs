@@ -17,7 +17,7 @@ public class CreateJobCommandHandler : IRequestHandler<CreateJobCommand, int>
         {
             Title = request.Title,
             Description = request.Description,
-            Category = request.Category,
+            JobCategory = request.JobCategory,
             JobType = request.JobType,
             Salary = request.Salary,
             EmployerId = request.EmployerId,
