@@ -3,11 +3,13 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 import { notificationReducer } from "../features";
 import { SMSApi } from "./api";
 import { rtkQueryErrorHandler } from "./api/emptySplitApi";
+import authReducer from "./slices/authSlice"; // Import auth slice
 
 
 export const store = configureStore({
   reducer: {
     notification: notificationReducer,
+    auth: authReducer, // Add auth reducer here
     [SMSApi.reducerPath]: SMSApi.reducer,
   },
   middleware: (getDefaultMiddleware) => {
@@ -28,6 +30,5 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   unknown,
   Action<string>
 >;
-
 export * from "./api";
 

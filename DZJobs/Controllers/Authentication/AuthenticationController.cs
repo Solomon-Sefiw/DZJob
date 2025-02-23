@@ -42,8 +42,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeFreelancerAsync(updatePermissionDto);
             if (response.Status)
             {
-                    var message = new EmailContent(new string[] { response.Email },"Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
-                     _emailService.SendEmail(message);
+                    //var message = new EmailContent(new string[] { response.Email },"Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
+                    // _emailService.SendEmail(message);
 
                 return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
             }
@@ -70,8 +70,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeEmployerAsync(updatePermissionDto);
             if (response.Status)
             {
-                var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
+                //_emailService.SendEmail(message);
                 return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
             }
             return Ok(new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode });
@@ -89,10 +89,10 @@ namespace ANCIA.Controllers
             if (response.Status == true)
             {
                 var conformationLink = Url.Action(nameof(ConfirmEmail), "Authentication", new { token = response.Token, email = response.Email }, Request.Scheme);
-                var message = new EmailContent(new string[] { response.Email }, " Password And Conformation Link", " <h4> Well Come to DZ-Jobs , your Password is :<H2> " + response.Password + ".</H2> <br></br>!!! Please Comfirm with this Link <b>Unless you are not conformed./b> </H4>" + conformationLink);
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, " Password And Conformation Link", " <h4> Well Come to DZ-Jobs , your Password is :<H2> " + response.Password + ".</H2> <br></br>!!! Please Comfirm with this Link <b>Unless you are not conformed./b> </H4>" + conformationLink);
+                //_emailService.SendEmail(message);
             }
-            return Ok(new Response { Status = response.Status,Message = response.Message,StatusCode = response.StatusCode});
+            return Ok(new Response { UserId = response.UserId, Status = response.Status,Message = response.Message,StatusCode = response.StatusCode});
 
         }
 

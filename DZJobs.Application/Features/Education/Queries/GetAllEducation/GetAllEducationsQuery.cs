@@ -24,7 +24,7 @@ namespace HCMS.Application.Educations.Queries
                 {
                     Id = e.Id,
                     UserId = e.UserId,
-                    EducationLevel = e.EducationLevel.ToString(),
+                    EducationLevel = e.EducationLevel,
                     StartDate = e.StartDate,
                     EndDate = e.EndDate,
                     SchoolName = e.SchoolName,

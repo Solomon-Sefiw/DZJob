@@ -13,8 +13,10 @@ import {
 } from "../features/SysAdmin";
 
 import { Dashboard, Login } from "../features";
+import { RegisterEducation } from "../features/Education/RegisterEducation";
 import { MFA } from "../features/user/mfa";
 import { RoleSelection } from "../features/user/RoleSelection";
+import { RegisterEmployerProfile } from "../features/userProfile/EmployerProfile/RegisterEmployerProfile";
 import { RegisterFreelancerProfile } from "../features/userProfile/freelancerProfile/RegisterFreelancerProfile";
 import { useAuth } from "../hooks";
 
@@ -37,6 +39,10 @@ const AppRoutes = () => {
       <Route path="verify" element={<MFA />} />
       <Route path="new-user" element={<RegisterNewUser />} />
       <Route path="frelancer-profile" element={<RegisterFreelancerProfile />} />
+      <Route path="employer-profile" element={<RegisterEmployerProfile />} />
+      <Route path="education" element={<RegisterEducation />} />
+
+
       <Route path="role-selection" element={<RoleSelection />} />
   
       <Route path="dashboard" element={<Dashboard />} />

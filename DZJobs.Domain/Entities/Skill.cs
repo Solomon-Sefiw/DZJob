@@ -1,8 +1,12 @@
 ﻿using DZJobs.Domain.User;
 
-public class Skill : BaseEntity
+namespace DZJobs.Domain.Entities
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public ICollection<DZJobUser> DZJobUsers { get; set; }
+    public class Skill : BaseEntity
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        // Navigation Property
+        public ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();
+    }
 }

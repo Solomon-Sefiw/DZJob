@@ -1,5 +1,6 @@
 ﻿using MediatR;
-using HCMS.Services.DataService; // Adjust namespace for your ApplicationDbContext
+using HCMS.Services.DataService;
+using DZJobs.Domain.Entities; // Adjust namespace for your ApplicationDbContext
 
 namespace HCMS.Application.Skills.Commands
 {

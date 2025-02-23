@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DZJobs.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 public class DZJobUser : IdentityUser
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public bool IsVerified { get; set; }
-    public string ProfilePictureUrl { get; set; } // Profile picture
-    public string Bio { get; set; } // Short description
 
     public ICollection<Job> JobsPosted { get; set; } = new List<Job>();
     public ICollection<JobApplication> JobApplications { get; set; } = new List<JobApplication>();
@@ -14,4 +13,7 @@ public class DZJobUser : IdentityUser
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
     public ICollection<Message> Messages { get; set; } = new List<Message>();
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+    // Navigation Property
+    public ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();
 }

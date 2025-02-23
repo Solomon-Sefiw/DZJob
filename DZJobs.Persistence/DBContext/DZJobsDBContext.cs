@@ -62,6 +62,19 @@ namespace DZJobs.Persistence.DBContext
                         .WithMany() // You can define this if JobSeeker has Contracts
                         .HasForeignKey(c => c.FreelancerId)
                         .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            modelBuilder.Entity<UserSkill>()
+                        .HasKey(us => us.Id);
+
+            modelBuilder.Entity<UserSkill>()
+                        .HasOne(us => us.User)
+                        .WithMany(u => u.UserSkills)
+                        .HasForeignKey(us => us.UserId);
+
+            modelBuilder.Entity<UserSkill>()
+                        .HasOne(us => us.Skill)
+                        .WithMany(s => s.UserSkills)
+                        .HasForeignKey(us => us.SkillId);
         }
 
         public DbSet<Job> Jobs { get; set; }

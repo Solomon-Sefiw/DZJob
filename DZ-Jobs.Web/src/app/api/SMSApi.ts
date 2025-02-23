@@ -543,6 +543,7 @@ export type GetApiSkillByIdApiArg = {
   id: number;
 };
 export type Response = {
+  userId?: string | null;
   status?: boolean;
   message?: string | null;
   statusCode?: number;
@@ -668,8 +669,6 @@ export type DzJobUser = {
   firstName?: string | null;
   lastName?: string | null;
   isVerified?: boolean;
-  profilePictureUrl?: string | null;
-  bio?: string | null;
   jobsPosted?: Job[] | null;
   jobApplications?: JobApplication[] | null;
   contracts?: Contract[] | null;
@@ -733,7 +732,8 @@ export type UpdateEducationCommand = {
 export type EducationDto = {
   id?: number;
   userId?: string | null;
-  educationLevel?: string | null;
+  user?: string | null;
+  educationLevel?: EducationLevelEnum;
   startDate?: string;
   endDate?: string;
   schoolName?: string | null;

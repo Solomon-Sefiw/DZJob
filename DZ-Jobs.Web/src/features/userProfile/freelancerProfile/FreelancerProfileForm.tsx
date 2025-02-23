@@ -27,7 +27,6 @@ const validationSchema = yup.object<YupShape<FreelancerProfileDto>>({
   experience: yup.number().min(0).required("Experience is required"),
   hourlyRate: yup.number().min(0).required("Hourly Rate is required"),
   location: yup.string().required("Location is required"),
-  dzJobUserId: yup.string().required("User ID is required"),
 });
 
 interface Props {

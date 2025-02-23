@@ -1,28 +1,35 @@
 import { Box, Container, Paper, Typography } from "@mui/material";
 import { useCallback } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FreelancerProfileDto, usePostApiFreelancerProfileMutation } from "../../../app/api";
+import { RootState } from "../../../app/store";
 import { FreelancerProfileForm } from "./FreelancerProfileForm";
-
 export const RegisterFreelancerProfile = () => {
+
+  const {userId} = useSelector(
+    (state: RootState) => state.auth
+  );
   const navigate = useNavigate();
   const [createProfile, { error: createProfileError }] = usePostApiFreelancerProfileMutation();
-
+console.log(userId);
   const onCancel = useCallback(() => {
     navigate("/role-selection"); // Adjust navigation based on your application structure
   }, [navigate]);
 
   const onSubmit = useCallback(
     async (profile: FreelancerProfileDto) => {
+      profile.dzJobUserId = userId;
+
       try {
         await createProfile({createFreelancerProfileCommand : profile}).unwrap();
         //navigate(`/profile-success`); // Adjust navigation based on your application structure
-        navigate("/dashboard");
+        navigate("/education");
       } catch (error) {
         console.error("Profile creation error:", error);
       }
     },
-    [navigate, createProfile]
+    [userId,navigate, createProfile]
   );
 
   const errors = (createProfileError as any)?.data;

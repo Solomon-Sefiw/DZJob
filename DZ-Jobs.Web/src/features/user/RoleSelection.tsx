@@ -8,13 +8,18 @@ import {
   Typography,
 } from "@mui/material";
 import { useCallback } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   UpdatePermissionDto,
   usePostApiAuthenticationGiveEmployerRoleMutation,
   usePostApiAuthenticationGiveFreelancerRoleMutation,
 } from "../../app/api";
-  
+import { RootState } from "../../app/store";
+
+
+
+
   // Assume this interface exists (adjust as needed)
   
   export const RoleSelection = () => {
@@ -23,33 +28,36 @@ import {
     const [giveEmployerRole] = usePostApiAuthenticationGiveEmployerRoleMutation();
   
     // Retrieve the user's email from local storage.
-    const userEmail = localStorage.getItem("emailForRole");
-    const useFullName = localStorage.getItem("useFullName");
 
+    const {email} = useSelector(
+      (state: RootState) => state.auth
+    );
+console.log(email);
   
     const handleRoleSelect = useCallback(
       async (selectedRole: string) => {
-        if (!userEmail) {
+        if (!email) {
           console.error("User email not found.");
           return;
         }
         const updatePermissionDto: UpdatePermissionDto = {
-          email: userEmail,
+          email: email,
         };
   
         try {
           if (selectedRole === "freelancer") {
             await giveFreelancerRole({ updatePermissionDto  }).unwrap();
+            navigate("/frelancer-profile");
           } else if (selectedRole === "employer") {
             await giveEmployerRole({ updatePermissionDto }).unwrap();
+            navigate("/employer-profile");
           }
-          useFullName && localStorage.setItem("welcomeMSg", "WellCome Dear, " + useFullName + ", You Have Created DZ-Jobs Account, with "+selectedRole+" Role." );
-          navigate("/frelancer-profile");
+
         } catch (error) {
           console.error("Error updating user role:", error);
         }
       },
-      [userEmail, navigate, giveFreelancerRole, giveEmployerRole]
+      [email, navigate, giveFreelancerRole, giveEmployerRole]
     );
   
     return (

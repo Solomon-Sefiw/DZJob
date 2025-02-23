@@ -33,7 +33,7 @@ namespace HCMS.Application.Educations.Queries
             {
                 Id = education.Id,
                 UserId = education.UserId,
-                EducationLevel = education.EducationLevel.ToString(),
+                EducationLevel = education.EducationLevel,
                 StartDate = education.StartDate,
                 EndDate = education.EndDate,
                 SchoolName = education.SchoolName,

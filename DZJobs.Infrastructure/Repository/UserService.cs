@@ -272,7 +272,8 @@ namespace User.Managment.Service.Repository
                     StatusCode = StatusCodes.Status201Created,
                     Token = token,
                     Email = newUser.Email,
-                    Password = registerUser.password
+                    Password = registerUser.password,
+                    UserId = newUser.Id
                 };
             }
             else
