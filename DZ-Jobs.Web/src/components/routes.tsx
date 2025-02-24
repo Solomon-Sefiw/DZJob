@@ -14,6 +14,7 @@ import {
 
 import { Dashboard, Login } from "../features";
 import { RegisterEducation } from "../features/Education/RegisterEducation";
+import UserSkillSelector from "../features/Skill/UserSkillSelector";
 import { MFA } from "../features/user/mfa";
 import { RoleSelection } from "../features/user/RoleSelection";
 import { RegisterEmployerProfile } from "../features/userProfile/EmployerProfile/RegisterEmployerProfile";
@@ -41,6 +42,8 @@ const AppRoutes = () => {
       <Route path="frelancer-profile" element={<RegisterFreelancerProfile />} />
       <Route path="employer-profile" element={<RegisterEmployerProfile />} />
       <Route path="education" element={<RegisterEducation />} />
+      <Route path="skills" element={<UserSkillSelector />} />
+
 
 
       <Route path="role-selection" element={<RoleSelection />} />

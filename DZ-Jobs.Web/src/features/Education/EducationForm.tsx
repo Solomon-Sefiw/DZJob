@@ -17,12 +17,12 @@ const initialValues: EducationDto = {
 };
 
 const validationSchema = yup.object<YupShape<EducationDto>>({
-    // startDate: yup.date().required("Start Date is required"),
-    // endDate: yup.date().required("End Date is required"),
-    // schoolName: yup.string().required("School Name is required"),
-    // schoolCity: yup.string().required("School City is required"),
-    // fieldOfStudy: yup.string().required("Field of Study is required"),
-    // graduationDate: yup.date().required("Graduation Date is required"),
+    startDate: yup.date().required("Start Date is required"),
+    endDate: yup.date().required("End Date is required"),
+    schoolName: yup.string().required("School Name is required"),
+    schoolCity: yup.string().required("School City is required"),
+    fieldOfStudy: yup.string().required("Field of Study is required"),
+    graduationDate: yup.date().required("Graduation Date is required"),
 });
 
 interface Props {

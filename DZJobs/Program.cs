@@ -1,6 +1,8 @@
 using DZJobs.Application;
 using DZJobs.Infrastructure;
+using DZJobs.Persistence.DBContext;
 using HCMS.Persistance.DBContext;
+using HCMS.Services.DataService;
 using Microsoft.OpenApi.Models;
 using SMS.Api.Configurations;
 
@@ -36,5 +38,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<DZJobsDBContext>();
+    DZJobsDBContext.SeedData(context);
+}
 app.Run();
 

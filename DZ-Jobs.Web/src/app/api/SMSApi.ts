@@ -355,6 +355,31 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({ url: `/api/Skill/${queryArg.id}` }),
     }),
+    getApiUserSkillsByUserId: build.query<
+      GetApiUserSkillsByUserIdApiResponse,
+      GetApiUserSkillsByUserIdApiArg
+    >({
+      query: (queryArg) => ({ url: `/api/UserSkills/${queryArg.userId}` }),
+    }),
+    postApiUserSkills: build.mutation<
+      PostApiUserSkillsApiResponse,
+      PostApiUserSkillsApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/UserSkills`,
+        method: "POST",
+        body: queryArg.addUserSkillCommand,
+      }),
+    }),
+    deleteApiUserSkillsByUserSkillId: build.mutation<
+      DeleteApiUserSkillsByUserSkillIdApiResponse,
+      DeleteApiUserSkillsByUserSkillIdApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/UserSkills/${queryArg.userSkillId}`,
+        method: "DELETE",
+      }),
+    }),
   }),
   overrideExisting: false,
 });
@@ -542,6 +567,20 @@ export type GetApiSkillByIdApiResponse = /** status 200 OK */ SkillDto;
 export type GetApiSkillByIdApiArg = {
   id: number;
 };
+export type GetApiUserSkillsByUserIdApiResponse =
+  /** status 200 OK */ UserSkillDto[];
+export type GetApiUserSkillsByUserIdApiArg = {
+  userId: string;
+};
+export type PostApiUserSkillsApiResponse = /** status 200 OK */ number;
+export type PostApiUserSkillsApiArg = {
+  addUserSkillCommand: AddUserSkillCommand;
+};
+export type DeleteApiUserSkillsByUserSkillIdApiResponse =
+  /** status 200 OK */ boolean;
+export type DeleteApiUserSkillsByUserSkillIdApiArg = {
+  userSkillId: number;
+};
 export type Response = {
   userId?: string | null;
   status?: boolean;
@@ -650,6 +689,23 @@ export type Notification = {
   type?: NotificationType;
   createdAt?: string;
 };
+export type Skill = {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  name?: string | null;
+  description?: string | null;
+  userSkills?: UserSkill[] | null;
+};
+export type UserSkill = {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  userId?: string | null;
+  user?: DzJobUser;
+  skillId?: number;
+  skill?: Skill;
+};
 export type DzJobUser = {
   id?: string | null;
   userName?: string | null;
@@ -675,6 +731,7 @@ export type DzJobUser = {
   reviews?: Review[] | null;
   messages?: Message[] | null;
   notifications?: Notification[] | null;
+  userSkills?: UserSkill[] | null;
 };
 export type RegisterUser = {
   firstName?: string | null;
@@ -907,6 +964,16 @@ export type SkillDto = {
   name?: string | null;
   description?: string | null;
 };
+export type UserSkillDto = {
+  id?: number;
+  skillId?: number;
+  skillName?: string | null;
+  userId?: string | null;
+};
+export type AddUserSkillCommand = {
+  userId?: string | null;
+  skillId?: number;
+};
 export const {
   usePostApiAuthenticationSeedRolesMutation,
   usePostApiAuthenticationGiveFreelancerRoleMutation,
@@ -973,4 +1040,8 @@ export const {
   useLazyGetApiSkillQuery,
   useGetApiSkillByIdQuery,
   useLazyGetApiSkillByIdQuery,
+  useGetApiUserSkillsByUserIdQuery,
+  useLazyGetApiUserSkillsByUserIdQuery,
+  usePostApiUserSkillsMutation,
+  useDeleteApiUserSkillsByUserSkillIdMutation,
 } = injectedRtkApi;

@@ -22,7 +22,7 @@ export const RegisterEducation = () => {
 
       try {
         await createEducation({ createEducationCommand: education }).unwrap();
-        navigate("/dashboard"); // Redirect after successful submission
+        navigate("/skills"); // Redirect after successful submission
       } catch (error) {
         console.error("Education creation error:", error);
       }
