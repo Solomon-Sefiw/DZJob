@@ -934,7 +934,7 @@ export type JobDto = {
   title?: string | null;
   description?: string | null;
   jobCategory?: JobCategory;
-  jobType?: string | null;
+  jobType?: JobType;
   salary?: number;
   postedDate?: string;
   employerId?: string | null;

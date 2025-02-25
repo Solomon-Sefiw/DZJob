@@ -14,6 +14,34 @@ export enum EducationLevel {
   Diploma = 13,
   Other = 14
 }
+export enum JobType
+{
+    FullTime = 1,
+    PartTime = 2,
+    Contract = 3,
+    Freelance = 4
+}
+
+export enum JobCategory
+{
+    IT = 1,
+    Marketing,
+    Finance,
+    Healthcare,
+    Education,
+    Engineering,
+    Sales,
+    CustomerService,
+    Writing,
+    Design,
+    Legal,
+    Consulting,
+    Others
+}
+
+
+
+
 export enum Gender {
   Male = 1,
   Female = 2,

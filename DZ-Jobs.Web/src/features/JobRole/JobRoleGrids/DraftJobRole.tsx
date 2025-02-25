@@ -1,17 +1,21 @@
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import WorkIcon from "@mui/icons-material/Work";
 import {
   Alert,
   Box,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Grid,
+  Typography
 } from "@mui/material";
-import { Fragment, useState } from "react";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { JobDto, useGetAllJobQuery, useGetJobCountByStatusQuery } from "../../../app/api";
+import { useGetAllJobQuery, useGetJobCountByStatusQuery } from "../../../app/api";
 import { Pagination } from "../../../components/Pagination";
 export const DraftJobRole = () => {
   const [pagination, setPagination] = useState<{
@@ -28,7 +32,7 @@ export const DraftJobRole = () => {
   const { data: items, isLoading: isListLoading } = useGetAllJobQuery({
     pageNumber: pagination.pageNumber + 1,
     pageSize: pagination.pageSize,
-    status: 2,
+    status: 1,
   });
 
   const { searchQuery } = useOutletContext<{ searchQuery: string }>();
@@ -59,80 +63,60 @@ export const DraftJobRole = () => {
   return (
     <Box>
       {!isLoading && !!counts?.drafts && (
-        <Paper>
-          <TableContainer>
-            <Table size="medium">
-              <TableHead>
-                <TableRow>
-                  <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Job Category
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>
-                    Job Role Category
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: "bold" }}>Job Grade</TableCell>
-                  <TableCell
-                    sx={{
-                      display: "flex",
-                      justifyContent: "center",
-                      gap: 1,
-                    }}
-                  >
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(filteredJobRoles || []).map((item: JobDto) => (
-                  <Fragment key={item.id}>
-                    <TableRow>
-                      <TableCell
-                        sx={{
-                          
-                        }}
-                      >
-                        {item.title}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                  
-                        }}
-                      >
-                        {item.description}
-                      </TableCell>
-                      <TableCell
-                        sx={{
+ <Box sx={{ p: 5, backgroundColor: "#f4f4f4", minHeight: "100vh" }}>
 
-                        }}
-                      >
-                        {item.jobCategory}
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                        
-                        }}
-                      >
-                        {item.jobType}
-                      </TableCell>
-                      <TableCell>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            gap: 1,
-                          }}
-                        >
+ <Grid container spacing={4} justifyContent="center">
+   {filteredJobRoles?.map((job) => (
+     <Grid item xs={12} sm={6} md={4} key={job.id}>
+       <motion.div
+         whileHover={{ scale: 1.05 }}
+         whileTap={{ scale: 0.95 }}
+       >
+         <Card
+           sx={{
+             background: "linear-gradient(to right, #6a11cb, #2575fc)",
+             color: "white",
+             boxShadow: 5,
+             borderRadius: 3,
+             overflow: "hidden",
+           }}
+         >
+           <CardContent>
+             <Typography variant="h5" fontWeight="bold" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+               <WorkIcon /> {job.title}
+             </Typography>
 
-                        </Box>
-                      </TableCell>
-                    </TableRow>
-                  </Fragment>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
+             <Box mt={1}>
+               <Chip label={job.jobCategory} color="secondary" sx={{ mr: 1, fontSize: "0.9rem" }} />
+               <Chip label={job.jobType} color="primary" sx={{ fontSize: "0.9rem" }} />
+             </Box>
+
+             <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+               <LocationOnIcon sx={{ mr: 1 }} /> {job.description}
+             </Typography>
+
+             <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+               <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
+             </Typography>
+
+             <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+               <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
+             </Typography>
+
+             <Button
+               variant="contained"
+               sx={{ mt: 2, backgroundColor: "#fff", color: "#6a11cb", fontWeight: "bold" }}
+               fullWidth
+             >
+               Apply Now
+             </Button>
+           </CardContent>
+         </Card>
+       </motion.div>
+     </Grid>
+   ))}
+ </Grid>
+</Box>
       )}
 
       {showNoMatchingAlert && (

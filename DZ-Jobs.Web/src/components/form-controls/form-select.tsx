@@ -31,8 +31,8 @@ export const FormSelectField = ({
   };
   return (
     <>
-     (
-        <TextField {...props}>
+
+      <TextField {...props}>
           {(options || []).map((item, index) => (
             <MenuItem
               key={index}
@@ -43,7 +43,6 @@ export const FormSelectField = ({
             </MenuItem>
           ))}
         </TextField>
-      ) || null
     </>
   );
 };

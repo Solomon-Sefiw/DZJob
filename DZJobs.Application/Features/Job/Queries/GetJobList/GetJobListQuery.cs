@@ -36,7 +36,7 @@ namespace DZJobs.Application.Features.Job.Queries.GetJobList
                 Title = job.Title,
                 Description = job.Description,
                 JobCategory = job.JobCategory,
-                JobType = job.JobType.ToString(),
+                JobType = job.JobType,
                 Salary = job.Salary,
                 PostedDate = job.PostedDate,
                 EmployerId = job.EmployerId,

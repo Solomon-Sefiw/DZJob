@@ -17,8 +17,9 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
 import * as Yup from "yup";
-import { CreateJobCommand, usePostApiJobCreateMutation } from "../../app/api";
-import { DialogHeader, Errors, FormTextField } from "../../components";
+import { CreateJobCommand, JobDto, usePostApiJobCreateMutation } from "../../app/api";
+import { JobCategory, JobType } from "../../app/api/enums";
+import { DialogHeader, Errors, FormSelectField, FormTextField } from "../../components";
 import { FormRichTextField } from "../../components/form-controls/from-reach-text";
 
 const emptyjobRoleData = {
@@ -47,19 +48,11 @@ export const JobRoleDialog = ({ onClose }: { onClose: () => void }) => {
   }, [emptyjobRoleData, jobRoleData]);
 
   const validationSchema = Yup.object({
-    roleName: Yup.string()
-      .required("Job Role Name is Required")
-      .max(100, "Job Role Name cannot exceed 100 characters"),
-    jobCatagoryId: Yup.number().required("Job Role Catagory is Required"),
-    jobRoleCategoryId: Yup.number().required(
-      "Job Role ,Role Catagory is Required"
-    ),
-    jobGradeId: Yup.number().required("Job Role Grade is Required"),
-    description: Yup.string().required("The Job Description is Required"),
+
   });
 
   const handleSubmit = useCallback(
-    (values: CreateJobCommand) => {
+    (values: JobDto) => {
       addJobRole({
         createJobCommand: values,
       })
@@ -123,48 +116,75 @@ export const JobRoleDialog = ({ onClose }: { onClose: () => void }) => {
                 )}
                 <Grid item xs={12}>
                   <FormTextField
-                    name="roleName"
-                    label="Job Role Name"
+                    name="title"
+                    label="Job Title"
                     type="text"
                     alwaysShowError={true}
                   />
                 </Grid>
-                {/* <Grid item xs={12}>
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <FormSelectField
-                      name="jobCatagoryId"
-                      label="Job Catagory"
-                      type="number"
-                      options={JobCatagoryLookups}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <FormSelectField
-                      name="jobRoleCategoryId"
-                      label="Job Role Catagory"
-                      type="number"
-                      options={jobRoleCatagoriesLookups}
-                    />
-                  </Box>
-                </Grid>
 
-                <Grid item xs={12}>
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <FormSelectField
-                      name="jobGradeId"
-                      label="Job Grade"
-                      type="number"
-                      options={JobGradesLookups}
-                    />
-                  </Box>
-                </Grid> */}
                 <Grid item xs={12}>
                   <Box sx={{ display: "flex", gap: 2 }}>
                     <FormRichTextField name="description" />
                   </Box>
                 </Grid>
+                <Grid container spacing={3}>
+                        {errors && (
+                            <Grid item xs={12}>
+                                <Errors errors={errors} />
+                            </Grid>
+                        )}
+                        <Grid item xs={12}>
+                        <FormSelectField
+                      name="jobCategory"
+                      label="Job Category"
+                      options={[
+                        {
+                          label: "IT",
+                          value: JobCategory.IT,
+                        },
+                        {
+                          label: "Master",
+                          value: JobCategory.Consulting,
+                        },
+                      ]}
+                    />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormSelectField
+                      name="jobType"
+                      label="Job Type"
+                      options={[
+                        {
+                          label: "FullTime",
+                          value: JobType.FullTime,
+                        },
+                        {
+                          label: "PartTime",
+                          value: JobType.PartTime,
+                        },
+                        {
+                          label: "Contract",
+                          value: JobType.Contract,
+                        },
+                        {
+                          label: "Freelance",
+                          value: JobType.Freelance,
+                        },
+                      ]}
+                    />
+                    </Grid>
+                    <Grid item xs={12}>
+              <FormTextField
+                name="salary"
+                type="number"
+                placeholder="Salary"
+                label="Salary"
+                fullWidth
+              />
+            </Grid>
+                    </Grid>
+
               </Grid>
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>

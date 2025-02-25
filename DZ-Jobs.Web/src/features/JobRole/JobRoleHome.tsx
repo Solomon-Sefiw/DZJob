@@ -28,7 +28,7 @@ export const JobRoleHome = () => {
   const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
   const navigate = useNavigate();
   const handleBackToHome = () => {
-    navigate("/setup");
+    navigate("/dashboard");
   };
   useEffect(() => {
     if (!searchInput) {
