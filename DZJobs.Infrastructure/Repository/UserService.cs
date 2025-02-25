@@ -169,6 +169,7 @@ namespace User.Managment.Service.Repository
         {
             // Find the user by email
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
+            
             if (user == null)
             {
                 return new ResponseDto
@@ -192,11 +193,12 @@ namespace User.Managment.Service.Repository
             }
 
             // If valid, generate the JWT token and return success
+            var role = await _userManager.GetRolesAsync(user);
             var jwtToken = await GetToken(user);
             return new ResponseDto
             {
                 Status = true,
-                Message = "Login Success",
+                Message = role[0],
                 StatusCode = StatusCodes.Status200OK,
                 Email = user.Email,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)

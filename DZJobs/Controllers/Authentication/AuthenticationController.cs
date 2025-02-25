@@ -109,8 +109,8 @@ namespace ANCIA.Controllers
             var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
-                var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+                //_emailService.SendEmail(message);
 
             }
             return Ok(new { token = response.Token, name = response.Message });
@@ -129,17 +129,16 @@ namespace ANCIA.Controllers
         //}
 
         [HttpPost("Confirm-OTP")]
-        public async Task<ActionResult<Response>> ConfirmOTP(string code, string email)
+        public async Task<ActionResult<Response>> ConfirmOTP(string code, string email) 
         {
             var response = await _userService.ConfirmOTPAsync(code,email);
             if(response.Status)
              return Ok(new Response { Status = response.Status,Message = response.Token,StatusCode = response.StatusCode });
             else
                 return BadRequest(new Response { Status = response.Status, Message = response.Token, StatusCode = response.StatusCode });
-
         }
 
-
+         
         [HttpPost("Forgot-Password")]
         public async Task<ActionResult<Response>> ForgetPassword([Required] string email)
         {

@@ -300,6 +300,22 @@ const injectedRtkApi = api.injectEndpoints({
     getApiJobById: build.query<GetApiJobByIdApiResponse, GetApiJobByIdApiArg>({
       query: (queryArg) => ({ url: `/api/Job/${queryArg.id}` }),
     }),
+    getJobCountByStatus: build.query<
+      GetJobCountByStatusApiResponse,
+      GetJobCountByStatusApiArg
+    >({
+      query: () => ({ url: `/api/Job/counts` }),
+    }),
+    getAllJob: build.query<GetAllJobApiResponse, GetAllJobApiArg>({
+      query: (queryArg) => ({
+        url: `/api/Job/allJob`,
+        params: {
+          status: queryArg.status,
+          pageNumber: queryArg.pageNumber,
+          pageSize: queryArg.pageSize,
+        },
+      }),
+    }),
     postApiJobApplications: build.mutation<
       PostApiJobApplicationsApiResponse,
       PostApiJobApplicationsApiArg
@@ -537,6 +553,15 @@ export type PutApiJobApiArg = {
 export type GetApiJobByIdApiResponse = /** status 200 OK */ JobDto;
 export type GetApiJobByIdApiArg = {
   id: number;
+};
+export type GetJobCountByStatusApiResponse =
+  /** status 200 OK */ JobCountsByStatus;
+export type GetJobCountByStatusApiArg = void;
+export type GetAllJobApiResponse = /** status 200 OK */ JobSearchResult;
+export type GetAllJobApiArg = {
+  status?: JobStatus;
+  pageNumber?: number;
+  pageSize?: number;
 };
 export type PostApiJobApplicationsApiResponse = unknown;
 export type PostApiJobApplicationsApiArg = {
@@ -914,7 +939,7 @@ export type JobDto = {
   postedDate?: string;
   employerId?: string | null;
   employerName?: string | null;
-  status?: string | null;
+  status?: JobStatus;
 };
 export type UpdateJobCommand = {
   jobId?: number;
@@ -924,6 +949,16 @@ export type UpdateJobCommand = {
   jobType?: number;
   salary?: number;
   status?: number;
+};
+export type JobCountsByStatus = {
+  approved?: number;
+  approvalRequests?: number;
+  rejected?: number;
+  drafts?: number;
+};
+export type JobSearchResult = {
+  items?: JobDto[] | null;
+  totalCount?: number;
 };
 export type CreateJobApplicationCommand = {
   jobId?: number;
@@ -1028,6 +1063,10 @@ export const {
   usePutApiJobMutation,
   useGetApiJobByIdQuery,
   useLazyGetApiJobByIdQuery,
+  useGetJobCountByStatusQuery,
+  useLazyGetJobCountByStatusQuery,
+  useGetAllJobQuery,
+  useLazyGetAllJobQuery,
   usePostApiJobApplicationsMutation,
   useGetApiJobApplicationsQuery,
   useLazyGetApiJobApplicationsQuery,

@@ -34,7 +34,7 @@ namespace DZJobs.Application.Jobs.Queries
                 PostedDate = job.PostedDate,
                 EmployerId = job.EmployerId,
                 EmployerName = job.Employer?.UserName ?? "Unknown",
-                Status = job.Status.ToString()
+                Status = job.Status
             }).ToList();
         }
     }

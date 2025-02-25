@@ -13,6 +13,6 @@ namespace DZJobs.Application.Jobs.DTOs
         public DateTime PostedDate { get; set; }
         public string EmployerId { get; set; }
         public string EmployerName { get; set; }  // Extra info about employer
-        public string Status { get; set; }  // Enum as string
+        public JobStatus Status { get; set; }  // Enum as string
     }
 }

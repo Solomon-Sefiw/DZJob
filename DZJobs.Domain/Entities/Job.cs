@@ -7,8 +7,6 @@ public class Job : BaseEntity
     public string Title { get; set; }
     public string Description { get; set; }
     public JobCategory JobCategory  { get; set; }
-
-
     public JobType JobType { get; set; }  // Enum: Full-time, Part-time, Freelance
     public decimal Salary { get; set; }
     public DateTime PostedDate { get; set; }

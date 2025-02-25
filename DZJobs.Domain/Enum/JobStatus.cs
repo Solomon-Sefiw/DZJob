@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HCMS.Domain.Enum
+namespace DZJobs.Domain.Enum
 {
-    public enum JobStatus
+    public enum JobStatus11
     {
         Active = 1,
         InActive = 2

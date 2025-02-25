@@ -12,8 +12,10 @@ import {
   RegisterNewUser
 } from "../features/SysAdmin";
 
-import { Dashboard, Login } from "../features";
+import { Login } from "../features";
 import { RegisterEducation } from "../features/Education/RegisterEducation";
+import { ApprovedJobRole, DraftJobRole, JobRoleApprovalRequests, JobRoleRejectedApprovalRequests } from "../features/JobRole/JobRoleGrids";
+import { JobRoleHome } from "../features/JobRole/JobRoleHome";
 import UserSkillSelector from "../features/Skill/UserSkillSelector";
 import { MFA } from "../features/user/mfa";
 import { RoleSelection } from "../features/user/RoleSelection";
@@ -43,12 +45,18 @@ const AppRoutes = () => {
       <Route path="employer-profile" element={<RegisterEmployerProfile />} />
       <Route path="education" element={<RegisterEducation />} />
       <Route path="skills" element={<UserSkillSelector />} />
+      <Route path="/dashboard" element={<JobRoleHome />}>
+        <Route index element={<ApprovedJobRole />} />
+        <Route path="approval-requests" element={<JobRoleApprovalRequests />} />
+        <Route path="rejected-approval-requests" element={<JobRoleRejectedApprovalRequests />}/>
+        <Route path="draft" element={<DraftJobRole />} />
+      </Route>
 
 
 
       <Route path="role-selection" element={<RoleSelection />} />
   
-      <Route path="dashboard" element={<Dashboard />} />
+      {/* <Route path="dashboard" element={<Dashboard />} /> */}
 
       {/* <Route element={<AuthenticatedRoutes />}> */}
         <Route path="/" element={<Navigate to="/login" replace />} />
