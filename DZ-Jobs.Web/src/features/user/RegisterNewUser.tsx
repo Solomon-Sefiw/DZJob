@@ -2,12 +2,12 @@ import { Box, Container, Paper, Typography } from "@mui/material";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RegisterUser, usePostApiAuthenticationCreateMutation } from "../../app/api";
+import { RegisterUser, useCreateUserMutation, } from "../../app/api";
 import { setUser } from "../../app/slices/authSlice";
 import { UserRegistrationForm } from "./UserRegistrationForm";
 export const RegisterNewUser = () => {
   const navigate = useNavigate();
-  const [registerUser, { error: registerUserError }] = usePostApiAuthenticationCreateMutation();
+  const [registerUser, { error: registerUserError }] = useCreateUserMutation();
   const dispatch = useDispatch();
 
   const onCancel = useCallback(() => {
@@ -17,18 +17,15 @@ export const RegisterNewUser = () => {
   const onSubmit = useCallback(
     async (user: RegisterUser) => {
       try {
-        const response = await registerUser({
-          registerUser: user,
-        }).unwrap();
-  
+        const response = await registerUser({ registerUser: user }).unwrap();
         if (response) {
           dispatch(
             setUser({
               userId: response.userId ?? "",
-              email: user.email ?? "",
-              username: user.username ?? "",
-              firstName: user.firstName ?? "",
-              lastName: user.lastName ?? "",
+              email: response.email ?? "",
+              username: response.username ?? "",
+              firstName: response.firstName ?? "",
+              lastName: response.lastName ?? "",
             })
           );
           navigate(`/role-selection`);
@@ -37,8 +34,9 @@ export const RegisterNewUser = () => {
         console.error("Registration error:", error);
       }
     },
-    [dispatch,navigate, registerUser]
+    [dispatch, navigate, registerUser]
   );
+  
   
   const errors = (registerUserError as any)?.data;
 

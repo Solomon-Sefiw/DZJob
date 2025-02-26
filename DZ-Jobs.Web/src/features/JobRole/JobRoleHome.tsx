@@ -12,16 +12,21 @@ import {
 import { useEffect, useState } from "react";
 
 import { ArrowBackIosNew } from "@mui/icons-material";
+import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useGetApiJobQuery, useGetJobCountByStatusQuery } from "../../app/api";
+import { useGetAllJobsQuery, useGetJobCountByStatusQuery } from "../../app/api";
+import { RootState } from "../../app/store";
 import { PageHeader } from "../../components";
 import { JobRoleDialog } from "./JobRoleDialog";
 import { JobRoleTabs } from "./JobRoleGrids/JobRoleTabs";
 
 export const JobRoleHome = () => {
+
+  const user = useSelector((state: RootState) => state.auth);
+  console.log(user)
   const [dialogOpened, setDialogOpened] = useState(false);
   const { data: JobRoleCounts } = useGetJobCountByStatusQuery();
-  const { data = [] } = useGetApiJobQuery();
+  const { data = [] } = useGetAllJobsQuery();
 
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -41,7 +46,7 @@ export const JobRoleHome = () => {
     <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <PageHeader
-          title={"Job Role"}
+          title={user.username}
           icon={<WorkIcon sx={{ fontSize: 15, color: "#1976d2" }} />}
         />
 
@@ -63,7 +68,7 @@ export const JobRoleHome = () => {
             },
           }}
         >
-          Add Job Role
+          Add Job
         </Button>
       </Box>
       <Box
@@ -157,7 +162,9 @@ export const JobRoleHome = () => {
           onClose={() => {
             setDialogOpened(false);
             window.location.reload();
+
           }}
+          employerId = {user.userId}
         />
       )}
     </Box>

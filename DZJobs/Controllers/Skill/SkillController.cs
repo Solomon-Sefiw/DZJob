@@ -12,29 +12,34 @@ namespace DZJobs.Controllers.Skill
     public class SkillController : BaseController<SkillController>
     {
 
-        [HttpPost]
+        [HttpPost("Create", Name = "CreateSkill")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> CreateSkill([FromBody] CreateSkillCommand command)
         {
             int skillId = await mediator.Send(command);
             return Ok(skillId);
         }
 
-        [HttpPut]
+        [HttpPut("update", Name = "UpdateSkill")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> UpdateSkill([FromBody] UpdateSkillCommand command)
         {
             int skillId = await mediator.Send(command);
             return Ok(skillId);
         }
 
-        [HttpGet("{id:int}")]
+
+        [HttpGet("getById{id:int}", Name = "GetSkillById")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<SkillDto>> GetSkillById(int id)
         {
             var skill = await mediator.Send(new GetSkillByIdQuery(id));
             return Ok(skill);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<SkillDto>>> GetAllSkills()
+        [HttpGet("all", Name = "GetAllSkill")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<List<SkillDto>>> GetAllSkill()
         {
             var skills = await mediator.Send(new GetAllSkillsQuery());
             return Ok(skills);

@@ -17,7 +17,8 @@ namespace DZJobs.Api.Controllers.Job
     [ApiController]
     public class JobController : BaseController<JobController>
     {
-        [HttpPost("create")]
+        [HttpPost("Create", Name = "CreateJob")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> CreateJob([FromBody] CreateJobCommand command)
         {
             //var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -27,19 +28,22 @@ namespace DZJobs.Api.Controllers.Job
             var jobId = await mediator.Send(command);
             return Ok(jobId);
         }
-        [HttpGet]
+        [HttpGet("allJobs", Name = "GetAllJobs")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<List<JobDto>>> GetAllJobs()
         {
             var jobs = await mediator.Send(new GetAllJobsQuery());
             return Ok(jobs);
         }
-        [HttpGet("{id:int}")]
+        [HttpGet("getById", Name = "GetJobCById")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<JobDto>> GetJobById(int id)
         {
             var job = await mediator.Send(new GetJobByIdQuery(id));
             return Ok(job);
         }
-        [HttpPut]
+        [HttpPut("update", Name = "UpdateJob")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> UpdateJob([FromBody] UpdateJobCommand command)
         {
             var JobId = await mediator.Send(command);
@@ -51,9 +55,9 @@ namespace DZJobs.Api.Controllers.Job
         {
             return await mediator.Send(new GetJobCountByStatusQuery());
         }
-        [HttpGet("allJob", Name = "GetAllJob")]
+        [HttpGet("allJobByStatus", Name = "GetAllJobByStatus")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<JobSearchResult>> GetJobLists(JobStatus status, int pageNumber, int pageSize)
+        public async Task<ActionResult<JobSearchResult>> GetAllJobByStatus(JobStatus status, int pageNumber, int pageSize)
         {
             var searchResult = await mediator.Send(new GetJobListQuery(status, pageNumber, pageSize));
 

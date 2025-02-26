@@ -198,35 +198,17 @@ namespace User.Managment.Service.Repository
             return new ResponseDto
             {
                 Status = true,
-                Message = role[0],
+                UserId = user.Id,
+                Message = "Success",
+                Role = role[0].ToString(),
                 StatusCode = StatusCodes.Status200OK,
                 Email = user.Email,
+                Username = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Token = new JwtSecurityTokenHandler().WriteToken(jwtToken)
             };
         }
-
-
-        //public async Task<ResponseDto> ConfirmOTPAsync(string code, string email)
-        //{
-        //    //var user = await _userManager.FindByEmailAsync(email);
-        //    var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == email);
-        //    var signIn = await _signInManager.TwoFactorSignInAsync("Email", code, false, false);
-        //    if (user != null)
-        //    {
-        //        if (signIn.Succeeded)
-        //        {
-        //            var jwtToken = await GetToken(user);
-        //            return new ResponseDto { Status = true, Message = "Login Success ", StatusCode = StatusCodes.Status200OK, Email = user.Email!, Token = new JwtSecurityTokenHandler().WriteToken(jwtToken) };
-        //        }
-        //        //if not Exist
-        //        else
-        //            return new ResponseDto { Status = false, Message = $"Incorrect OTP Please Check Your Email {user.Email} And Try Again !!", StatusCode = StatusCodes.Status401Unauthorized };
-        //    }
-        //    //if not Exist
-        //    else
-        //        return new ResponseDto { Status = false, Message = $"your Email {user!.Email} Is Not Exist Please Check It.", StatusCode = StatusCodes.Status404NotFound };
-
-        //}
 
         public async Task<ResponseDto> CreateuserAsync(RegisterUser registerUser)
         {
@@ -269,13 +251,15 @@ namespace User.Managment.Service.Repository
                 return new ResponseDto
                 {
                     Status = true,
-                    Message = $"User Created Successfully And Password is Sent, Please Comform The Email By Click the Link on Email : {newUser.Email}"
-                    ,
+                    Message = $"User Created Successfully And Password is Sent, Please Comform The Email By Click the Link on Email : {newUser.Email}",
                     StatusCode = StatusCodes.Status201Created,
                     Token = token,
                     Email = newUser.Email,
                     Password = registerUser.password,
-                    UserId = newUser.Id
+                    UserId = newUser.Id,
+                    Username = newUser.UserName,
+                    FirstName = newUser.FirstName,
+                    LastName = newUser.LastName
                 };
             }
             else
@@ -321,6 +305,7 @@ namespace User.Managment.Service.Repository
                 {
                     Status = true,
                     Email = user.Email,
+                    Username = user.UserName,
                     Message = $"We have sent an OTP to {user.Email}. Please confirm ASAP.",
                     StatusCode = StatusCodes.Status202Accepted,
                     Token = token
@@ -334,7 +319,7 @@ namespace User.Managment.Service.Repository
                 return new ResponseDto
                 {
                     Status = true,
-                    Message = user.UserName,
+                    Username = user.UserName,
                     StatusCode = StatusCodes.Status200OK,
                     Token = new JwtSecurityTokenHandler().WriteToken(jwtToken),
                     Email = user.Email

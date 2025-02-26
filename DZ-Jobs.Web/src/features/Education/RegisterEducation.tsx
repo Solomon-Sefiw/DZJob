@@ -3,14 +3,14 @@ import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 //import { EducationDto, RootState, usePostApiEducationsMutation } from "../../app/store";
-import { EducationDto, usePostApiEducationsMutation } from "../../app/api";
+import { EducationDto, useCreateEducationMutation, } from "../../app/api";
 import { RootState } from "../../app/store";
 import { EducationForm } from "./EducationForm";
 
 export const RegisterEducation = () => {
   const { userId } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
-  const [createEducation, { error: createEducationError }] = usePostApiEducationsMutation();
+  const [createEducation, { error: createEducationError }] = useCreateEducationMutation();
   console.log(userId);
   const onCancel = useCallback(() => {
     navigate("/profile"); // Adjust navigation based on your app structure

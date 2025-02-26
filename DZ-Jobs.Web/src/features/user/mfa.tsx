@@ -5,7 +5,9 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
-import { usePostApiAuthenticationConfirmOtpMutation } from "../../app/api";
+import { useDispatch } from "react-redux";
+import { useConfirmOtpMutation } from "../../app/api";
+import { setUser } from "../../app/slices/authSlice";
 import { Errors, FormTextField } from "../../components";
 import { YupShape } from "../../utils";
 
@@ -24,9 +26,10 @@ const initialValues = {
 
 export const MFA = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [verify, { error: verifyError, isLoading, reset }] =
-    usePostApiAuthenticationConfirmOtpMutation();
+    useConfirmOtpMutation();
     const email = localStorage.getItem("email");
   console.log(email)
     if (!email) {
@@ -35,20 +38,34 @@ export const MFA = () => {
     }
     
     const handleSubmit = useCallback(
-      (values: MFAFormFields) => {
-        reset();
-        verify({
-          code: values.code,
-          email: email, // email is now guaranteed to be a string
-        })
-          .unwrap()
-          .then(() => {
-            navigate(`/dashboard`);
-          })
-          .catch(() => {});
+      async (values: MFAFormFields) => {
+        try {
+          reset();
+          const response = await verify({
+            code: values.code,
+            email: email, // email is now guaranteed to be a string
+          }).unwrap();
+    
+                  if (response) {
+                    dispatch(
+                      setUser({
+                        userId: response.userId ?? "",
+                        email: response.email ?? "",
+                        username: response.username ?? "",
+                        firstName: response.firstName ?? "",
+                        lastName: response.lastName ?? "",
+                        role: response.role ?? "",
+                      })
+                    );
+                    navigate(`/dashboard`);
+                  }
+        } catch (error) {
+          console.error("MFA verification failed:", error);
+        }
       },
       [email, navigate, reset, verify]
     );
+    
     
 
   return (

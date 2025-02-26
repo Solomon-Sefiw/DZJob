@@ -17,7 +17,7 @@ import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
 import * as Yup from "yup";
-import { CreateJobCommand, JobDto, usePostApiJobCreateMutation } from "../../app/api";
+import { CreateJobCommand, JobDto, useCreateJobMutation } from "../../app/api";
 import { JobCategory, JobType } from "../../app/api/enums";
 import { DialogHeader, Errors, FormSelectField, FormTextField } from "../../components";
 import { FormRichTextField } from "../../components/form-controls/from-reach-text";
@@ -30,12 +30,12 @@ const emptyjobRoleData = {
   jobGradeId: "",
 } as any;
 
-export const JobRoleDialog = ({ onClose }: { onClose: () => void }) => {
+export const JobRoleDialog = ({ onClose ,employerId}: { onClose: () => void ,employerId : string}) => {
   const [jobRoleData, setJobRole] = useState<CreateJobCommand>();
   const [message, setMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();
 
-  const [addJobRole, { error: AddJobRoleError }] = usePostApiJobCreateMutation();
+  const [addJobRole, { error: AddJobRoleError }] = useCreateJobMutation();
   // const { JobCatagoryLookups } = useJobCatagory();
   // const { JobGradesLookups } = useJobGrade();
   // const { jobRoleCatagoriesLookups } = useJobRoleCategories();
@@ -53,20 +53,21 @@ export const JobRoleDialog = ({ onClose }: { onClose: () => void }) => {
 
   const handleSubmit = useCallback(
     (values: JobDto) => {
+      values.employerId = employerId;
       addJobRole({
         createJobCommand: values,
       })
         .unwrap()
         .then(() => {
           setAlertSeverity("success");
-          setMessage("JobRole Added successfully!");
+          setMessage("Job Added successfully!");
           setTimeout(() => {
             onClose();
             window.location.reload();
-          }, 2000);
+          }, 0);
         })
         .catch((error) => {
-          // Handle error appropriately
+          console.log(error);
         });
     },
     [onClose, addJobRole]

@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Fragment, useState } from "react";
 import { useOutletContext } from "react-router-dom";
-import { JobDto, useGetAllJobQuery, useGetJobCountByStatusQuery } from "../../../app/api";
+import { JobDto, useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/api";
 import { Pagination } from "../../../components/Pagination";
 export const JobRoleApprovalRequests = () => {
   const [pagination, setPagination] = useState<{
@@ -25,7 +25,7 @@ export const JobRoleApprovalRequests = () => {
   const { data: counts, isLoading: isCountsLoading } =
     useGetJobCountByStatusQuery();
 
-  const { data: items, isLoading: isListLoading } = useGetAllJobQuery({
+  const { data: items, isLoading: isListLoading } = useGetAllJobByStatusQuery({
     pageNumber: pagination.pageNumber + 1,
     pageSize: pagination.pageSize,
     status: 2,
@@ -41,24 +41,24 @@ export const JobRoleApprovalRequests = () => {
 
   const showNoMatchingAlert = searchQuery && filteredJobRoles.length === 0;
 
-  const [dialogOpened, setDialogOpened] = useState(false);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  // const [dialogOpened, setDialogOpened] = useState(false);
+  // const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  const handleDialogClose = () => {
-    setDialogOpened(false);
-    setSelectedId(null);
-  };
+  // const handleDialogClose = () => {
+  //   setDialogOpened(false);
+  //   setSelectedId(null);
+  // };
 
-  const handleDialogOpen = (id: number) => {
-    setDialogOpened(true);
-    setSelectedId(id);
-  };
+  // const handleDialogOpen = (id: number) => {
+  //   setDialogOpened(true);
+  //   setSelectedId(id);
+  // };
 
   const isLoading = isCountsLoading || isListLoading;
 
   return (
     <Box>
-      {!isLoading && !!counts?.drafts && (
+      {!isLoading && !!counts?.inProgress && (
         <Paper>
           <TableContainer>
             <Table size="medium">
@@ -145,7 +145,7 @@ export const JobRoleApprovalRequests = () => {
         pageNumber={pagination.pageNumber}
         pageSize={pagination.pageSize}
         onChange={setPagination}
-        totalRowsCount={counts?.drafts}
+        totalRowsCount={counts?.inProgress}
         rowsPerPageOptions={[10, 20, 50]}
       />
 

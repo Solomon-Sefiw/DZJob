@@ -12,8 +12,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   UpdatePermissionDto,
-  usePostApiAuthenticationGiveEmployerRoleMutation,
-  usePostApiAuthenticationGiveFreelancerRoleMutation,
+  useMakeUserAdminMutation,
+  useMakeUserEmployerMutation,
 } from "../../app/api";
 import { RootState } from "../../app/store";
 
@@ -24,10 +24,10 @@ import { RootState } from "../../app/store";
   
   export const RoleSelection = () => {
     const navigate = useNavigate();
-    const [giveFreelancerRole] = usePostApiAuthenticationGiveFreelancerRoleMutation();
-    const [giveEmployerRole] = usePostApiAuthenticationGiveEmployerRoleMutation();
+    const [giveFreelancerRole] = useMakeUserAdminMutation();
+    const [giveEmployerRole] = useMakeUserEmployerMutation();
   
-    // Retrieve the user's email from local storage.
+    // Retrieve the user's email from Redux storage.
 
     const {email} = useSelector(
       (state: RootState) => state.auth

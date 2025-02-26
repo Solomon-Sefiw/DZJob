@@ -13,28 +13,32 @@ namespace DZJobs.Controllers.FreelancerProfile
     {
 
 
-        [HttpPost]
+        [HttpPost("Create", Name = "CreateFreelancerProfile")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> CreateFreelancerProfile([FromBody] CreateFreelancerProfileCommand command)
         {
             var id = await mediator.Send(command);
-            return CreatedAtAction(nameof(GetFreelancerProfileById), new { id }, id);
+            return Ok(id);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("getById{id:int}", Name = "GetFreelancerProfileById")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<FreelancerProfileDto>> GetFreelancerProfileById(int id)
         {
             var profile = await mediator.Send(new GetFreelancerProfileByIdQuery(id));
             return Ok(profile);
         }
 
-        [HttpGet]
+        [HttpGet("all", Name = "GetAllFreelancerProfiles")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<List<FreelancerProfileDto>>> GetAllFreelancerProfiles()
         {
             var profiles = await mediator.Send(new GetAllFreelancerProfilesQuery());
             return Ok(profiles);
         }
 
-        [HttpPut]
+        [HttpPut("update", Name = "UpdateFreelancerProfile")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> UpdateFreelancerProfile([FromBody] UpdateFreelancerProfileCommand command)
         {
             var profileId = await mediator.Send(command);

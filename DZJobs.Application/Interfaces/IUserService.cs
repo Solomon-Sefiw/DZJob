@@ -1,12 +1,5 @@
 ﻿using DZJobs.Application.Models.Authentication.Login;
 using DZJobs.Application.Models.Authentication.Signup;
-using DZJobs.Domain.User;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using User.Managment.Service.Models.Authentication;
 using User.Managment.Service.Models.DTO;

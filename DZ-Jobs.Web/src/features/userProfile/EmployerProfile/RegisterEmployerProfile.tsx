@@ -2,14 +2,14 @@ import { Box, Container, Paper, Typography } from "@mui/material";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { EmployerProfileDto, usePostApiEmployerProfileMutation } from "../../../app/api";
+import { EmployerProfileDto, useCreateEmployerProfileMutation, } from "../../../app/api";
 import { RootState } from "../../../app/store";
 import { EmployerProfileForm } from "./EmployerProfileForm";
 
 export const RegisterEmployerProfile = () => {
   const { userId } = useSelector((state: RootState) => state.auth);
   const navigate = useNavigate();
-  const [createProfile, { error: createProfileError }] = usePostApiEmployerProfileMutation();
+  const [createProfile, { error: createProfileError }] = useCreateEmployerProfileMutation();
 
   const onCancel = useCallback(() => {
     navigate("/role-selection"); // Adjust navigation based on your app structure

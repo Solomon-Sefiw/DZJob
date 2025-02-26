@@ -1,16 +1,16 @@
 import CloseIcon from "@mui/icons-material/Close";
 import {
-    Box,
-    Button,
-    Chip,
-    CircularProgress,
-    Paper,
-    TextField,
-    Typography,
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Paper,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetApiSkillQuery, usePostApiUserSkillsMutation } from "../../app/api";
+import { useAddUserSkillMutation, useGetAllSkillQuery } from "../../app/api";
 import { RootState } from "../../app/store";
   
   interface Skill {
@@ -20,8 +20,8 @@ import { RootState } from "../../app/store";
   
   const UserSkillSelector = () => {
     const { userId } = useSelector((state: RootState) => state.auth);
-    const { data: skills, isLoading, error } = useGetApiSkillQuery();
-    const [addUserSkill, { isLoading: isSaving }] = usePostApiUserSkillsMutation();
+    const { data: skills, isLoading, error } = useGetAllSkillQuery();
+    const [addUserSkill, { isLoading: isSaving }] = useAddUserSkillMutation();
     const [selectedSkills, setSelectedSkills] = useState<Skill[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredSkills, setFilteredSkills] = useState<Skill[]>([]);

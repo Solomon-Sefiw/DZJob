@@ -12,33 +12,33 @@ interface TabProps {
 }
 
 const getTabs = ({
-  approvalRequests,
-  rejected,
-  drafts,
-  approved,
+  inProgress,
+  archived,
+  open,
+  closed,
 }: JobCountsByStatus = {}): TabProps[] => [
   {
-    label: "JobRole",
+    label: "Jobs",
     href: "/dashboard",
-    counts: approved,
+    counts: closed,
     color: "success",
   },
   {
-    label: "Approval Requests",
+    label: "In Progress",
     href: "/dashboard/approval-requests",
-    counts: approvalRequests,
+    counts: inProgress,
     color: "success",
   },
   {
-    label: "Rejected",
+    label: "Archived",
     href: "/dashboard/rejected-approval-requests",
-    counts: rejected,
+    counts: archived,
     color: "error",
   },
   {
-    label: "Draft",
+    label: "Open",
     href: "/dashboard/draft",
-    counts: drafts,
+    counts: open,
     color: "info",
   },
 ];

@@ -27,7 +27,7 @@ export const Signature = forwardRef<SignatureHandle, Props>(
       width?: number;
       height: number;
     }>({ height: 160, width: 400 });
-    const signaturePad = useRef<SignaturePad>();
+    const signaturePad = useRef<SignaturePad>(null);
 
     useImperativeHandle(ref, () => ({
       getSignature: async () => {

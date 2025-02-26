@@ -1,6 +1,6 @@
 import UploadIcon from "@mui/icons-material/Upload";
 import { Button } from "@mui/material";
-import { useCallback, useMemo } from "react";
+import { JSX, useCallback, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 
 export type FileTypes = "Image" | "PDF";

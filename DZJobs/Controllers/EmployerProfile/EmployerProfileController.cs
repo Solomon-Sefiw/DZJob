@@ -12,28 +12,33 @@ namespace DZJobs.Controllers.EmployerProfile
     [ApiController]
     public class EmployerProfileController : BaseController<EmployerProfileController>
     {
-        [HttpPost]
+        [HttpPost("Create", Name = "CreateEmployerProfile")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> CreateEmployerProfile([FromBody] CreateEmployerProfileCommand command)
         {
             int profileId = await mediator.Send(command);
             return Ok(profileId);
         }
 
-        [HttpPut]
+
+        [HttpPut("Create", Name = "UpdateEmployerProfile")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> UpdateEmployerProfile([FromBody] UpdateEmployerProfileCommand command)
         {
             int id = await mediator.Send(command);
             return Ok(id);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("getById{id:int}", Name = "GetEmployerProfileById")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<EmployerProfileDto>> GetEmployerProfileById(int id)
         {
             var profile = await mediator.Send(new GetEmployerProfileByIdQuery(id));
             return Ok(profile);
         }
 
-        [HttpGet]
+        [HttpGet("all", Name = "GetAllEmployerProfile")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<List<EmployerProfileDto>>> GetAllEmployerProfiles()
         {
             var profiles = await mediator.Send(new GetAllEmployerProfilesQuery());

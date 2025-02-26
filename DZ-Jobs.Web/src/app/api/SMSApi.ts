@@ -7,84 +7,69 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: () => ({ url: `/api/Authentication/seed-Roles`, method: "POST" }),
     }),
-    postApiAuthenticationGiveFreelancerRole: build.mutation<
-      PostApiAuthenticationGiveFreelancerRoleApiResponse,
-      PostApiAuthenticationGiveFreelancerRoleApiArg
+    makeUserFreelancer: build.mutation<
+      MakeUserFreelancerApiResponse,
+      MakeUserFreelancerApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Authentication/Give-Freelancer-Role`,
+        url: `/api/Authentication/addRole/Freelancer`,
         method: "POST",
         body: queryArg.updatePermissionDto,
       }),
     }),
-    postApiAuthenticationGiveAdminRole: build.mutation<
-      PostApiAuthenticationGiveAdminRoleApiResponse,
-      PostApiAuthenticationGiveAdminRoleApiArg
+    makeUserAdmin: build.mutation<
+      MakeUserAdminApiResponse,
+      MakeUserAdminApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Authentication/Give-Admin-Role`,
+        url: `/api/Authentication/addRole/Admin`,
         method: "POST",
         body: queryArg.updatePermissionDto,
       }),
     }),
-    postApiAuthenticationGiveEmployerRole: build.mutation<
-      PostApiAuthenticationGiveEmployerRoleApiResponse,
-      PostApiAuthenticationGiveEmployerRoleApiArg
+    makeUserEmployer: build.mutation<
+      MakeUserEmployerApiResponse,
+      MakeUserEmployerApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Authentication/Give-Employer-Role`,
+        url: `/api/Authentication/addRole/Employer`,
         method: "POST",
         body: queryArg.updatePermissionDto,
       }),
     }),
-    getApiAuthenticationGetAllUser: build.query<
-      GetApiAuthenticationGetAllUserApiResponse,
-      GetApiAuthenticationGetAllUserApiArg
-    >({
-      query: () => ({ url: `/api/Authentication/GetAllUser` }),
+    getAllUser: build.query<GetAllUserApiResponse, GetAllUserApiArg>({
+      query: () => ({ url: `/api/Authentication/GetAll` }),
     }),
-    postApiAuthenticationCreate: build.mutation<
-      PostApiAuthenticationCreateApiResponse,
-      PostApiAuthenticationCreateApiArg
-    >({
+    createUser: build.mutation<CreateUserApiResponse, CreateUserApiArg>({
       query: (queryArg) => ({
         url: `/api/Authentication/Create`,
         method: "POST",
         body: queryArg.registerUser,
       }),
     }),
-    getApiAuthenticationConfiremEmailAuto: build.query<
-      GetApiAuthenticationConfiremEmailAutoApiResponse,
-      GetApiAuthenticationConfiremEmailAutoApiArg
-    >({
+    confirmEmail: build.query<ConfirmEmailApiResponse, ConfirmEmailApiArg>({
       query: (queryArg) => ({
-        url: `/api/Authentication/Confirem Email/Auto`,
+        url: `/api/Authentication/Confirem/Auto`,
         params: { token: queryArg.token, email: queryArg.email },
       }),
     }),
-    postApiAuthenticationLogin: build.mutation<
-      PostApiAuthenticationLoginApiResponse,
-      PostApiAuthenticationLoginApiArg
-    >({
+    login: build.mutation<LoginApiResponse, LoginApiArg>({
       query: (queryArg) => ({
-        url: `/api/Authentication/Login`,
+        url: `/api/Authentication/login`,
         method: "POST",
         body: queryArg.login,
       }),
     }),
-    postApiAuthenticationConfirmOtp: build.mutation<
-      PostApiAuthenticationConfirmOtpApiResponse,
-      PostApiAuthenticationConfirmOtpApiArg
-    >({
+    confirmOtp: build.mutation<ConfirmOtpApiResponse, ConfirmOtpApiArg>({
       query: (queryArg) => ({
         url: `/api/Authentication/Confirm-OTP`,
         method: "POST",
         params: { code: queryArg.code, email: queryArg.email },
       }),
     }),
-    postApiAuthenticationForgotPassword: build.mutation<
-      PostApiAuthenticationForgotPasswordApiResponse,
-      PostApiAuthenticationForgotPasswordApiArg
+    forgetPassword: build.mutation<
+      ForgetPasswordApiResponse,
+      ForgetPasswordApiArg
     >({
       query: (queryArg) => ({
         url: `/api/Authentication/Forgot-Password`,
@@ -92,19 +77,13 @@ const injectedRtkApi = api.injectEndpoints({
         params: { email: queryArg.email },
       }),
     }),
-    getApiAuthenticationResetPasswordAuto: build.query<
-      GetApiAuthenticationResetPasswordAutoApiResponse,
-      GetApiAuthenticationResetPasswordAutoApiArg
-    >({
+    resetPassword: build.query<ResetPasswordApiResponse, ResetPasswordApiArg>({
       query: (queryArg) => ({
         url: `/api/Authentication/Reset-Password/Auto`,
         params: { token: queryArg.token, email: queryArg.email },
       }),
     }),
-    postApiAuthenticationResetPassword: build.mutation<
-      PostApiAuthenticationResetPasswordApiResponse,
-      PostApiAuthenticationResetPasswordApiArg
-    >({
+    passwordRest: build.mutation<PasswordRestApiResponse, PasswordRestApiArg>({
       query: (queryArg) => ({
         url: `/api/Authentication/Reset-Password`,
         method: "POST",
@@ -117,133 +96,140 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: () => ({ url: `/api/Authentication/Test Email` }),
     }),
-    postApiEducations: build.mutation<
-      PostApiEducationsApiResponse,
-      PostApiEducationsApiArg
+    createEducation: build.mutation<
+      CreateEducationApiResponse,
+      CreateEducationApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Educations`,
+        url: `/api/Educations/Create`,
         method: "POST",
         body: queryArg.createEducationCommand,
       }),
     }),
-    putApiEducations: build.mutation<
-      PutApiEducationsApiResponse,
-      PutApiEducationsApiArg
+    updateEducation: build.mutation<
+      UpdateEducationApiResponse,
+      UpdateEducationApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Educations`,
+        url: `/api/Educations/update`,
         method: "PUT",
         body: queryArg.updateEducationCommand,
       }),
     }),
-    getApiEducations: build.query<
-      GetApiEducationsApiResponse,
-      GetApiEducationsApiArg
+    getEducationById: build.query<
+      GetEducationByIdApiResponse,
+      GetEducationByIdApiArg
     >({
-      query: () => ({ url: `/api/Educations` }),
+      query: (queryArg) => ({ url: `/api/Educations/getById${queryArg.id}` }),
     }),
-    getApiEducationsById: build.query<
-      GetApiEducationsByIdApiResponse,
-      GetApiEducationsByIdApiArg
+    getAllEducation: build.query<
+      GetAllEducationApiResponse,
+      GetAllEducationApiArg
     >({
-      query: (queryArg) => ({ url: `/api/Educations/${queryArg.id}` }),
+      query: () => ({ url: `/api/Educations/all` }),
     }),
-    postApiEmployerProfile: build.mutation<
-      PostApiEmployerProfileApiResponse,
-      PostApiEmployerProfileApiArg
+    createEmployerProfile: build.mutation<
+      CreateEmployerProfileApiResponse,
+      CreateEmployerProfileApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/EmployerProfile`,
+        url: `/api/EmployerProfile/Create`,
         method: "POST",
         body: queryArg.createEmployerProfileCommand,
       }),
     }),
-    putApiEmployerProfile: build.mutation<
-      PutApiEmployerProfileApiResponse,
-      PutApiEmployerProfileApiArg
+    updateEmployerProfile: build.mutation<
+      UpdateEmployerProfileApiResponse,
+      UpdateEmployerProfileApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/EmployerProfile`,
+        url: `/api/EmployerProfile/Create`,
         method: "PUT",
         body: queryArg.updateEmployerProfileCommand,
       }),
     }),
-    getApiEmployerProfile: build.query<
-      GetApiEmployerProfileApiResponse,
-      GetApiEmployerProfileApiArg
-    >({
-      query: () => ({ url: `/api/EmployerProfile` }),
-    }),
-    getApiEmployerProfileById: build.query<
-      GetApiEmployerProfileByIdApiResponse,
-      GetApiEmployerProfileByIdApiArg
-    >({
-      query: (queryArg) => ({ url: `/api/EmployerProfile/${queryArg.id}` }),
-    }),
-    postApiEmploymentHistory: build.mutation<
-      PostApiEmploymentHistoryApiResponse,
-      PostApiEmploymentHistoryApiArg
+    getEmployerProfileById: build.query<
+      GetEmployerProfileByIdApiResponse,
+      GetEmployerProfileByIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/EmploymentHistory`,
+        url: `/api/EmployerProfile/getById${queryArg.id}`,
+      }),
+    }),
+    getAllEmployerProfile: build.query<
+      GetAllEmployerProfileApiResponse,
+      GetAllEmployerProfileApiArg
+    >({
+      query: () => ({ url: `/api/EmployerProfile/all` }),
+    }),
+    createEmploymentHistory: build.mutation<
+      CreateEmploymentHistoryApiResponse,
+      CreateEmploymentHistoryApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/EmploymentHistory/Create`,
         method: "POST",
         body: queryArg.createEmploymentHistoryCommand,
       }),
     }),
-    getApiEmploymentHistory: build.query<
-      GetApiEmploymentHistoryApiResponse,
-      GetApiEmploymentHistoryApiArg
-    >({
-      query: () => ({ url: `/api/EmploymentHistory` }),
-    }),
-    putApiEmploymentHistoryById: build.mutation<
-      PutApiEmploymentHistoryByIdApiResponse,
-      PutApiEmploymentHistoryByIdApiArg
+    updateEmploymentHistory: build.mutation<
+      UpdateEmploymentHistoryApiResponse,
+      UpdateEmploymentHistoryApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/EmploymentHistory/${queryArg.id}`,
+        url: `/api/EmploymentHistory/update`,
         method: "PUT",
         body: queryArg.updateEmploymentHistoryCommand,
+        params: { id: queryArg.id },
       }),
     }),
-    getApiEmploymentHistoryById: build.query<
-      GetApiEmploymentHistoryByIdApiResponse,
-      GetApiEmploymentHistoryByIdApiArg
-    >({
-      query: (queryArg) => ({ url: `/api/EmploymentHistory/${queryArg.id}` }),
-    }),
-    postApiFreelancerProfile: build.mutation<
-      PostApiFreelancerProfileApiResponse,
-      PostApiFreelancerProfileApiArg
+    getEmploymentHistoryById: build.query<
+      GetEmploymentHistoryByIdApiResponse,
+      GetEmploymentHistoryByIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/FreelancerProfile`,
+        url: `/api/EmploymentHistory/getById${queryArg.id}`,
+      }),
+    }),
+    getAllEmploymentHistory: build.query<
+      GetAllEmploymentHistoryApiResponse,
+      GetAllEmploymentHistoryApiArg
+    >({
+      query: () => ({ url: `/api/EmploymentHistory/all` }),
+    }),
+    createFreelancerProfile: build.mutation<
+      CreateFreelancerProfileApiResponse,
+      CreateFreelancerProfileApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/FreelancerProfile/Create`,
         method: "POST",
         body: queryArg.createFreelancerProfileCommand,
       }),
     }),
-    getApiFreelancerProfile: build.query<
-      GetApiFreelancerProfileApiResponse,
-      GetApiFreelancerProfileApiArg
-    >({
-      query: () => ({ url: `/api/FreelancerProfile` }),
-    }),
-    putApiFreelancerProfile: build.mutation<
-      PutApiFreelancerProfileApiResponse,
-      PutApiFreelancerProfileApiArg
+    getFreelancerProfileById: build.query<
+      GetFreelancerProfileByIdApiResponse,
+      GetFreelancerProfileByIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/FreelancerProfile`,
+        url: `/api/FreelancerProfile/getById${queryArg.id}`,
+      }),
+    }),
+    getAllFreelancerProfiles: build.query<
+      GetAllFreelancerProfilesApiResponse,
+      GetAllFreelancerProfilesApiArg
+    >({
+      query: () => ({ url: `/api/FreelancerProfile/all` }),
+    }),
+    updateFreelancerProfile: build.mutation<
+      UpdateFreelancerProfileApiResponse,
+      UpdateFreelancerProfileApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/FreelancerProfile/update`,
         method: "PUT",
         body: queryArg.updateFreelancerProfileCommand,
       }),
-    }),
-    getApiFreelancerProfileById: build.query<
-      GetApiFreelancerProfileByIdApiResponse,
-      GetApiFreelancerProfileByIdApiArg
-    >({
-      query: (queryArg) => ({ url: `/api/FreelancerProfile/${queryArg.id}` }),
     }),
     postApiGeolocation: build.mutation<
       PostApiGeolocationApiResponse,
@@ -277,28 +263,28 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({ url: `/api/Geolocation/${queryArg.id}` }),
     }),
-    postApiJobCreate: build.mutation<
-      PostApiJobCreateApiResponse,
-      PostApiJobCreateApiArg
-    >({
+    createJob: build.mutation<CreateJobApiResponse, CreateJobApiArg>({
       query: (queryArg) => ({
-        url: `/api/Job/create`,
+        url: `/api/Job/Create`,
         method: "POST",
         body: queryArg.createJobCommand,
       }),
     }),
-    getApiJob: build.query<GetApiJobApiResponse, GetApiJobApiArg>({
-      query: () => ({ url: `/api/Job` }),
+    getAllJobs: build.query<GetAllJobsApiResponse, GetAllJobsApiArg>({
+      query: () => ({ url: `/api/Job/allJobs` }),
     }),
-    putApiJob: build.mutation<PutApiJobApiResponse, PutApiJobApiArg>({
+    getJobCById: build.query<GetJobCByIdApiResponse, GetJobCByIdApiArg>({
       query: (queryArg) => ({
-        url: `/api/Job`,
+        url: `/api/Job/getById`,
+        params: { id: queryArg.id },
+      }),
+    }),
+    updateJob: build.mutation<UpdateJobApiResponse, UpdateJobApiArg>({
+      query: (queryArg) => ({
+        url: `/api/Job/update`,
         method: "PUT",
         body: queryArg.updateJobCommand,
       }),
-    }),
-    getApiJobById: build.query<GetApiJobByIdApiResponse, GetApiJobByIdApiArg>({
-      query: (queryArg) => ({ url: `/api/Job/${queryArg.id}` }),
     }),
     getJobCountByStatus: build.query<
       GetJobCountByStatusApiResponse,
@@ -306,9 +292,12 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: () => ({ url: `/api/Job/counts` }),
     }),
-    getAllJob: build.query<GetAllJobApiResponse, GetAllJobApiArg>({
+    getAllJobByStatus: build.query<
+      GetAllJobByStatusApiResponse,
+      GetAllJobByStatusApiArg
+    >({
       query: (queryArg) => ({
-        url: `/api/Job/allJob`,
+        url: `/api/Job/allJobByStatus`,
         params: {
           status: queryArg.status,
           pageNumber: queryArg.pageNumber,
@@ -348,51 +337,44 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({ url: `/api/JobApplications/${queryArg.id}` }),
     }),
-    postApiSkill: build.mutation<PostApiSkillApiResponse, PostApiSkillApiArg>({
+    createSkill: build.mutation<CreateSkillApiResponse, CreateSkillApiArg>({
       query: (queryArg) => ({
-        url: `/api/Skill`,
+        url: `/api/Skill/Create`,
         method: "POST",
         body: queryArg.createSkillCommand,
       }),
     }),
-    putApiSkill: build.mutation<PutApiSkillApiResponse, PutApiSkillApiArg>({
+    updateSkill: build.mutation<UpdateSkillApiResponse, UpdateSkillApiArg>({
       query: (queryArg) => ({
-        url: `/api/Skill`,
+        url: `/api/Skill/update`,
         method: "PUT",
         body: queryArg.updateSkillCommand,
       }),
     }),
-    getApiSkill: build.query<GetApiSkillApiResponse, GetApiSkillApiArg>({
-      query: () => ({ url: `/api/Skill` }),
+    getSkillById: build.query<GetSkillByIdApiResponse, GetSkillByIdApiArg>({
+      query: (queryArg) => ({ url: `/api/Skill/getById${queryArg.id}` }),
     }),
-    getApiSkillById: build.query<
-      GetApiSkillByIdApiResponse,
-      GetApiSkillByIdApiArg
-    >({
-      query: (queryArg) => ({ url: `/api/Skill/${queryArg.id}` }),
+    getAllSkill: build.query<GetAllSkillApiResponse, GetAllSkillApiArg>({
+      query: () => ({ url: `/api/Skill/all` }),
     }),
-    getApiUserSkillsByUserId: build.query<
-      GetApiUserSkillsByUserIdApiResponse,
-      GetApiUserSkillsByUserIdApiArg
-    >({
-      query: (queryArg) => ({ url: `/api/UserSkills/${queryArg.userId}` }),
-    }),
-    postApiUserSkills: build.mutation<
-      PostApiUserSkillsApiResponse,
-      PostApiUserSkillsApiArg
-    >({
+    getUserSkill: build.query<GetUserSkillApiResponse, GetUserSkillApiArg>({
       query: (queryArg) => ({
-        url: `/api/UserSkills`,
+        url: `/api/UserSkills/getByUserId${queryArg.userId}`,
+      }),
+    }),
+    addUserSkill: build.mutation<AddUserSkillApiResponse, AddUserSkillApiArg>({
+      query: (queryArg) => ({
+        url: `/api/UserSkills/add`,
         method: "POST",
         body: queryArg.addUserSkillCommand,
       }),
     }),
-    deleteApiUserSkillsByUserSkillId: build.mutation<
-      DeleteApiUserSkillsByUserSkillIdApiResponse,
-      DeleteApiUserSkillsByUserSkillIdApiArg
+    removeUserSkill: build.mutation<
+      RemoveUserSkillApiResponse,
+      RemoveUserSkillApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/UserSkills/${queryArg.userSkillId}`,
+        url: `/api/UserSkills/remove${queryArg.userSkillId}`,
         method: "DELETE",
       }),
     }),
@@ -401,128 +383,118 @@ const injectedRtkApi = api.injectEndpoints({
 });
 export { injectedRtkApi as SMSApi };
 export type PostApiAuthenticationSeedRolesApiResponse =
-  /** status 200 OK */ Response;
+  /** status 200 OK */ ResponseDto;
 export type PostApiAuthenticationSeedRolesApiArg = void;
-export type PostApiAuthenticationGiveFreelancerRoleApiResponse =
-  /** status 200 OK */ Response;
-export type PostApiAuthenticationGiveFreelancerRoleApiArg = {
+export type MakeUserFreelancerApiResponse = /** status 200 OK */ ResponseDto;
+export type MakeUserFreelancerApiArg = {
   updatePermissionDto: UpdatePermissionDto;
 };
-export type PostApiAuthenticationGiveAdminRoleApiResponse =
-  /** status 200 OK */ Response;
-export type PostApiAuthenticationGiveAdminRoleApiArg = {
+export type MakeUserAdminApiResponse = /** status 200 OK */ ResponseDto;
+export type MakeUserAdminApiArg = {
   updatePermissionDto: UpdatePermissionDto;
 };
-export type PostApiAuthenticationGiveEmployerRoleApiResponse =
-  /** status 200 OK */ Response;
-export type PostApiAuthenticationGiveEmployerRoleApiArg = {
+export type MakeUserEmployerApiResponse = /** status 200 OK */ ResponseDto;
+export type MakeUserEmployerApiArg = {
   updatePermissionDto: UpdatePermissionDto;
 };
-export type GetApiAuthenticationGetAllUserApiResponse =
-  /** status 200 OK */ DzJobUser[];
-export type GetApiAuthenticationGetAllUserApiArg = void;
-export type PostApiAuthenticationCreateApiResponse =
-  /** status 200 OK */ Response;
-export type PostApiAuthenticationCreateApiArg = {
+export type GetAllUserApiResponse = /** status 200 OK */ DzJobUser[];
+export type GetAllUserApiArg = void;
+export type CreateUserApiResponse = /** status 200 OK */ ResponseDto;
+export type CreateUserApiArg = {
   registerUser: RegisterUser;
 };
-export type GetApiAuthenticationConfiremEmailAutoApiResponse =
-  /** status 200 OK */ Response;
-export type GetApiAuthenticationConfiremEmailAutoApiArg = {
+export type ConfirmEmailApiResponse = /** status 200 OK */ ResponseDto;
+export type ConfirmEmailApiArg = {
   token?: string;
   email?: string;
 };
-export type PostApiAuthenticationLoginApiResponse = unknown;
-export type PostApiAuthenticationLoginApiArg = {
+export type LoginApiResponse = /** status 200 OK */ ResponseDto;
+export type LoginApiArg = {
   login: Login;
 };
-export type PostApiAuthenticationConfirmOtpApiResponse =
-  /** status 200 OK */ Response;
-export type PostApiAuthenticationConfirmOtpApiArg = {
+export type ConfirmOtpApiResponse = /** status 200 OK */ ResponseDto;
+export type ConfirmOtpApiArg = {
   code?: string;
   email?: string;
 };
-export type PostApiAuthenticationForgotPasswordApiResponse =
-  /** status 200 OK */ Response;
-export type PostApiAuthenticationForgotPasswordApiArg = {
+export type ForgetPasswordApiResponse = /** status 200 OK */ Response;
+export type ForgetPasswordApiArg = {
   email: string;
 };
-export type GetApiAuthenticationResetPasswordAutoApiResponse =
-  /** status 200 OK */ ResetPassword;
-export type GetApiAuthenticationResetPasswordAutoApiArg = {
+export type ResetPasswordApiResponse = /** status 200 OK */ ResetPassword;
+export type ResetPasswordApiArg = {
   token?: string;
   email?: string;
 };
-export type PostApiAuthenticationResetPasswordApiResponse =
-  /** status 200 OK */ Response;
-export type PostApiAuthenticationResetPasswordApiArg = {
+export type PasswordRestApiResponse = /** status 200 OK */ Response;
+export type PasswordRestApiArg = {
   resetPassword: ResetPassword;
 };
 export type GetApiAuthenticationTestEmailApiResponse =
   /** status 200 OK */ Response;
 export type GetApiAuthenticationTestEmailApiArg = void;
-export type PostApiEducationsApiResponse = /** status 200 OK */ number;
-export type PostApiEducationsApiArg = {
+export type CreateEducationApiResponse = /** status 200 OK */ number;
+export type CreateEducationApiArg = {
   createEducationCommand: CreateEducationCommand;
 };
-export type PutApiEducationsApiResponse = /** status 200 OK */ number;
-export type PutApiEducationsApiArg = {
+export type UpdateEducationApiResponse = /** status 200 OK */ number;
+export type UpdateEducationApiArg = {
   updateEducationCommand: UpdateEducationCommand;
 };
-export type GetApiEducationsApiResponse = /** status 200 OK */ EducationDto[];
-export type GetApiEducationsApiArg = void;
-export type GetApiEducationsByIdApiResponse = /** status 200 OK */ EducationDto;
-export type GetApiEducationsByIdApiArg = {
+export type GetEducationByIdApiResponse = /** status 200 OK */ EducationDto;
+export type GetEducationByIdApiArg = {
   id: number;
 };
-export type PostApiEmployerProfileApiResponse = /** status 200 OK */ number;
-export type PostApiEmployerProfileApiArg = {
+export type GetAllEducationApiResponse = /** status 200 OK */ EducationDto[];
+export type GetAllEducationApiArg = void;
+export type CreateEmployerProfileApiResponse = /** status 200 OK */ number;
+export type CreateEmployerProfileApiArg = {
   createEmployerProfileCommand: CreateEmployerProfileCommand;
 };
-export type PutApiEmployerProfileApiResponse = /** status 200 OK */ number;
-export type PutApiEmployerProfileApiArg = {
+export type UpdateEmployerProfileApiResponse = /** status 200 OK */ number;
+export type UpdateEmployerProfileApiArg = {
   updateEmployerProfileCommand: UpdateEmployerProfileCommand;
 };
-export type GetApiEmployerProfileApiResponse =
-  /** status 200 OK */ EmployerProfileDto[];
-export type GetApiEmployerProfileApiArg = void;
-export type GetApiEmployerProfileByIdApiResponse =
+export type GetEmployerProfileByIdApiResponse =
   /** status 200 OK */ EmployerProfileDto;
-export type GetApiEmployerProfileByIdApiArg = {
+export type GetEmployerProfileByIdApiArg = {
   id: number;
 };
-export type PostApiEmploymentHistoryApiResponse = /** status 200 OK */ number;
-export type PostApiEmploymentHistoryApiArg = {
+export type GetAllEmployerProfileApiResponse =
+  /** status 200 OK */ EmployerProfileDto[];
+export type GetAllEmployerProfileApiArg = void;
+export type CreateEmploymentHistoryApiResponse = /** status 200 OK */ number;
+export type CreateEmploymentHistoryApiArg = {
   createEmploymentHistoryCommand: CreateEmploymentHistoryCommand;
 };
-export type GetApiEmploymentHistoryApiResponse =
-  /** status 200 OK */ EmploymentHistoryDto[];
-export type GetApiEmploymentHistoryApiArg = void;
-export type PutApiEmploymentHistoryByIdApiResponse = unknown;
-export type PutApiEmploymentHistoryByIdApiArg = {
-  id: number;
+export type UpdateEmploymentHistoryApiResponse = unknown;
+export type UpdateEmploymentHistoryApiArg = {
+  id?: number;
   updateEmploymentHistoryCommand: UpdateEmploymentHistoryCommand;
 };
-export type GetApiEmploymentHistoryByIdApiResponse =
+export type GetEmploymentHistoryByIdApiResponse =
   /** status 200 OK */ EmploymentHistoryDto;
-export type GetApiEmploymentHistoryByIdApiArg = {
+export type GetEmploymentHistoryByIdApiArg = {
   id: number;
 };
-export type PostApiFreelancerProfileApiResponse = /** status 200 OK */ number;
-export type PostApiFreelancerProfileApiArg = {
+export type GetAllEmploymentHistoryApiResponse =
+  /** status 200 OK */ EmploymentHistoryDto[];
+export type GetAllEmploymentHistoryApiArg = void;
+export type CreateFreelancerProfileApiResponse = /** status 200 OK */ number;
+export type CreateFreelancerProfileApiArg = {
   createFreelancerProfileCommand: CreateFreelancerProfileCommand;
 };
-export type GetApiFreelancerProfileApiResponse =
-  /** status 200 OK */ FreelancerProfileDto[];
-export type GetApiFreelancerProfileApiArg = void;
-export type PutApiFreelancerProfileApiResponse = /** status 200 OK */ number;
-export type PutApiFreelancerProfileApiArg = {
-  updateFreelancerProfileCommand: UpdateFreelancerProfileCommand;
-};
-export type GetApiFreelancerProfileByIdApiResponse =
+export type GetFreelancerProfileByIdApiResponse =
   /** status 200 OK */ FreelancerProfileDto;
-export type GetApiFreelancerProfileByIdApiArg = {
+export type GetFreelancerProfileByIdApiArg = {
   id: number;
+};
+export type GetAllFreelancerProfilesApiResponse =
+  /** status 200 OK */ FreelancerProfileDto[];
+export type GetAllFreelancerProfilesApiArg = void;
+export type UpdateFreelancerProfileApiResponse = /** status 200 OK */ number;
+export type UpdateFreelancerProfileApiArg = {
+  updateFreelancerProfileCommand: UpdateFreelancerProfileCommand;
 };
 export type PostApiGeolocationApiResponse = /** status 200 OK */ number;
 export type PostApiGeolocationApiArg = {
@@ -540,25 +512,25 @@ export type GetApiGeolocationByIdApiResponse =
 export type GetApiGeolocationByIdApiArg = {
   id: number;
 };
-export type PostApiJobCreateApiResponse = /** status 200 OK */ number;
-export type PostApiJobCreateApiArg = {
+export type CreateJobApiResponse = /** status 200 OK */ number;
+export type CreateJobApiArg = {
   createJobCommand: CreateJobCommand;
 };
-export type GetApiJobApiResponse = /** status 200 OK */ JobDto[];
-export type GetApiJobApiArg = void;
-export type PutApiJobApiResponse = /** status 200 OK */ number;
-export type PutApiJobApiArg = {
-  updateJobCommand: UpdateJobCommand;
+export type GetAllJobsApiResponse = /** status 200 OK */ JobDto[];
+export type GetAllJobsApiArg = void;
+export type GetJobCByIdApiResponse = /** status 200 OK */ JobDto;
+export type GetJobCByIdApiArg = {
+  id?: number;
 };
-export type GetApiJobByIdApiResponse = /** status 200 OK */ JobDto;
-export type GetApiJobByIdApiArg = {
-  id: number;
+export type UpdateJobApiResponse = /** status 200 OK */ number;
+export type UpdateJobApiArg = {
+  updateJobCommand: UpdateJobCommand;
 };
 export type GetJobCountByStatusApiResponse =
   /** status 200 OK */ JobCountsByStatus;
 export type GetJobCountByStatusApiArg = void;
-export type GetAllJobApiResponse = /** status 200 OK */ JobSearchResult;
-export type GetAllJobApiArg = {
+export type GetAllJobByStatusApiResponse = /** status 200 OK */ JobSearchResult;
+export type GetAllJobByStatusApiArg = {
   status?: JobStatus;
   pageNumber?: number;
   pageSize?: number;
@@ -578,39 +550,44 @@ export type GetApiJobApplicationsByIdApiResponse = unknown;
 export type GetApiJobApplicationsByIdApiArg = {
   id: number;
 };
-export type PostApiSkillApiResponse = /** status 200 OK */ number;
-export type PostApiSkillApiArg = {
+export type CreateSkillApiResponse = /** status 200 OK */ number;
+export type CreateSkillApiArg = {
   createSkillCommand: CreateSkillCommand;
 };
-export type PutApiSkillApiResponse = /** status 200 OK */ number;
-export type PutApiSkillApiArg = {
+export type UpdateSkillApiResponse = /** status 200 OK */ number;
+export type UpdateSkillApiArg = {
   updateSkillCommand: UpdateSkillCommand;
 };
-export type GetApiSkillApiResponse = /** status 200 OK */ SkillDto[];
-export type GetApiSkillApiArg = void;
-export type GetApiSkillByIdApiResponse = /** status 200 OK */ SkillDto;
-export type GetApiSkillByIdApiArg = {
+export type GetSkillByIdApiResponse = /** status 200 OK */ SkillDto;
+export type GetSkillByIdApiArg = {
   id: number;
 };
-export type GetApiUserSkillsByUserIdApiResponse =
-  /** status 200 OK */ UserSkillDto[];
-export type GetApiUserSkillsByUserIdApiArg = {
+export type GetAllSkillApiResponse = /** status 200 OK */ SkillDto[];
+export type GetAllSkillApiArg = void;
+export type GetUserSkillApiResponse = /** status 200 OK */ UserSkillDto[];
+export type GetUserSkillApiArg = {
   userId: string;
 };
-export type PostApiUserSkillsApiResponse = /** status 200 OK */ number;
-export type PostApiUserSkillsApiArg = {
+export type AddUserSkillApiResponse = /** status 200 OK */ number;
+export type AddUserSkillApiArg = {
   addUserSkillCommand: AddUserSkillCommand;
 };
-export type DeleteApiUserSkillsByUserSkillIdApiResponse =
-  /** status 200 OK */ boolean;
-export type DeleteApiUserSkillsByUserSkillIdApiArg = {
+export type RemoveUserSkillApiResponse = /** status 200 OK */ boolean;
+export type RemoveUserSkillApiArg = {
   userSkillId: number;
 };
-export type Response = {
+export type ResponseDto = {
   userId?: string | null;
+  username?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
   status?: boolean;
   message?: string | null;
   statusCode?: number;
+  token?: string | null;
+  email?: string | null;
+  password?: string | null;
+  role?: string | null;
 };
 export type UpdatePermissionDto = {
   email: string;
@@ -770,6 +747,19 @@ export type Login = {
   email?: string | null;
   password?: string | null;
 };
+export type Response = {
+  userId?: string | null;
+  email?: string | null;
+  username?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  role?: string | null;
+  password?: string | null;
+  token?: string | null;
+  message?: string | null;
+  statusCode?: number;
+  status?: boolean;
+};
 export type ResetPassword = {
   password?: string | null;
   confirmPassword?: string | null;
@@ -856,17 +846,17 @@ export type CreateEmploymentHistoryCommand = {
   endDate?: string;
   description?: string | null;
 };
-export type EmploymentHistoryDto = {
+export type UpdateEmploymentHistoryCommand = {
   id?: number;
-  userId?: string | null;
   companyName?: string | null;
   jobTitle?: string | null;
   startDate?: string;
   endDate?: string;
   description?: string | null;
 };
-export type UpdateEmploymentHistoryCommand = {
+export type EmploymentHistoryDto = {
   id?: number;
+  userId?: string | null;
   companyName?: string | null;
   jobTitle?: string | null;
   startDate?: string;
@@ -951,10 +941,10 @@ export type UpdateJobCommand = {
   status?: number;
 };
 export type JobCountsByStatus = {
-  approved?: number;
-  approvalRequests?: number;
-  rejected?: number;
-  drafts?: number;
+  closed?: number;
+  inProgress?: number;
+  archived?: number;
+  open?: number;
 };
 export type JobSearchResult = {
   items?: JobDto[] | null;
@@ -1011,76 +1001,76 @@ export type AddUserSkillCommand = {
 };
 export const {
   usePostApiAuthenticationSeedRolesMutation,
-  usePostApiAuthenticationGiveFreelancerRoleMutation,
-  usePostApiAuthenticationGiveAdminRoleMutation,
-  usePostApiAuthenticationGiveEmployerRoleMutation,
-  useGetApiAuthenticationGetAllUserQuery,
-  useLazyGetApiAuthenticationGetAllUserQuery,
-  usePostApiAuthenticationCreateMutation,
-  useGetApiAuthenticationConfiremEmailAutoQuery,
-  useLazyGetApiAuthenticationConfiremEmailAutoQuery,
-  usePostApiAuthenticationLoginMutation,
-  usePostApiAuthenticationConfirmOtpMutation,
-  usePostApiAuthenticationForgotPasswordMutation,
-  useGetApiAuthenticationResetPasswordAutoQuery,
-  useLazyGetApiAuthenticationResetPasswordAutoQuery,
-  usePostApiAuthenticationResetPasswordMutation,
+  useMakeUserFreelancerMutation,
+  useMakeUserAdminMutation,
+  useMakeUserEmployerMutation,
+  useGetAllUserQuery,
+  useLazyGetAllUserQuery,
+  useCreateUserMutation,
+  useConfirmEmailQuery,
+  useLazyConfirmEmailQuery,
+  useLoginMutation,
+  useConfirmOtpMutation,
+  useForgetPasswordMutation,
+  useResetPasswordQuery,
+  useLazyResetPasswordQuery,
+  usePasswordRestMutation,
   useGetApiAuthenticationTestEmailQuery,
   useLazyGetApiAuthenticationTestEmailQuery,
-  usePostApiEducationsMutation,
-  usePutApiEducationsMutation,
-  useGetApiEducationsQuery,
-  useLazyGetApiEducationsQuery,
-  useGetApiEducationsByIdQuery,
-  useLazyGetApiEducationsByIdQuery,
-  usePostApiEmployerProfileMutation,
-  usePutApiEmployerProfileMutation,
-  useGetApiEmployerProfileQuery,
-  useLazyGetApiEmployerProfileQuery,
-  useGetApiEmployerProfileByIdQuery,
-  useLazyGetApiEmployerProfileByIdQuery,
-  usePostApiEmploymentHistoryMutation,
-  useGetApiEmploymentHistoryQuery,
-  useLazyGetApiEmploymentHistoryQuery,
-  usePutApiEmploymentHistoryByIdMutation,
-  useGetApiEmploymentHistoryByIdQuery,
-  useLazyGetApiEmploymentHistoryByIdQuery,
-  usePostApiFreelancerProfileMutation,
-  useGetApiFreelancerProfileQuery,
-  useLazyGetApiFreelancerProfileQuery,
-  usePutApiFreelancerProfileMutation,
-  useGetApiFreelancerProfileByIdQuery,
-  useLazyGetApiFreelancerProfileByIdQuery,
+  useCreateEducationMutation,
+  useUpdateEducationMutation,
+  useGetEducationByIdQuery,
+  useLazyGetEducationByIdQuery,
+  useGetAllEducationQuery,
+  useLazyGetAllEducationQuery,
+  useCreateEmployerProfileMutation,
+  useUpdateEmployerProfileMutation,
+  useGetEmployerProfileByIdQuery,
+  useLazyGetEmployerProfileByIdQuery,
+  useGetAllEmployerProfileQuery,
+  useLazyGetAllEmployerProfileQuery,
+  useCreateEmploymentHistoryMutation,
+  useUpdateEmploymentHistoryMutation,
+  useGetEmploymentHistoryByIdQuery,
+  useLazyGetEmploymentHistoryByIdQuery,
+  useGetAllEmploymentHistoryQuery,
+  useLazyGetAllEmploymentHistoryQuery,
+  useCreateFreelancerProfileMutation,
+  useGetFreelancerProfileByIdQuery,
+  useLazyGetFreelancerProfileByIdQuery,
+  useGetAllFreelancerProfilesQuery,
+  useLazyGetAllFreelancerProfilesQuery,
+  useUpdateFreelancerProfileMutation,
   usePostApiGeolocationMutation,
   usePutApiGeolocationMutation,
   useGetApiGeolocationQuery,
   useLazyGetApiGeolocationQuery,
   useGetApiGeolocationByIdQuery,
   useLazyGetApiGeolocationByIdQuery,
-  usePostApiJobCreateMutation,
-  useGetApiJobQuery,
-  useLazyGetApiJobQuery,
-  usePutApiJobMutation,
-  useGetApiJobByIdQuery,
-  useLazyGetApiJobByIdQuery,
+  useCreateJobMutation,
+  useGetAllJobsQuery,
+  useLazyGetAllJobsQuery,
+  useGetJobCByIdQuery,
+  useLazyGetJobCByIdQuery,
+  useUpdateJobMutation,
   useGetJobCountByStatusQuery,
   useLazyGetJobCountByStatusQuery,
-  useGetAllJobQuery,
-  useLazyGetAllJobQuery,
+  useGetAllJobByStatusQuery,
+  useLazyGetAllJobByStatusQuery,
   usePostApiJobApplicationsMutation,
   useGetApiJobApplicationsQuery,
   useLazyGetApiJobApplicationsQuery,
   usePutApiJobApplicationsMutation,
   useGetApiJobApplicationsByIdQuery,
   useLazyGetApiJobApplicationsByIdQuery,
-  usePostApiSkillMutation,
-  usePutApiSkillMutation,
-  useGetApiSkillQuery,
-  useLazyGetApiSkillQuery,
-  useGetApiSkillByIdQuery,
-  useLazyGetApiSkillByIdQuery,
-  useGetApiUserSkillsByUserIdQuery,
-  useLazyGetApiUserSkillsByUserIdQuery,
-  usePostApiUserSkillsMutation,
-  useDeleteApiUserSkillsByUserSkillIdMutation,
+  useCreateSkillMutation,
+  useUpdateSkillMutation,
+  useGetSkillByIdQuery,
+  useLazyGetSkillByIdQuery,
+  useGetAllSkillQuery,
+  useLazyGetAllSkillQuery,
+  useGetUserSkillQuery,
+  useLazyGetUserSkillQuery,
+  useAddUserSkillMutation,
+  useRemoveUserSkillMutation,
 } = injectedRtkApi;

@@ -17,10 +17,7 @@ import { Form, Formik } from "formik";
 import { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import {
-  usePostApiAuthenticationForgotPasswordMutation,
-  usePostApiAuthenticationLoginMutation,
-} from "../../app/api";
+import { useForgetPasswordMutation, useLoginMutation } from "../../app/api";
 import { FormTextField } from "../../components/form-controls";
 
 const validationSchema = yup.object({
@@ -37,8 +34,8 @@ const initialValues = {
 };
 
 export const Login = () => {
-  const [login] = usePostApiAuthenticationLoginMutation();
-  const [sendPwdResetEmail] = usePostApiAuthenticationForgotPasswordMutation();
+  const [login] = useLoginMutation();
+  const [sendPwdResetEmail] = useForgetPasswordMutation();
   const [forgotPassword, setForgotPassword] = useState(false);
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);

@@ -11,14 +11,17 @@ namespace DZJobs.Controllers.Education
     [ApiController]
     public class EducationsController : BaseController<EducationsController>
     {
-        [HttpPost]
+
+        [HttpPost("Create", Name = "CreateEducation")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> CreateEducation([FromBody] CreateEducationCommand command)
         {
             int id = await mediator.Send(command);
             return Ok(id);
         }
 
-        [HttpPut]
+        [HttpPut("update", Name = "UpdateEducation")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> UpdateEducation([FromBody] UpdateEducationCommand command)
         {
             int id = await mediator.Send(command);
@@ -26,15 +29,17 @@ namespace DZJobs.Controllers.Education
         }
 
 
-        [HttpGet("{id:int}")]
+        [HttpGet("getById{id:int}", Name = "GetEducationById")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<EducationDto>> GetEducationById(int id)
         {
             var education = await mediator.Send(new GetEducationByIdQuery(id));
             return Ok(education);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<EducationDto>>> GetAllEducations()
+        [HttpGet("all", Name = "GetAllEducation")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<List<EducationDto>>> GetAllEducation()
         {
             var educations = await mediator.Send(new GetAllEducationsQuery());
             return Ok(educations);

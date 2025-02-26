@@ -2,7 +2,7 @@ import { Box, Container, Paper, Typography } from "@mui/material";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { FreelancerProfileDto, usePostApiFreelancerProfileMutation } from "../../../app/api";
+import { FreelancerProfileDto, useCreateFreelancerProfileMutation } from "../../../app/api";
 import { RootState } from "../../../app/store";
 import { FreelancerProfileForm } from "./FreelancerProfileForm";
 export const RegisterFreelancerProfile = () => {
@@ -11,7 +11,7 @@ export const RegisterFreelancerProfile = () => {
     (state: RootState) => state.auth
   );
   const navigate = useNavigate();
-  const [createProfile, { error: createProfileError }] = usePostApiFreelancerProfileMutation();
+  const [createProfile, { error: createProfileError }] = useCreateFreelancerProfileMutation();
 console.log(userId);
   const onCancel = useCallback(() => {
     navigate("/role-selection"); // Adjust navigation based on your application structure
