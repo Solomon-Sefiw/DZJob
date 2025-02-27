@@ -12,8 +12,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   UpdatePermissionDto,
-  useMakeUserAdminMutation,
   useMakeUserEmployerMutation,
+  useMakeUserFreelancerMutation
 } from "../../app/api";
 import { RootState } from "../../app/store";
 
@@ -24,7 +24,7 @@ import { RootState } from "../../app/store";
   
   export const RoleSelection = () => {
     const navigate = useNavigate();
-    const [giveFreelancerRole] = useMakeUserAdminMutation();
+    const [giveFreelancerRole] = useMakeUserFreelancerMutation();
     const [giveEmployerRole] = useMakeUserEmployerMutation();
   
     // Retrieve the user's email from Redux storage.

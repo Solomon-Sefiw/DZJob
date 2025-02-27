@@ -45,11 +45,15 @@ export const Login = () => {
     (values: any) => {
       login({ login: values })
         .unwrap()
-        .then(() => {
+        .then((response) => {
+          if(response.status){
           localStorage.setItem("email", values.email);
           navigate("/verify");
+          }else
+          window.location.reload();
+
         })
-        .catch(() => navigate("/verify"));
+        .catch();
     },
     [login, navigate]
   );

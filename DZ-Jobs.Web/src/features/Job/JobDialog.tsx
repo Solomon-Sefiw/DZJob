@@ -6,46 +6,39 @@ import {
   DialogContent,
   Grid,
 } from "@mui/material";
-import { Form, Formik } from "formik";
-import { useCallback, useEffect, useState } from "react";
-// import { JobRole, useAddJobRoleMutation } from "../../../app/api/HCMSApi";
-// import { useJobCatagory } from "../JobCatagory/useJobCatagories";
-// import { useJobGrade } from "../JobGrade/useJobGrade";
-// import { useJobRoleCategories } from "./useJobRoleCatagories";
-// import { FormRichTextField } from "../../../components/form-controls/from-reach-text";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
 import Stack from "@mui/material/Stack";
+import { Form, Formik } from "formik";
+import { useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
-import { CreateJobCommand, JobDto, useCreateJobMutation } from "../../app/api";
+import { JobDto, useCreateJobMutation } from "../../app/api";
 import { JobCategory, JobType } from "../../app/api/enums";
 import { DialogHeader, Errors, FormSelectField, FormTextField } from "../../components";
 import { FormRichTextField } from "../../components/form-controls/from-reach-text";
 
-const emptyjobRoleData = {
-  name: "",
+const emptyjobData = {
+  title: "",
   description: "",
-  jobCatagoryId: "", // Add all required fields to the empty state
-  jobRoleCategoryId: "",
-  jobGradeId: "",
+  jobCategory: 0,
+  jobType: 0,
+  salary: 0,
 } as any;
 
-export const JobRoleDialog = ({ onClose ,employerId}: { onClose: () => void ,employerId : string}) => {
-  const [jobRoleData, setJobRole] = useState<CreateJobCommand>();
+export const JobDialog = ({ onClose ,employerId}: { onClose: () => void ,employerId : string}) => {
+  const [jobData, setJobRole] = useState<JobDto>();
   const [message, setMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();
 
   const [addJobRole, { error: AddJobRoleError }] = useCreateJobMutation();
-  // const { JobCatagoryLookups } = useJobCatagory();
-  // const { JobGradesLookups } = useJobGrade();
-  // const { jobRoleCatagoriesLookups } = useJobRoleCategories();
+
 
   useEffect(() => {
     setJobRole({
-      ...emptyjobRoleData,
-      ...jobRoleData,
+      ...emptyjobData,
+      ...jobData,
     });
-  }, [emptyjobRoleData, jobRoleData]);
+  }, [emptyjobData, jobData]);
 
   const validationSchema = Yup.object({
 
@@ -70,11 +63,9 @@ export const JobRoleDialog = ({ onClose ,employerId}: { onClose: () => void ,emp
           console.log(error);
         });
     },
-    [onClose, addJobRole]
+    [onClose, addJobRole,employerId]
   );
-
   const errors = (AddJobRoleError as any)?.data.errors;
-
   return (
     <Dialog
       scroll={"paper"}
@@ -83,9 +74,9 @@ export const JobRoleDialog = ({ onClose ,employerId}: { onClose: () => void ,emp
       open={true}
       fullWidth
     >
-      {!!jobRoleData && (
+      {!!jobData && (
         <Formik
-          initialValues={jobRoleData}
+          initialValues={jobData}
           enableReinitialize={true}
           onSubmit={handleSubmit}
           validationSchema={validationSchema}

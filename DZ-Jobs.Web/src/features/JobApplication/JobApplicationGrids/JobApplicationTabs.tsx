@@ -19,31 +19,31 @@ const getTabs = ({
 }: JobCountsByStatus = {}): TabProps[] => [
   {
     label: "Jobs",
-    href: "/dashboard",
+    href: "/freelancer-dashboard",
     counts: closed,
     color: "success",
   },
   {
     label: "In Progress",
-    href: "/dashboard/approval-requests",
+    href: "/freelancer-dashboard/approval-requests",
     counts: inProgress,
     color: "success",
   },
   {
     label: "Archived",
-    href: "/dashboard/rejected-approval-requests",
+    href: "/freelancer-dashboard/rejected-approval-requests",
     counts: archived,
     color: "error",
   },
   {
     label: "Open",
-    href: "/dashboard/draft",
+    href: "/freelancer-dashboard/draft",
     counts: open,
     color: "info",
   },
 ];
 
-export const JobRoleTabs = ({
+export const JobApplicationabs = ({
   counts,
 }: {
   counts?: JobCountsByStatus;

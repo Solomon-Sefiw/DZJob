@@ -7,6 +7,7 @@ import * as yup from "yup";
 
 import { useDispatch } from "react-redux";
 import { useConfirmOtpMutation } from "../../app/api";
+import { UserRole } from "../../app/api/enums";
 import { setUser } from "../../app/slices/authSlice";
 import { Errors, FormTextField } from "../../components";
 import { YupShape } from "../../utils";
@@ -57,8 +58,12 @@ export const MFA = () => {
                         role: response.role ?? "",
                       })
                     );
-                    navigate(`/dashboard`);
                   }
+                  if(response.role == UserRole.EMPLOYER)
+                    navigate(`/employyer-dashboard`);
+                  else 
+                  if(response.role == UserRole.FREELANCER)
+                    navigate(`/freelancer-dashboard`);
         } catch (error) {
           console.error("MFA verification failed:", error);
         }

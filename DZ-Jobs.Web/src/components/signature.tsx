@@ -16,6 +16,7 @@ export interface SignatureHandle {
   getSignature: () => Promise<File | undefined>;
   clear: () => void;
 }
+
 interface Props {
   canvasProps?: CanvasHTMLAttributes<HTMLCanvasElement>;
 }
@@ -23,15 +24,17 @@ interface Props {
 export const Signature = forwardRef<SignatureHandle, Props>(
   ({ canvasProps }, ref) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-    const [canvasDim, setCanvasDim] = useState<{
-      width?: number;
-      height: number;
-    }>({ height: 160, width: 400 });
-    const signaturePad = useRef<SignaturePad>(null);
+    const [canvasDim, setCanvasDim] = useState<{ width?: number; height: number }>({
+      height: 160,
+      width: 400,
+    });
+    
+    // Updated useRef initialization
+    const signaturePadRef = useRef<SignaturePad | null>(null);
 
     useImperativeHandle(ref, () => ({
       getSignature: async () => {
-        const dataUrl = signaturePad.current?.toDataURL("image/png");
+        const dataUrl = signaturePadRef.current?.toDataURL("image/png");
         if (!dataUrl) {
           return;
         }
@@ -40,7 +43,7 @@ export const Signature = forwardRef<SignatureHandle, Props>(
         return new File([blob], "signature.png", { type: blob.type });
       },
       clear: () => {
-        signaturePad.current?.clear();
+        signaturePadRef.current?.clear();
       },
     }));
 
@@ -61,20 +64,23 @@ export const Signature = forwardRef<SignatureHandle, Props>(
         canvas.width = canvas.offsetWidth * ratio;
         canvas.height = canvas.offsetHeight * ratio;
         canvas.getContext("2d")?.scale(ratio, ratio);
-        signaturePad?.current?.clear();
+        signaturePadRef.current?.clear();
       }
     }, [canvasDim]);
 
     useResizeObserver(canvasRef.current, onCanvasResize);
 
     useLayoutEffect(() => {
-      signaturePad.current = new SignaturePad(canvasRef.current!, {
-        penColor: "blue",
-        backgroundColor: "white",
-      });
-      signaturePad.current.on();
+      if (canvasRef.current) {
+        // Correct way to initialize SignaturePad
+        signaturePadRef.current = new SignaturePad(canvasRef.current, {
+          penColor: "blue",
+          backgroundColor: "white",
+        });
+      }
+
       return () => {
-        signaturePad.current?.off();
+        signaturePadRef.current?.off();
       };
     }, []);
 

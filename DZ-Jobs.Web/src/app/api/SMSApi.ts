@@ -305,37 +305,39 @@ const injectedRtkApi = api.injectEndpoints({
         },
       }),
     }),
-    postApiJobApplications: build.mutation<
-      PostApiJobApplicationsApiResponse,
-      PostApiJobApplicationsApiArg
+    createJobApplication: build.mutation<
+      CreateJobApplicationApiResponse,
+      CreateJobApplicationApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/JobApplications`,
+        url: `/api/JobApplications/Create`,
         method: "POST",
         body: queryArg.createJobApplicationCommand,
       }),
     }),
-    getApiJobApplications: build.query<
-      GetApiJobApplicationsApiResponse,
-      GetApiJobApplicationsApiArg
-    >({
-      query: () => ({ url: `/api/JobApplications` }),
-    }),
-    putApiJobApplications: build.mutation<
-      PutApiJobApplicationsApiResponse,
-      PutApiJobApplicationsApiArg
+    getJobApplicationById: build.query<
+      GetJobApplicationByIdApiResponse,
+      GetJobApplicationByIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/JobApplications`,
+        url: `/api/JobApplications/getById${queryArg.id}`,
+      }),
+    }),
+    getAllJobApplications: build.query<
+      GetAllJobApplicationsApiResponse,
+      GetAllJobApplicationsApiArg
+    >({
+      query: () => ({ url: `/api/JobApplications/all` }),
+    }),
+    updateJobApplication: build.mutation<
+      UpdateJobApplicationApiResponse,
+      UpdateJobApplicationApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/JobApplications/all`,
         method: "PUT",
         body: queryArg.updateJobApplicationCommand,
       }),
-    }),
-    getApiJobApplicationsById: build.query<
-      GetApiJobApplicationsByIdApiResponse,
-      GetApiJobApplicationsByIdApiArg
-    >({
-      query: (queryArg) => ({ url: `/api/JobApplications/${queryArg.id}` }),
     }),
     createSkill: build.mutation<CreateSkillApiResponse, CreateSkillApiArg>({
       query: (queryArg) => ({
@@ -535,20 +537,20 @@ export type GetAllJobByStatusApiArg = {
   pageNumber?: number;
   pageSize?: number;
 };
-export type PostApiJobApplicationsApiResponse = unknown;
-export type PostApiJobApplicationsApiArg = {
+export type CreateJobApplicationApiResponse = unknown;
+export type CreateJobApplicationApiArg = {
   createJobApplicationCommand: CreateJobApplicationCommand;
 };
-export type GetApiJobApplicationsApiResponse =
-  /** status 200 OK */ JobApplicationDto[];
-export type GetApiJobApplicationsApiArg = void;
-export type PutApiJobApplicationsApiResponse = /** status 200 OK */ number;
-export type PutApiJobApplicationsApiArg = {
-  updateJobApplicationCommand: UpdateJobApplicationCommand;
-};
-export type GetApiJobApplicationsByIdApiResponse = unknown;
-export type GetApiJobApplicationsByIdApiArg = {
+export type GetJobApplicationByIdApiResponse = unknown;
+export type GetJobApplicationByIdApiArg = {
   id: number;
+};
+export type GetAllJobApplicationsApiResponse =
+  /** status 200 OK */ JobApplicationDto[];
+export type GetAllJobApplicationsApiArg = void;
+export type UpdateJobApplicationApiResponse = /** status 200 OK */ number;
+export type UpdateJobApplicationApiArg = {
+  updateJobApplicationCommand: UpdateJobApplicationCommand;
 };
 export type CreateSkillApiResponse = /** status 200 OK */ number;
 export type CreateSkillApiArg = {
@@ -1057,12 +1059,12 @@ export const {
   useLazyGetJobCountByStatusQuery,
   useGetAllJobByStatusQuery,
   useLazyGetAllJobByStatusQuery,
-  usePostApiJobApplicationsMutation,
-  useGetApiJobApplicationsQuery,
-  useLazyGetApiJobApplicationsQuery,
-  usePutApiJobApplicationsMutation,
-  useGetApiJobApplicationsByIdQuery,
-  useLazyGetApiJobApplicationsByIdQuery,
+  useCreateJobApplicationMutation,
+  useGetJobApplicationByIdQuery,
+  useLazyGetJobApplicationByIdQuery,
+  useGetAllJobApplicationsQuery,
+  useLazyGetAllJobApplicationsQuery,
+  useUpdateJobApplicationMutation,
   useCreateSkillMutation,
   useUpdateSkillMutation,
   useGetSkillByIdQuery,

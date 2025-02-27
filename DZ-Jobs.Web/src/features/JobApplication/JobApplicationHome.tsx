@@ -17,10 +17,11 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useGetAllJobsQuery, useGetJobCountByStatusQuery } from "../../app/api";
 import { RootState } from "../../app/store";
 import { PageHeader } from "../../components";
-import { JobRoleDialog } from "./JobRoleDialog";
-import { JobRoleTabs } from "./JobRoleGrids/JobRoleTabs";
 
-export const JobRoleHome = () => {
+import { JobApplicationDialog } from "./JobApplicationDialog";
+import { JobApplicationabs } from "./JobApplicationGrids/JobApplicationTabs";
+
+export const JobApplicationHome = () => {
 
   const user = useSelector((state: RootState) => state.auth);
   console.log(user)
@@ -153,12 +154,12 @@ export const JobRoleHome = () => {
       </Box>
 
       <Paper sx={{ p: 2, flex: 1 }}>
-        <JobRoleTabs counts={JobRoleCounts} />
+        <JobApplicationabs counts={JobRoleCounts} />
         <Divider />
         <Outlet context={{ searchQuery }} />
       </Paper>
       {dialogOpened && (
-        <JobRoleDialog
+        <JobApplicationDialog
           onClose={() => {
             setDialogOpened(false);
             window.location.reload();

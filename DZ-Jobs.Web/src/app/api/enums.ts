@@ -21,6 +21,12 @@ export enum JobType
     Contract = 3,
     Freelance = 4
 }
+export enum UserRole
+{
+     ADMIN = "ADMIN",
+    FREELANCER = "FREELANCER",
+    EMPLOYER = "EMPLOYER",
+}
 
 export enum JobCategory
 {

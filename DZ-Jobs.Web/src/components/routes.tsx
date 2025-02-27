@@ -14,8 +14,9 @@ import {
 
 import { Login } from "../features";
 import { RegisterEducation } from "../features/Education/RegisterEducation";
-import { ApprovedJobRole, DraftJobRole, JobRoleApprovalRequests, JobRoleRejectedApprovalRequests } from "../features/JobRole/JobRoleGrids";
-import { JobRoleHome } from "../features/JobRole/JobRoleHome";
+import { ApprovedJobRole, DraftJobRole, JobRoleApprovalRequests, JobRoleRejectedApprovalRequests } from "../features/Job/JobGrids";
+import { JobRoleHome } from "../features/Job/JobRoleHome";
+import { JobApplicationHome } from "../features/JobApplication/JobApplicationHome";
 import UserSkillSelector from "../features/Skill/UserSkillSelector";
 import { MFA } from "../features/user/mfa";
 import { RoleSelection } from "../features/user/RoleSelection";
@@ -45,15 +46,18 @@ const AppRoutes = () => {
       <Route path="employer-profile" element={<RegisterEmployerProfile />} />
       <Route path="education" element={<RegisterEducation />} />
       <Route path="skills" element={<UserSkillSelector />} />
-      <Route path="/dashboard" element={<JobRoleHome />}>
+      <Route path="/employyer-dashboard" element={<JobRoleHome />}>
         <Route index element={<ApprovedJobRole />} />
         <Route path="approval-requests" element={<JobRoleApprovalRequests />} />
         <Route path="rejected-approval-requests" element={<JobRoleRejectedApprovalRequests />}/>
         <Route path="draft" element={<DraftJobRole />} />
       </Route>
-
-
-
+      <Route path="/freelancer-dashboard" element={<JobApplicationHome />}>
+        <Route index element={<ApprovedJobRole />} />
+        <Route path="approval-requests" element={<JobRoleApprovalRequests />} />
+        <Route path="rejected-approval-requests" element={<JobRoleRejectedApprovalRequests />}/>
+        <Route path="draft" element={<DraftJobRole />} />
+      </Route>
       <Route path="role-selection" element={<RoleSelection />} />
   
       {/* <Route path="dashboard" element={<Dashboard />} /> */}
