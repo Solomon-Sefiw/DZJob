@@ -96,8 +96,11 @@ export const OpenJobs = () => {
              </Box>
 
              <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-               <LocationOnIcon sx={{ mr: 1 }} /> {job.description}
+               <LocationOnIcon sx={{ mr: 1 }} /> <div dangerouslySetInnerHTML={{ __html: job.description || "" }} />
              </Typography>
+             
+
+
 
              <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
                <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}

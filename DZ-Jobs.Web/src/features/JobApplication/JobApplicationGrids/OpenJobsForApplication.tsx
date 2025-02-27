@@ -3,21 +3,25 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
 import {
-    Alert,
-    Box,
-    Button,
-    Card,
-    CardContent,
-    Chip,
-    Grid,
-    Typography
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  Grid,
+  Typography
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { useGetAllOpenJobByStatusQuery } from "../../../app/api";
+import { RootState } from "../../../app/store";
 import { Pagination } from "../../../components/Pagination";
+import { ApplayforJobDialog } from "../ApplayforJobDialog";
 export const OpenJobsForApplication = () => {
+  const user = useSelector((state: RootState) => state.auth);
   const [pagination, setPagination] = useState<{
     pageNumber: number;
     pageSize?: number;
@@ -45,18 +49,9 @@ export const OpenJobsForApplication = () => {
 
   const showNoMatchingAlert = searchQuery && filteredJobRoles.length === 0;
 
-  // const [dialogOpened, setDialogOpened] = useState(false);
-  // const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [dialogOpened, setDialogOpened] = useState(false);
+   const [selectedId, setSelectedId] = useState<number | null>(null);
 
-  // const handleDialogClose = () => {
-  //   setDialogOpened(false);
-  //   setSelectedId(null);
-  // };
-
-  // const handleDialogOpen = (id: number) => {
-  //   setDialogOpened(true);
-  //   setSelectedId(id);
-  // };
 
   const isLoading = isListLoading || isListLoading;
 
@@ -107,6 +102,7 @@ export const OpenJobsForApplication = () => {
                variant="contained"
                sx={{ mt: 2, backgroundColor: "#fff", color: "#6a11cb", fontWeight: "bold" }}
                fullWidth
+               onClick={() => {setSelectedId(job.id!);setDialogOpened(true);}}
              >
                Apply Now
              </Button>
@@ -123,6 +119,17 @@ export const OpenJobsForApplication = () => {
         <Alert severity="info" sx={{ m: 2 }}>
           No Approved Job Role found with name {searchQuery}!!
         </Alert>
+      )}
+      {dialogOpened && (
+        <ApplayforJobDialog
+          onClose={() => {
+            setDialogOpened(false);
+            window.location.reload();
+
+          }}
+          freelancerId = {user.userId}
+          jobId={selectedId}
+        />
       )}
 
       <Pagination
