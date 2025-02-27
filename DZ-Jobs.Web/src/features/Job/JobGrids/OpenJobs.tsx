@@ -14,10 +14,13 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/api";
+import { RootState } from "../../../app/store";
 import { Pagination } from "../../../components/Pagination";
-export const DraftJobRole = () => {
+export const OpenJobs = () => {
+  const user = useSelector((state: RootState) => state.auth);
   const [pagination, setPagination] = useState<{
     pageNumber: number;
     pageSize?: number;
@@ -27,12 +30,13 @@ export const DraftJobRole = () => {
   });
 
   const { data: counts, isLoading: isCountsLoading } =
-    useGetJobCountByStatusQuery();
+    useGetJobCountByStatusQuery({employerId : user.userId});
 
   const { data: items, isLoading: isListLoading } = useGetAllJobByStatusQuery({
     pageNumber: pagination.pageNumber + 1,
     pageSize: pagination.pageSize,
     status: 1,
+    employerId : user.userId
   });
 
   const { searchQuery } = useOutletContext<{ searchQuery: string }>();

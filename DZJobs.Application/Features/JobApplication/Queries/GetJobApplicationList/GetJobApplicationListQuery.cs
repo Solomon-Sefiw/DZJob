@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationList
 {
     public record JobApplicationSearchResult(List<JobApplicationDto> Items, int TotalCount);
-    public record GetJobApplicationListQuery(ApplicationStatus Status, int PageNumber, int PageSize) : IRequest<JobApplicationSearchResult>;
+    public record GetJobApplicationListQuery(ApplicationStatus Status, string FreelancerId, int PageNumber, int PageSize) : IRequest<JobApplicationSearchResult>;
     public class GetJobApplicationListQueryHandler : IRequestHandler<GetJobApplicationListQuery, JobApplicationSearchResult>
     {
         private readonly IMapper mapper;
@@ -49,32 +49,32 @@ namespace DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationLi
             .ToList();
             if (request.Status == ApplicationStatus.Pending)
             {
-                var result = applicationList.Where(JR => JR.Status == ApplicationStatus.Pending)
+                var result = applicationList.Where(JR => JR.Status == ApplicationStatus.Pending && JR.FreelancerId == request.FreelancerId)
                                                 .Skip((request.PageNumber - 1) * request.PageSize)
                                                 .Take(request.PageSize)
                                                 .ToList();
 
                 var count = await dataService.
-                    JobApplications.Where(JR => JR.Status == ApplicationStatus.Pending).CountAsync();
+                    JobApplications.Where(JR => JR.Status == ApplicationStatus.Pending && JR.FreelancerId == request.FreelancerId).CountAsync();
                 return new(result, count);
             }
             else if (request.Status == ApplicationStatus.Accepted)
             {
-                var result = applicationList.Where(JR => JR.Status == ApplicationStatus.Accepted)
+                var result = applicationList.Where(JR => JR.Status == ApplicationStatus.Accepted && JR.FreelancerId == request.FreelancerId)
                                                  .Skip((request.PageNumber - 1) * request.PageSize)
                                                  .Take(request.PageSize)
                                                  .ToList();
                 var count = await dataService.JobApplications.Where(JR =>
-                        JR.Status == ApplicationStatus.Accepted).CountAsync();
+                        JR.Status == ApplicationStatus.Accepted && JR.FreelancerId == request.FreelancerId).CountAsync();
                 return new(result, count);
             }
             else
             {
-                var result = applicationList.Where(JR => JR.Status == ApplicationStatus.Rejected)
+                var result = applicationList.Where(JR => JR.Status == ApplicationStatus.Rejected && JR.FreelancerId == request.FreelancerId)
                                                 .Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize)
                                                 .ToList();
                 var count = await dataService.JobApplications.Where(JR =>
-                            JR.Status == ApplicationStatus.Rejected).CountAsync();
+                            JR.Status == ApplicationStatus.Rejected && JR.FreelancerId == request.FreelancerId).CountAsync();
                 return new(result, count);
             }
         }

@@ -14,11 +14,14 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { useGetAllJobApplicationByStatusQuery, useGetJobApplicationCountByStatusQuery } from "../../../app/api";
 import { ApplicationStatus } from "../../../app/api/enums";
+import { RootState } from "../../../app/store";
 import { Pagination } from "../../../components/Pagination";
 export const RejectedJobApplication = () => {
+          const user = useSelector((state: RootState) => state.auth);
   const [pagination, setPagination] = useState<{
     pageNumber: number;
     pageSize?: number;
@@ -28,12 +31,13 @@ export const RejectedJobApplication = () => {
   });
 
   const { data: counts, isLoading: isCountsLoading } =
-    useGetJobApplicationCountByStatusQuery();
+    useGetJobApplicationCountByStatusQuery({freelancerId : user.userId});
 
   const { data: items, isLoading: isListLoading } = useGetAllJobApplicationByStatusQuery({
     pageNumber: pagination.pageNumber + 1,
     pageSize: pagination.pageSize,
     status: ApplicationStatus.Rejected,
+    freelancerId : user.userId
   });
 
   const { searchQuery } = useOutletContext<{ searchQuery: string }>();

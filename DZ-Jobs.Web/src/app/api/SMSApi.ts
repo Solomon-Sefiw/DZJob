@@ -290,7 +290,10 @@ const injectedRtkApi = api.injectEndpoints({
       GetJobCountByStatusApiResponse,
       GetJobCountByStatusApiArg
     >({
-      query: () => ({ url: `/api/Job/counts` }),
+      query: (queryArg) => ({
+        url: `/api/Job/counts`,
+        params: { EmployerId: queryArg.employerId },
+      }),
     }),
     getAllJobByStatus: build.query<
       GetAllJobByStatusApiResponse,
@@ -300,6 +303,7 @@ const injectedRtkApi = api.injectEndpoints({
         url: `/api/Job/allJobByStatus`,
         params: {
           status: queryArg.status,
+          EmployerId: queryArg.employerId,
           pageNumber: queryArg.pageNumber,
           pageSize: queryArg.pageSize,
         },
@@ -343,7 +347,10 @@ const injectedRtkApi = api.injectEndpoints({
       GetJobApplicationCountByStatusApiResponse,
       GetJobApplicationCountByStatusApiArg
     >({
-      query: () => ({ url: `/api/JobApplications/counts` }),
+      query: (queryArg) => ({
+        url: `/api/JobApplications/counts`,
+        params: { FreelancerId: queryArg.freelancerId },
+      }),
     }),
     getAllJobApplicationByStatus: build.query<
       GetAllJobApplicationByStatusApiResponse,
@@ -353,6 +360,7 @@ const injectedRtkApi = api.injectEndpoints({
         url: `/api/JobApplications/allByStatus`,
         params: {
           status: queryArg.status,
+          FreelancerId: queryArg.freelancerId,
           pageNumber: queryArg.pageNumber,
           pageSize: queryArg.pageSize,
         },
@@ -562,10 +570,13 @@ export type UpdateJobApiArg = {
 };
 export type GetJobCountByStatusApiResponse =
   /** status 200 OK */ JobCountsByStatus;
-export type GetJobCountByStatusApiArg = void;
+export type GetJobCountByStatusApiArg = {
+  employerId?: string;
+};
 export type GetAllJobByStatusApiResponse = /** status 200 OK */ JobSearchResult;
 export type GetAllJobByStatusApiArg = {
   status?: JobStatus;
+  employerId?: string;
   pageNumber?: number;
   pageSize?: number;
 };
@@ -586,11 +597,14 @@ export type UpdateJobApplicationApiArg = {
 };
 export type GetJobApplicationCountByStatusApiResponse =
   /** status 200 OK */ JobApplicationCountsByStatus;
-export type GetJobApplicationCountByStatusApiArg = void;
+export type GetJobApplicationCountByStatusApiArg = {
+  freelancerId?: string;
+};
 export type GetAllJobApplicationByStatusApiResponse =
   /** status 200 OK */ JobApplicationSearchResult;
 export type GetAllJobApplicationByStatusApiArg = {
   status?: ApplicationStatus;
+  freelancerId?: string;
   pageNumber?: number;
   pageSize?: number;
 };

@@ -51,15 +51,15 @@ namespace DZJobs.Controllers.JobApplication
         }
         [HttpGet("counts", Name = "GetJobApplicationCountByStatus")]
         [ProducesResponseType(200)]
-        public async Task<JobApplicationCountsByStatus> GetJobApplicationCountByStatus()
+        public async Task<JobApplicationCountsByStatus> GetJobApplicationCountByStatus(string FreelancerId)
         {
-            return await mediator.Send(new GetJobApplicationCountByStatusQuery());
+            return await mediator.Send(new GetJobApplicationCountByStatusQuery(FreelancerId));
         }
         [HttpGet("allByStatus", Name = "GetAllJobApplicationByStatus")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<JobApplicationSearchResult>> GetAllJobApplicationByStatus(ApplicationStatus status, int pageNumber, int pageSize)
+        public async Task<ActionResult<JobApplicationSearchResult>> GetAllJobApplicationByStatus(ApplicationStatus status, string FreelancerId, int pageNumber, int pageSize)
         {
-            var searchResult = await mediator.Send(new GetJobApplicationListQuery(status, pageNumber, pageSize));
+            var searchResult = await mediator.Send(new GetJobApplicationListQuery(status, FreelancerId, pageNumber, pageSize));
 
             return searchResult;
         }

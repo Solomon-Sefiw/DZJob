@@ -14,7 +14,8 @@ import {
 
 import { Login } from "../features";
 import { RegisterEducation } from "../features/Education/RegisterEducation";
-import { ApprovedJobRole, DraftJobRole, JobRoleApprovalRequests, JobRoleRejectedApprovalRequests } from "../features/Job/JobGrids";
+import { ClosedJobs, InprogressJobs, OpenJobs } from "../features/Job/JobGrids";
+import { ArchivedJobs } from "../features/Job/JobGrids/ArchivedJobs";
 import { JobRoleHome } from "../features/Job/JobRoleHome";
 import { AcceptedJobApplication } from "../features/JobApplication/JobApplicationGrids/AcceptedJobApplication";
 import { OpenJobsForApplication } from "../features/JobApplication/JobApplicationGrids/OpenJobsForApplication";
@@ -51,10 +52,10 @@ const AppRoutes = () => {
       <Route path="education" element={<RegisterEducation />} />
       <Route path="skills" element={<UserSkillSelector />} />
       <Route path="/employer-dashboard" element={<JobRoleHome />}>
-        <Route index element={<ApprovedJobRole />} />
-        <Route path="approval-requests" element={<JobRoleApprovalRequests />} />
-        <Route path="rejected-approval-requests" element={<JobRoleRejectedApprovalRequests />}/>
-        <Route path="draft" element={<DraftJobRole />} />
+        <Route index element={<ClosedJobs />} />
+        <Route path="inprogress-jobs" element={<InprogressJobs />} />
+        <Route path="archived-jobs" element={<ArchivedJobs />}/>
+        <Route path="open-jobs" element={<OpenJobs />} />
       </Route>
       <Route path="/freelancer-dashboard" element={<JobApplicationHome />}>
         <Route index element={<OpenJobsForApplication />} />

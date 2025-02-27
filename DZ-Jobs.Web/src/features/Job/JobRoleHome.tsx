@@ -18,14 +18,14 @@ import { useGetAllJobsQuery, useGetJobCountByStatusQuery } from "../../app/api";
 import { RootState } from "../../app/store";
 import { PageHeader } from "../../components";
 import { JobDialog } from "./JobDialog";
-import { JobRoleTabs } from "./JobGrids/JobRoleTabs";
+import { JobTabs } from "./JobGrids/JobTabs";
 
 export const JobRoleHome = () => {
 
   const user = useSelector((state: RootState) => state.auth);
   console.log(user)
   const [dialogOpened, setDialogOpened] = useState(false);
-  const { data: JobRoleCounts } = useGetJobCountByStatusQuery();
+  const { data: JobRoleCounts } = useGetJobCountByStatusQuery({ employerId: user.userId });
   const { data = [] } = useGetAllJobsQuery();
 
   const [searchInput, setSearchInput] = useState("");
@@ -153,7 +153,7 @@ export const JobRoleHome = () => {
       </Box>
 
       <Paper sx={{ p: 2, flex: 1 }}>
-        <JobRoleTabs counts={JobRoleCounts} />
+        <JobTabs counts={JobRoleCounts} />
         <Divider />
         <Outlet context={{ searchQuery }} />
       </Paper>

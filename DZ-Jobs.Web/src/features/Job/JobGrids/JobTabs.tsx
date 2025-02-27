@@ -25,25 +25,25 @@ const getTabs = ({
   },
   {
     label: "In Progress",
-    href: "/employer-dashboard/approval-requests",
+    href: "/employer-dashboard/inprogress-jobs",
     counts: inProgress,
     color: "success",
   },
   {
     label: "Archived",
-    href: "/employer-dashboard/rejected-approval-requests",
+    href: "/employer-dashboard/archived-jobs",
     counts: archived,
     color: "error",
   },
   {
     label: "Open",
-    href: "/employer-dashboard/draft",
+    href: "/employer-dashboard/open-jobs",
     counts: open,
     color: "info",
   },
 ];
 
-export const JobRoleTabs = ({
+export const JobTabs = ({
   counts,
 }: {
   counts?: JobCountsByStatus;

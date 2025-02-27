@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DZJobs.Application.Features.Job.Queries.GetJobList
 {
     public record JobSearchResult(List<JobDto> Items, int TotalCount);
-    public record GetJobListQuery(JobStatus Status, int PageNumber, int PageSize) : IRequest<JobSearchResult>;
+    public record GetJobListQuery(JobStatus Status, string EmployerId, int PageNumber, int PageSize) : IRequest<JobSearchResult>;
     public class GetJobListQueryHandler : IRequestHandler<GetJobListQuery, JobSearchResult>
     {
         private readonly IMapper mapper;
@@ -45,41 +45,41 @@ namespace DZJobs.Application.Features.Job.Queries.GetJobList
             }).ToList();
             if (request.Status == JobStatus.InProgress)
             {
-                var result = joblist.Where(JR => JR.Status == JobStatus.InProgress)
+                var result = joblist.Where(JR => JR.Status == JobStatus.InProgress && JR.EmployerId == request.EmployerId)
                                                 .Skip((request.PageNumber - 1) * request.PageSize)
                                                 .Take(request.PageSize)
                                                 .ToList();
 
                 var count = await dataService.
-                    Jobs.Where(JR => JR.Status == JobStatus.InProgress).CountAsync();
+                    Jobs.Where(JR => JR.Status == JobStatus.InProgress && JR.EmployerId == request.EmployerId).CountAsync();
                 return new(result, count);
             }
             else if (request.Status == JobStatus.Archived)
             {
-                var result = joblist.Where(JR => JR.Status == JobStatus.Archived)
+                var result = joblist.Where(JR => JR.Status == JobStatus.Archived && JR.EmployerId == request.EmployerId)
                                                  .Skip((request.PageNumber - 1) * request.PageSize)
                                                  .Take(request.PageSize)
                                                  .ToList();
                 var count = await dataService.Jobs.Where(JR =>
-                        JR.Status == JobStatus.Archived).CountAsync();
+                        JR.Status == JobStatus.Archived && JR.EmployerId == request.EmployerId).CountAsync();
                 return new(result, count);
             }
             else if (request.Status == JobStatus.Open)
             {
-                var result = joblist.Where(JR => JR.Status == JobStatus.Open)
+                var result = joblist.Where(JR => JR.Status == JobStatus.Open && JR.EmployerId == request.EmployerId)
                                             .Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize)
                                             .ToList();
                 var count = await dataService.Jobs.Where(JR =>
-                        JR.Status == JobStatus.Open).CountAsync();
+                        JR.Status == JobStatus.Open && JR.EmployerId == request.EmployerId).CountAsync();
                 return new(result, count);
             }
             else
             {
-                var result = joblist.Where(JR => JR.Status == JobStatus.Closed)
+                var result = joblist.Where(JR => JR.Status == JobStatus.Closed && JR.EmployerId == request.EmployerId)
                                                 .Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize)
                                                 .ToList();
                 var count = await dataService.Jobs.Where(JR =>
-                            JR.Status == JobStatus.Closed).CountAsync();
+                            JR.Status == JobStatus.Closed && JR.EmployerId == request.EmployerId).CountAsync();
                 return new(result, count);
             }
         }

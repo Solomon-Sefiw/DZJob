@@ -25,7 +25,7 @@ export const JobApplicationHome = () => {
   const user = useSelector((state: RootState) => state.auth);
   console.log(user)
   const [dialogOpened, setDialogOpened] = useState(false);
-  const { data: JobApplicationCounts } = useGetJobApplicationCountByStatusQuery();
+  const { data: JobApplicationCounts } = useGetJobApplicationCountByStatusQuery({ freelancerId: user.userId });
   const { data = [] } = useGetAllJobsQuery();
 
   const [searchInput, setSearchInput] = useState("");
