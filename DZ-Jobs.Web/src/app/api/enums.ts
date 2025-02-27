@@ -1,3 +1,10 @@
+export enum ApplicationStatus
+{
+    Pending = 1,
+    Accepted = 2,
+    Rejected = 3
+}
+
 export enum EducationLevel {
   Primary = 1,
   MiddleSchool = 2,

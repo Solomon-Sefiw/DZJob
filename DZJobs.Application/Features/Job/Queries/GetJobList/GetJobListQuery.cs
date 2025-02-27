@@ -82,7 +82,6 @@ namespace DZJobs.Application.Features.Job.Queries.GetJobList
                             JR.Status == JobStatus.Closed).CountAsync();
                 return new(result, count);
             }
-            return null;
         }
     }
 

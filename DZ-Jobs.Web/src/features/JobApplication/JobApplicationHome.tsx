@@ -1,4 +1,3 @@
-import AddIcon from "@mui/icons-material/Add";
 import WorkIcon from "@mui/icons-material/Work";
 import {
   Autocomplete,
@@ -14,7 +13,7 @@ import { useEffect, useState } from "react";
 import { ArrowBackIosNew } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { useGetAllJobsQuery, useGetJobCountByStatusQuery } from "../../app/api";
+import { useGetAllJobsQuery, useGetJobApplicationCountByStatusQuery } from "../../app/api";
 import { RootState } from "../../app/store";
 import { PageHeader } from "../../components";
 
@@ -26,7 +25,7 @@ export const JobApplicationHome = () => {
   const user = useSelector((state: RootState) => state.auth);
   console.log(user)
   const [dialogOpened, setDialogOpened] = useState(false);
-  const { data: JobRoleCounts } = useGetJobCountByStatusQuery();
+  const { data: JobApplicationCounts } = useGetJobApplicationCountByStatusQuery();
   const { data = [] } = useGetAllJobsQuery();
 
   const [searchInput, setSearchInput] = useState("");
@@ -52,7 +51,7 @@ export const JobApplicationHome = () => {
         />
 
         {/* Button placed on the right side */}
-        <Button
+        {/* <Button
           variant="outlined"
           startIcon={<AddIcon />}
           onClick={() => {
@@ -70,7 +69,7 @@ export const JobApplicationHome = () => {
           }}
         >
           Add Job
-        </Button>
+        </Button> */}
       </Box>
       <Box
         sx={{
@@ -154,7 +153,7 @@ export const JobApplicationHome = () => {
       </Box>
 
       <Paper sx={{ p: 2, flex: 1 }}>
-        <JobApplicationabs counts={JobRoleCounts} />
+        <JobApplicationabs counts={JobApplicationCounts} />
         <Divider />
         <Outlet context={{ searchQuery }} />
       </Paper>

@@ -60,7 +60,7 @@ export const MFA = () => {
                     );
                   }
                   if(response.role == UserRole.EMPLOYER)
-                    navigate(`/employyer-dashboard`);
+                    navigate(`/employer-dashboard`);
                   else 
                   if(response.role == UserRole.FREELANCER)
                     navigate(`/freelancer-dashboard`);

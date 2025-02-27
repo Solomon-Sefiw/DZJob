@@ -1,7 +1,7 @@
 import { Badge, Box, Tab, Tabs } from "@mui/material";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { JobCountsByStatus } from "../../../app/api";
+import { JobApplicationCountsByStatus } from "../../../app/api";
 
 
 interface TabProps {
@@ -12,33 +12,32 @@ interface TabProps {
 }
 
 const getTabs = ({
-  inProgress,
-  archived,
-  open,
-  closed,
-}: JobCountsByStatus = {}): TabProps[] => [
+  accepted,
+  rejected,
+  pending,
+}: JobApplicationCountsByStatus = {}): TabProps[] => [
   {
-    label: "Jobs",
+    label: "Open Jobs",
     href: "/freelancer-dashboard",
-    counts: closed,
+    counts: accepted,
     color: "success",
   },
   {
-    label: "In Progress",
-    href: "/freelancer-dashboard/approval-requests",
-    counts: inProgress,
+    label: "Accepted",
+    href: "/freelancer-dashboard/accepted",
+    counts: accepted,
     color: "success",
   },
   {
-    label: "Archived",
-    href: "/freelancer-dashboard/rejected-approval-requests",
-    counts: archived,
+    label: "rejected",
+    href: "/freelancer-dashboard/rejected",
+    counts: rejected,
     color: "error",
   },
   {
-    label: "Open",
-    href: "/freelancer-dashboard/draft",
-    counts: open,
+    label: "Pending",
+    href: "/freelancer-dashboard/pending",
+    counts: pending,
     color: "info",
   },
 ];
@@ -46,7 +45,7 @@ const getTabs = ({
 export const JobApplicationabs = ({
   counts,
 }: {
-  counts?: JobCountsByStatus;
+  counts?: JobApplicationCountsByStatus;
 }) => {
   const tabs = useMemo(() => getTabs(counts), [counts]);
 

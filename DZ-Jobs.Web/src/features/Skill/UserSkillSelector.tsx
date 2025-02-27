@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { useAddUserSkillMutation, useGetAllSkillQuery } from "../../app/api";
 import { RootState } from "../../app/store";
   
@@ -25,7 +26,7 @@ import { RootState } from "../../app/store";
     const [selectedSkills, setSelectedSkills] = useState<Skill[]>([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredSkills, setFilteredSkills] = useState<Skill[]>([]);
-  
+  const navigate = useNavigate();
     // Filter skills based on search term
     useEffect(() => {
       if (skills) {
@@ -53,7 +54,7 @@ import { RootState } from "../../app/store";
         for (const skill of selectedSkills) {
           await addUserSkill({ addUserSkillCommand: { userId : userId, skillId: skill.id } });
         }
-        alert("Skills updated successfully!");
+        navigate("/freelancer-dashboard"); 
       } catch (error) {
         console.error("Failed to save skills:", error);
         alert("Failed to update skills. Please try again.");

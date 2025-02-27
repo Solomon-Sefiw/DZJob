@@ -21,7 +21,7 @@ export const RegisterEmployerProfile = () => {
 
       try {
         await createProfile({ createEmployerProfileCommand: profile }).unwrap();
-        navigate("/dashboard"); // Redirect to employer dashboard
+        navigate("/employer-dashboard"); // Redirect to employer dashboard
       } catch (error) {
         console.error("Employer profile creation error:", error);
       }

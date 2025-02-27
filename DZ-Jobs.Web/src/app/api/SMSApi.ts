@@ -339,6 +339,38 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.updateJobApplicationCommand,
       }),
     }),
+    getJobApplicationCountByStatus: build.query<
+      GetJobApplicationCountByStatusApiResponse,
+      GetJobApplicationCountByStatusApiArg
+    >({
+      query: () => ({ url: `/api/JobApplications/counts` }),
+    }),
+    getAllJobApplicationByStatus: build.query<
+      GetAllJobApplicationByStatusApiResponse,
+      GetAllJobApplicationByStatusApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/JobApplications/allByStatus`,
+        params: {
+          status: queryArg.status,
+          pageNumber: queryArg.pageNumber,
+          pageSize: queryArg.pageSize,
+        },
+      }),
+    }),
+    getAllOpenJobByStatus: build.query<
+      GetAllOpenJobByStatusApiResponse,
+      GetAllOpenJobByStatusApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/JobApplications/allOpenJobByStatus`,
+        params: {
+          status: queryArg.status,
+          pageNumber: queryArg.pageNumber,
+          pageSize: queryArg.pageSize,
+        },
+      }),
+    }),
     createSkill: build.mutation<CreateSkillApiResponse, CreateSkillApiArg>({
       query: (queryArg) => ({
         url: `/api/Skill/Create`,
@@ -551,6 +583,23 @@ export type GetAllJobApplicationsApiArg = void;
 export type UpdateJobApplicationApiResponse = /** status 200 OK */ number;
 export type UpdateJobApplicationApiArg = {
   updateJobApplicationCommand: UpdateJobApplicationCommand;
+};
+export type GetJobApplicationCountByStatusApiResponse =
+  /** status 200 OK */ JobApplicationCountsByStatus;
+export type GetJobApplicationCountByStatusApiArg = void;
+export type GetAllJobApplicationByStatusApiResponse =
+  /** status 200 OK */ JobApplicationSearchResult;
+export type GetAllJobApplicationByStatusApiArg = {
+  status?: ApplicationStatus;
+  pageNumber?: number;
+  pageSize?: number;
+};
+export type GetAllOpenJobByStatusApiResponse =
+  /** status 200 OK */ OpenJobSearchResult;
+export type GetAllOpenJobByStatusApiArg = {
+  status?: JobStatus;
+  pageNumber?: number;
+  pageSize?: number;
 };
 export type CreateSkillApiResponse = /** status 200 OK */ number;
 export type CreateSkillApiArg = {
@@ -977,6 +1026,19 @@ export type UpdateJobApplicationCommand = {
   proposedSalary?: number;
   status?: number;
 };
+export type JobApplicationCountsByStatus = {
+  accepted?: number;
+  rejected?: number;
+  pending?: number;
+};
+export type JobApplicationSearchResult = {
+  items?: JobApplicationDto[] | null;
+  totalCount?: number;
+};
+export type OpenJobSearchResult = {
+  items?: JobDto[] | null;
+  totalCount?: number;
+};
 export type CreateSkillCommand = {
   name?: string | null;
   description?: string | null;
@@ -1065,6 +1127,12 @@ export const {
   useGetAllJobApplicationsQuery,
   useLazyGetAllJobApplicationsQuery,
   useUpdateJobApplicationMutation,
+  useGetJobApplicationCountByStatusQuery,
+  useLazyGetJobApplicationCountByStatusQuery,
+  useGetAllJobApplicationByStatusQuery,
+  useLazyGetAllJobApplicationByStatusQuery,
+  useGetAllOpenJobByStatusQuery,
+  useLazyGetAllOpenJobByStatusQuery,
   useCreateSkillMutation,
   useUpdateSkillMutation,
   useGetSkillByIdQuery,

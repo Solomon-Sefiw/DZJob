@@ -1,4 +1,10 @@
-﻿using DZJobs.Application.Features.JobApplication.Models;
+﻿using DZJobs.Application.Features.Job.Queries.GetJobCountByStatus;
+using DZJobs.Application.Features.Job.Queries.GetJobList;
+using DZJobs.Application.Features.JobApplication.Models;
+using DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationCountByStatus;
+using DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationList;
+using DZJobs.Application.Features.Queries.GetJobList;
+using DZJobs.Domain.Entities;
 using HCMS.API.Controllers;
 using HCMS.Application.JobApplications.Commands;
 using HCMS.Application.JobApplications.Queries;
@@ -43,6 +49,26 @@ namespace DZJobs.Controllers.JobApplication
             var jobApplicationId = await mediator.Send(command);
             return jobApplicationId;
         }
+        [HttpGet("counts", Name = "GetJobApplicationCountByStatus")]
+        [ProducesResponseType(200)]
+        public async Task<JobApplicationCountsByStatus> GetJobApplicationCountByStatus()
+        {
+            return await mediator.Send(new GetJobApplicationCountByStatusQuery());
+        }
+        [HttpGet("allByStatus", Name = "GetAllJobApplicationByStatus")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<JobApplicationSearchResult>> GetAllJobApplicationByStatus(ApplicationStatus status, int pageNumber, int pageSize)
+        {
+            var searchResult = await mediator.Send(new GetJobApplicationListQuery(status, pageNumber, pageSize));
 
+            return searchResult;
+        }
+        [HttpGet("allOpenJobByStatus", Name = "GetAllOpenJobByStatus")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<OpenJobSearchResult>> GetAllOpenJobByStatus(JobStatus status, int pageNumber, int pageSize)
+        {
+            var searchResult = await mediator.Send(new GetOpenJobsForApplicationQuery(status, pageNumber, pageSize));
+            return searchResult;
+        }
     }
 }
