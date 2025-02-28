@@ -12,44 +12,57 @@ import Stack from "@mui/material/Stack";
 import { Form, Formik } from "formik";
 import { useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
-import { JobDto, useCreateJobMutation } from "../../app/api";
+import { JobDto, useCreateJobMutation, useUpdateJobMutation } from "../../app/api";
 import { JobCategory, JobType } from "../../app/api/enums";
 import { DialogHeader, Errors, FormSelectField, FormTextField } from "../../components";
 import { FormRichTextField } from "../../components/form-controls/from-reach-text";
+import { removeEmptyFields } from "../../utils";
 
 const emptyjobData = {
   title: "",
   description: "",
-  jobCategory: 0,
-  jobType: 0,
-  salary: 0,
-} as any;
+  jobCategory: 1,
+  jobType: 1,
+  salary: 1,
+} as JobDto;
 
-export const JobDialog = ({ onClose ,employerId}: { onClose: () => void ,employerId : string}) => {
+export const JobDialog = ({ onClose ,employerId,job,title}: 
+  { onClose: () => void ,employerId : string,job? : JobDto,title  : string}) => {
   const [jobData, setJobRole] = useState<JobDto>();
   const [message, setMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();
 
-  const [addJobRole, { error: AddJobRoleError }] = useCreateJobMutation();
+  const [addJob, { error: AddJobError }] = useCreateJobMutation();
+  const [updateJob, { error: UpdateJobError }] = useUpdateJobMutation();
 
 
   useEffect(() => {
     setJobRole({
       ...emptyjobData,
       ...jobData,
+      ...job,
     });
   }, [emptyjobData, jobData]);
 
   const validationSchema = Yup.object({
 
   });
-
+  
   const handleSubmit = useCallback(
     (values: JobDto) => {
       values.employerId = employerId;
-      addJobRole({
-        createJobCommand: values,
-      })
+      const payload = removeEmptyFields({
+        ...values,
+      });
+      console.log(payload);
+      (job?.id
+        ? updateJob({
+            updateJobCommand: payload,
+          })
+        : addJob({
+            createJobCommand: payload,
+          })
+      )
         .unwrap()
         .then(() => {
           setAlertSeverity("success");
@@ -63,9 +76,13 @@ export const JobDialog = ({ onClose ,employerId}: { onClose: () => void ,employe
           console.log(error);
         });
     },
-    [onClose, addJobRole,employerId]
+    [onClose, addJob,employerId]
   );
-  const errors = (AddJobRoleError as any)?.data.errors;
+
+
+  const errors = (
+    (job?.id ? UpdateJobError : AddJobError) as any
+  )?.data?.errors;
   return (
     <Dialog
       scroll={"paper"}
@@ -85,7 +102,7 @@ export const JobDialog = ({ onClose ,employerId}: { onClose: () => void ,employe
           validateOnSubmit={true} // Ensure that validation happens on form submit
         >
           <Form>
-            <DialogHeader title="Add Job Role" onClose={onClose} />
+            <DialogHeader title={title} onClose={onClose} />
             <DialogContent dividers={true}>
               <Grid container spacing={2}>
                 {message && (

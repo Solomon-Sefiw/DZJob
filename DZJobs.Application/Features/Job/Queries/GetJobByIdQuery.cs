@@ -10,8 +10,8 @@ namespace HCMS.Application.Jobs.Queries
 {
     public class GetJobByIdQuery : IRequest<Job>
     {
-        public int JobId { get; set; }
-        public GetJobByIdQuery(int jobId) => JobId = jobId;
+        public int Id { get; set; }
+        public GetJobByIdQuery(int jobId) => Id = jobId;
     }
 
     public class GetJobByIdQueryHandler : IRequestHandler<GetJobByIdQuery, Job>
@@ -27,7 +27,7 @@ namespace HCMS.Application.Jobs.Queries
         {
             var job = await _context.Jobs
                                     .Include(j => j.Employer)
-                                    .FirstOrDefaultAsync(j => j.Id == request.JobId, cancellationToken);
+                                    .FirstOrDefaultAsync(j => j.Id == request.Id, cancellationToken);
             if (job == null)
             {
                 throw new KeyNotFoundException("Job not found");

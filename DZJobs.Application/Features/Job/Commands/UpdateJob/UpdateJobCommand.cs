@@ -6,7 +6,7 @@ namespace HCMS.Application.Jobs.Commands
 {
     public class UpdateJobCommand : IRequest<int>
     {
-        public int JobId { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public JobCategory JobCategory { get; set; }
@@ -26,7 +26,7 @@ namespace HCMS.Application.Jobs.Commands
 
         public async Task<int> Handle(UpdateJobCommand request, CancellationToken cancellationToken)
         {
-            var job = await _context.Jobs.FindAsync(new object[] { request.JobId }, cancellationToken);
+            var job = await _context.Jobs.FindAsync(new object[] { request.Id }, cancellationToken);
             if (job == null)
             {
                 throw new KeyNotFoundException("Job not found");

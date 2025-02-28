@@ -1,129 +1,129 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  Typography
-} from "@mui/material";
-import { motion } from "framer-motion";
+import { Alert, Box, Button, Grid, Link, Typography } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
-import { useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/api";
+import { JobDto, useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/api";
 import { RootState } from "../../../app/store";
 import { Pagination } from "../../../components/Pagination";
+import { JobDialog } from "../JobDialog";
+
 export const OpenJobs = () => {
   const user = useSelector((state: RootState) => state.auth);
-  const [pagination, setPagination] = useState<{
-    pageNumber: number;
-    pageSize?: number;
-  }>({
-    pageNumber: 0,
-    pageSize: 10,
-  });
+  const [pagination, setPagination] = useState({ pageNumber: 0, pageSize: 10 });
 
-  const { data: counts, isLoading: isCountsLoading } =
-    useGetJobCountByStatusQuery({employerId : user.userId});
-
+  const { data: counts, isLoading: isCountsLoading } = useGetJobCountByStatusQuery({ employerId: user.userId });
   const { data: items, isLoading: isListLoading } = useGetAllJobByStatusQuery({
     pageNumber: pagination.pageNumber + 1,
     pageSize: pagination.pageSize,
     status: 1,
-    employerId : user.userId
+    employerId: user.userId,
   });
 
   const { searchQuery } = useOutletContext<{ searchQuery: string }>();
-
   const filteredJobRoles = searchQuery
-    ? (items?.items || []).filter((option) =>
-        option.title?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+    ? (items?.items || []).filter((option) => option.title?.toLowerCase().includes(searchQuery.toLowerCase()))
     : items?.items || [];
-
   const showNoMatchingAlert = searchQuery && filteredJobRoles.length === 0;
-
-  // const [dialogOpened, setDialogOpened] = useState(false);
-  // const [selectedId, setSelectedId] = useState<number | null>(null);
-
-  // const handleDialogClose = () => {
-  //   setDialogOpened(false);
-  //   setSelectedId(null);
-  // };
-
-  // const handleDialogOpen = (id: number) => {
-  //   setDialogOpened(true);
-  //   setSelectedId(id);
-  // };
-
   const isLoading = isCountsLoading || isListLoading;
 
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<JobDto | undefined>(undefined);
+  const [expandedJobId, setExpandedJobId] = useState<number | null>(null);
+
+  const handleOpenDialog = (job: JobDto) => {
+    setSelectedJob(job);
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedJob(undefined);
+  };
+
+  const handleExpandToggle = (jobId: number) => {
+    setExpandedJobId((prev) => (prev === jobId ? null : jobId));
+  };
+
   return (
-    <Box>
+    <Box sx={{ p: 3, backgroundColor: "#f4f4f4", minHeight: "10vh" }} onClick={() => setExpandedJobId(null)}>
       {!isLoading && !!counts?.open && (
- <Box sx={{ p: 5, backgroundColor: "#f4f4f4", minHeight: "100vh" }}>
-
- <Grid container spacing={4} justifyContent="center">
-   {filteredJobRoles?.map((job) => (
-     <Grid item xs={12} sm={6} md={4} key={job.id}>
-       <motion.div
-         whileHover={{ scale: 1.05 }}
-         whileTap={{ scale: 0.95 }}
-       >
-         <Card
-           sx={{
-             background: "linear-gradient(to right, #6a11cb, #2575fc)",
-             color: "white",
-             boxShadow: 5,
-             borderRadius: 3,
-             overflow: "hidden",
-           }}
-         >
-           <CardContent>
-             <Typography variant="h5" fontWeight="bold" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-               <WorkIcon /> {job.title}
-             </Typography>
-
-             <Box mt={1}>
-               <Chip label={job.jobCategory} color="secondary" sx={{ mr: 1, fontSize: "0.9rem" }} />
-               <Chip label={job.jobType} color="primary" sx={{ fontSize: "0.9rem" }} />
-             </Box>
-
-             <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-               <LocationOnIcon sx={{ mr: 1 }} /> <div dangerouslySetInnerHTML={{ __html: job.description || "" }} />
-             </Typography>
-             
-
-
-
-             <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-               <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
-             </Typography>
-
-             <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-               <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
-             </Typography>
-
-             <Button
-               variant="contained"
-               sx={{ mt: 2, backgroundColor: "#fff", color: "#6a11cb", fontWeight: "bold" }}
-               fullWidth
-             >
-               Apply Now
-             </Button>
-           </CardContent>
-         </Card>
-       </motion.div>
-     </Grid>
-   ))}
- </Grid>
-</Box>
+        <Grid container spacing={3} sx={{ alignItems: "stretch" }}>
+          {filteredJobRoles?.map((job) => {
+            const isExpanded = expandedJobId === job.id;
+            return (
+              <Grid item xs={12} sm={6} md={6} lg={4} key={job.id}>
+                <Box
+                  sx={{
+                    p: 3,
+                    backgroundColor: "white",
+                    borderRadius: 2,
+                    boxShadow: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    height: "100%",
+                    position: "relative",
+                    "&:hover": { boxShadow: 4 },
+                  }}
+                  onClick={(e) => e.stopPropagation()} // Prevents collapse when clicking inside
+                >
+                  <Typography variant="h6" fontWeight="bold">
+                    <WorkIcon sx={{ mr: 1 }} /> {job.title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{
+                      flexGrow: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      display: "-webkit-box",
+                      WebkitLineClamp: isExpanded ? "unset" : 3, // Expand or limit lines
+                      WebkitBoxOrient: "vertical",
+                    }}
+                  >
+                    <div dangerouslySetInnerHTML={{ __html: job.description || "" }} />
+                  </Typography>
+                  {!isExpanded && job.description && job.description.length > 150 && (
+                    <Link
+                      href="#"
+                      sx={{ fontSize: "0.9rem", mt: 1, display: "block" }}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        if (job.id !== undefined) handleExpandToggle(job.id);
+                      }}
+                    >
+                      More
+                    </Link>
+                  )}
+                  <Typography variant="body2">
+                    <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
+                  </Typography>
+                  <Typography variant="body2" color="textSecondary">
+                    <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
+                  </Typography>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      mt: 2,
+                      alignSelf: "center",
+                      width: "100%",
+                      transition: "0.3s",
+                      "&:hover": { backgroundColor: "#1976d2" },
+                    }}
+                    onClick={() => handleOpenDialog(job)}
+                  >
+                    Update
+                  </Button>
+                </Box>
+              </Grid>
+            );
+          })}
+        </Grid>
       )}
 
       {showNoMatchingAlert && (
@@ -132,14 +132,20 @@ export const OpenJobs = () => {
         </Alert>
       )}
 
-      <Pagination
-        pageNumber={pagination.pageNumber}
-        pageSize={pagination.pageSize}
-        onChange={setPagination}
-        totalRowsCount={counts?.open}
-        rowsPerPageOptions={[10, 20, 50]}
-      />
+      {/* Pagination now properly separated */}
+      <Box sx={{ mt: 5, display: "flex", justifyContent: "center", width: "100%" }}>
+        <Pagination
+          pageNumber={pagination.pageNumber}
+          pageSize={pagination.pageSize}
+          onChange={setPagination}
+          totalRowsCount={counts?.open}
+          rowsPerPageOptions={[10, 20, 50]}
+        />
+      </Box>
 
+      {openDialog && (
+        <JobDialog onClose={handleCloseDialog} employerId={user.userId} job={selectedJob} title="Update Job" />
+      )}
     </Box>
   );
 };

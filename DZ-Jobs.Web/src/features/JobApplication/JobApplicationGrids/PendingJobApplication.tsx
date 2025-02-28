@@ -68,7 +68,7 @@ export const PendingJobApplication = () => {
   return (
     <Box>
       {!isLoading && !!counts?.pending && (
- <Box sx={{ p: 5, backgroundColor: "#f4f4f4", minHeight: "100vh" }}>
+ <Box sx={{ p: 5, backgroundColor: "#f4f4f4", minHeight: "10vh" }}>
 
  <Grid container spacing={4} justifyContent="center">
    {filteredJobRoles?.map((application) => (
@@ -92,12 +92,13 @@ export const PendingJobApplication = () => {
              </Typography>
 
              <Box mt={1}>
-               <Chip label={application.coverLetter} color="secondary" sx={{ mr: 1, fontSize: "0.9rem" }} />
+               <Chip label={application.appliedDate} color="secondary" sx={{ mr: 1, fontSize: "0.9rem" }} />
                <Chip label={application.freelancer} color="primary" sx={{ fontSize: "0.9rem" }} />
              </Box>
 
              <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-               <LocationOnIcon sx={{ mr: 1 }} /> {application.appliedDate}
+               <LocationOnIcon sx={{ mr: 1 }} /> <div dangerouslySetInnerHTML={{ __html: application.coverLetter || "" }} />
+
              </Typography>
 
              <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 1 }}>

@@ -997,7 +997,7 @@ export type JobDto = {
   status?: JobStatus;
 };
 export type UpdateJobCommand = {
-  jobId?: number;
+  id?: number;
   title?: string | null;
   description?: string | null;
   jobCategory?: JobCategory;

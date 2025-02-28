@@ -117,24 +117,12 @@ namespace ANCIA.Controllers
             var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
-                var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+                //_emailService.SendEmail(message);
 
             }
             return Ok(response);
         }
-
-        //[HttpPost("Login")]
-        //public async Task<ActionResult<Response>> Login(Login login) { 
-
-        //var response = await _userService.LoginAsync(login);
-        //    if (response.Status == true)
-        //    {
-        //        var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
-        //        _emailService.SendEmail(message);
-        //    }
-        //        return Ok(new Response { Status = response.Status, Message = response.Message,StatusCode = response.StatusCode });
-        //}
 
         [HttpPost("Confirm-OTP", Name = "ConfirmOTP")]
         [ProducesResponseType(200)]

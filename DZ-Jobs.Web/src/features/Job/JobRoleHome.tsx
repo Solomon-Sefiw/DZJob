@@ -165,6 +165,7 @@ export const JobRoleHome = () => {
 
           }}
           employerId = {user.userId}
+          title = "Add New Job"
         />
       )}
     </Box>
