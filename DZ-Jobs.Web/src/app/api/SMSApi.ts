@@ -40,6 +40,12 @@ const injectedRtkApi = api.injectEndpoints({
     getAllUser: build.query<GetAllUserApiResponse, GetAllUserApiArg>({
       query: () => ({ url: `/api/Authentication/GetAll` }),
     }),
+    getUserById: build.query<GetUserByIdApiResponse, GetUserByIdApiArg>({
+      query: (queryArg) => ({
+        url: `/api/Authentication/GetById`,
+        params: { Id: queryArg.id },
+      }),
+    }),
     createUser: build.mutation<CreateUserApiResponse, CreateUserApiArg>({
       query: (queryArg) => ({
         url: `/api/Authentication/Create`,
@@ -319,12 +325,12 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.createJobApplicationCommand,
       }),
     }),
-    getJobApplicationById: build.query<
-      GetJobApplicationByIdApiResponse,
-      GetJobApplicationByIdApiArg
+    getJobApplicationByJobId: build.query<
+      GetJobApplicationByJobIdApiResponse,
+      GetJobApplicationByJobIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/JobApplications/getById${queryArg.id}`,
+        url: `/api/JobApplications/getByJobId${queryArg.id}`,
       }),
     }),
     getAllJobApplications: build.query<
@@ -377,6 +383,36 @@ const injectedRtkApi = api.injectEndpoints({
           pageNumber: queryArg.pageNumber,
           pageSize: queryArg.pageSize,
         },
+      }),
+    }),
+    approveJobApplication: build.mutation<
+      ApproveJobApplicationApiResponse,
+      ApproveJobApplicationApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/JobApplications/approve`,
+        method: "PATCH",
+        body: queryArg.approveJobApplicationCommand,
+      }),
+    }),
+    closeJobApplication: build.mutation<
+      CloseJobApplicationApiResponse,
+      CloseJobApplicationApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/JobApplications/close`,
+        method: "PATCH",
+        body: queryArg.closeJobApplicationCommand,
+      }),
+    }),
+    rejectJobApplication: build.mutation<
+      RejectJobApplicationApiResponse,
+      RejectJobApplicationApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/JobApplications/reject`,
+        method: "PATCH",
+        body: queryArg.rejectJobApplicationCommand,
       }),
     }),
     createSkill: build.mutation<CreateSkillApiResponse, CreateSkillApiArg>({
@@ -441,6 +477,10 @@ export type MakeUserEmployerApiArg = {
 };
 export type GetAllUserApiResponse = /** status 200 OK */ DzJobUser[];
 export type GetAllUserApiArg = void;
+export type GetUserByIdApiResponse = /** status 200 OK */ DzJobUser;
+export type GetUserByIdApiArg = {
+  id?: string;
+};
 export type CreateUserApiResponse = /** status 200 OK */ ResponseDto;
 export type CreateUserApiArg = {
   registerUser: RegisterUser;
@@ -584,8 +624,9 @@ export type CreateJobApplicationApiResponse = unknown;
 export type CreateJobApplicationApiArg = {
   createJobApplicationCommand: CreateJobApplicationCommand;
 };
-export type GetJobApplicationByIdApiResponse = unknown;
-export type GetJobApplicationByIdApiArg = {
+export type GetJobApplicationByJobIdApiResponse =
+  /** status 200 OK */ JobApplicationSearchByJobIdResult;
+export type GetJobApplicationByJobIdApiArg = {
   id: number;
 };
 export type GetAllJobApplicationsApiResponse =
@@ -614,6 +655,18 @@ export type GetAllOpenJobByStatusApiArg = {
   status?: JobStatus;
   pageNumber?: number;
   pageSize?: number;
+};
+export type ApproveJobApplicationApiResponse = /** status 200 OK */ number;
+export type ApproveJobApplicationApiArg = {
+  approveJobApplicationCommand: ApproveJobApplicationCommand;
+};
+export type CloseJobApplicationApiResponse = /** status 200 OK */ number;
+export type CloseJobApplicationApiArg = {
+  closeJobApplicationCommand: CloseJobApplicationCommand;
+};
+export type RejectJobApplicationApiResponse = /** status 200 OK */ number;
+export type RejectJobApplicationApiArg = {
+  rejectJobApplicationCommand: RejectJobApplicationCommand;
 };
 export type CreateSkillApiResponse = /** status 200 OK */ number;
 export type CreateSkillApiArg = {
@@ -1034,6 +1087,10 @@ export type JobApplicationDto = {
   createdAt?: string;
   updatedAt?: string;
 };
+export type JobApplicationSearchByJobIdResult = {
+  items?: JobApplicationDto[] | null;
+  totalCount?: number;
+};
 export type UpdateJobApplicationCommand = {
   id?: number;
   coverLetter?: string | null;
@@ -1052,6 +1109,18 @@ export type JobApplicationSearchResult = {
 export type OpenJobSearchResult = {
   items?: JobDto[] | null;
   totalCount?: number;
+};
+export type ApproveJobApplicationCommand = {
+  applicantId?: number;
+  jobId?: number;
+};
+export type CloseJobApplicationCommand = {
+  applicantId?: number;
+  jobId?: number;
+};
+export type RejectJobApplicationCommand = {
+  applicantId?: number;
+  jobId?: number;
 };
 export type CreateSkillCommand = {
   name?: string | null;
@@ -1084,6 +1153,8 @@ export const {
   useMakeUserEmployerMutation,
   useGetAllUserQuery,
   useLazyGetAllUserQuery,
+  useGetUserByIdQuery,
+  useLazyGetUserByIdQuery,
   useCreateUserMutation,
   useConfirmEmailQuery,
   useLazyConfirmEmailQuery,
@@ -1136,8 +1207,8 @@ export const {
   useGetAllJobByStatusQuery,
   useLazyGetAllJobByStatusQuery,
   useCreateJobApplicationMutation,
-  useGetJobApplicationByIdQuery,
-  useLazyGetJobApplicationByIdQuery,
+  useGetJobApplicationByJobIdQuery,
+  useLazyGetJobApplicationByJobIdQuery,
   useGetAllJobApplicationsQuery,
   useLazyGetAllJobApplicationsQuery,
   useUpdateJobApplicationMutation,
@@ -1147,6 +1218,9 @@ export const {
   useLazyGetAllJobApplicationByStatusQuery,
   useGetAllOpenJobByStatusQuery,
   useLazyGetAllOpenJobByStatusQuery,
+  useApproveJobApplicationMutation,
+  useCloseJobApplicationMutation,
+  useRejectJobApplicationMutation,
   useCreateSkillMutation,
   useUpdateSkillMutation,
   useGetSkillByIdQuery,

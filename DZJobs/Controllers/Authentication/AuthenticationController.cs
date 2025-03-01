@@ -86,6 +86,15 @@ namespace ANCIA.Controllers
             var response = await _userService.GetAllUserAsync();
             return Ok(response);
         }
+
+        [HttpGet("GetById", Name = "GetUserById")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<DZJobUser>> GetUserById(string Id)
+        {
+            var response = await _userService.GetUserByIdAsync(Id);
+            return Ok(response);
+        }
+
         [HttpPost("Create", Name = "CreateUser")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<ResponseDto>> CreateUser([FromBody] RegisterUser user)

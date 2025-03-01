@@ -407,5 +407,8 @@ namespace User.Managment.Service.Repository
         }
 
         public async Task<ICollection<DZJobUser>> GetAllUserAsync() => await _userManager.Users.ToListAsync();
+
+
+        public async Task<DZJobUser> GetUserByIdAsync(string Id) => await _userManager.Users.FirstOrDefaultAsync(u => u.Id == Id);
     }
 }

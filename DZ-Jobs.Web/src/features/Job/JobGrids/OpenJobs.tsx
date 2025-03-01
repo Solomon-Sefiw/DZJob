@@ -8,6 +8,7 @@ import { useOutletContext } from "react-router-dom";
 import { JobDto, useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/api";
 import { RootState } from "../../../app/store";
 import { Pagination } from "../../../components/Pagination";
+import { JobDetailsDialog } from "../JobDetailsDialog";
 import { JobDialog } from "../JobDialog";
 
 export const OpenJobs = () => {
@@ -42,6 +43,19 @@ export const OpenJobs = () => {
     setOpenDialog(false);
     setSelectedJob(undefined);
   };
+  const [jobDetailsOpen, setJobDetailsOpen] = useState(false);
+const [selectedJobDetails, setSelectedJobDetails] = useState<JobDto | null>(null);
+
+const handleOpenJobDetails = (job: JobDto) => {
+  setSelectedJobDetails(job);
+  setJobDetailsOpen(true);
+};
+
+const handleCloseJobDetails = () => {
+  setJobDetailsOpen(false);
+  setSelectedJobDetails(null);
+};
+
 
   const handleExpandToggle = (jobId: number) => {
     setExpandedJobId((prev) => (prev === jobId ? null : jobId));
@@ -70,9 +84,15 @@ export const OpenJobs = () => {
                   }}
                   onClick={(e) => e.stopPropagation()} // Prevents collapse when clicking inside
                 >
-                  <Typography variant="h6" fontWeight="bold">
-                    <WorkIcon sx={{ mr: 1 }} /> {job.title}
-                  </Typography>
+<Typography
+  variant="h6"
+  fontWeight="bold"
+  sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+  onClick={() => handleOpenJobDetails(job)}
+>
+  <WorkIcon sx={{ mr: 1 }} /> {job.title}
+</Typography>
+
                   <Typography
                     variant="body2"
                     color="textSecondary"
@@ -146,6 +166,10 @@ export const OpenJobs = () => {
       {openDialog && (
         <JobDialog onClose={handleCloseDialog} employerId={user.userId} job={selectedJob} title="Update Job" />
       )}
+      {jobDetailsOpen && (
+  <JobDetailsDialog open={jobDetailsOpen} onClose={handleCloseJobDetails} job={selectedJobDetails} />
+)}
+
     </Box>
   );
 };

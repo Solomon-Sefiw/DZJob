@@ -1,5 +1,8 @@
 ﻿using DZJobs.Application.Features.Job.Queries.GetJobCountByStatus;
 using DZJobs.Application.Features.Job.Queries.GetJobList;
+using DZJobs.Application.Features.JobApplication.Commands.ApproveJobApplication;
+using DZJobs.Application.Features.JobApplication.Commands.CloseJobApplication;
+using DZJobs.Application.Features.JobApplication.Commands.RejectJobApplication;
 using DZJobs.Application.Features.JobApplication.Models;
 using DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationCountByStatus;
 using DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationList;
@@ -25,12 +28,12 @@ namespace DZJobs.Controllers.JobApplication
             return Ok(id);
         }
 
-        [HttpGet("getById{id:int}", Name = "GetJobApplicationById")]
+        [HttpGet("getByJobId{id:int}", Name = "GetJobApplicationByJobId")]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> GetJobApplicationById(int id)
+        public async Task<ActionResult<JobApplicationSearchByJobIdResult>> GetJobApplicationByJobId(int id)
         {
-            var application = await mediator.Send(new GetJobApplicationByIdQuery(id));
-            return Ok(application);
+            var applications = await mediator.Send(new GetJobApplicationByJobIdQuery(id));
+            return Ok(applications);
         }
 
 
@@ -69,6 +72,29 @@ namespace DZJobs.Controllers.JobApplication
         {
             var searchResult = await mediator.Send(new GetOpenJobsForApplicationQuery(status, pageNumber, pageSize));
             return searchResult;
+        }
+
+        [HttpPatch("approve", Name = "ApproveJobApplication")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<int>> ApproveJobApplication([FromBody]  ApproveJobApplicationCommand command)
+        {
+            var jobId = await mediator.Send(command);
+            return Ok(jobId);
+        }
+
+        [HttpPatch("close", Name = "CloseJobApplication")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<int>> CloseJobApplication([FromBody] CloseJobApplicationCommand command)
+        {
+            var jobId = await mediator.Send(command);
+            return Ok(jobId);
+        }
+        [HttpPatch("reject", Name = "RejectJobApplication")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<int>> RejectJobApplication([FromBody] RejectJobApplicationCommand command)
+        {
+            var jobId = await mediator.Send(command);
+            return Ok(jobId);
         }
     }
 }

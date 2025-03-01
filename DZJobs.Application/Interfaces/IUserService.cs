@@ -19,5 +19,6 @@ namespace User.Managment.Service.Services
         Task<ResponseDto> MakeEmployerAsync(UpdatePermissionDto updatePermissionDto);
         Task<ResponseDto> MakeFreelancerAsync(UpdatePermissionDto updatePermissionDto);
         Task<ICollection<DZJobUser>> GetAllUserAsync();
+        Task<DZJobUser> GetUserByIdAsync(string Id);
     }
 }
