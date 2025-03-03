@@ -8,6 +8,7 @@ import { useOutletContext } from "react-router-dom";
 import { JobDto, useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/api";
 import { RootState } from "../../../app/store";
 import { Pagination } from "../../../components/Pagination";
+import { JobApplicantDetailsDialog } from "../JobApplicantDetailsDialog";
 import { JobDetailsDialog } from "../JobDetailsDialog";
 import { JobDialog } from "../JobDialog";
 
@@ -30,36 +31,42 @@ export const OpenJobs = () => {
   const showNoMatchingAlert = searchQuery && filteredJobRoles.length === 0;
   const isLoading = isCountsLoading || isListLoading;
 
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedJob, setSelectedJob] = useState<JobDto | undefined>(undefined);
+  const [openJobApplicantDialog, setOpenJobApplicantDialog] = useState(false);
+  const [selectedJobApplicant, setSelectedJobApplicant] = useState<JobDto | null>(null);
+
+  const [openJobDetailsDialog, setOpenJobDetailsDialog] = useState(false);
+  const [selectedJobDetails, setSelectedJobDetails] = useState<JobDto | null>(null);
+
+  const [openJobDialog, setOpenJobDialog] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<JobDto | null>(null);
+
   const [expandedJobId, setExpandedJobId] = useState<number | null>(null);
 
-  const handleOpenDialog = (job: JobDto) => {
+  const handleOpenJobApplicantDialog = (job: JobDto) => {
+    setSelectedJobApplicant(job);
+    setOpenJobApplicantDialog(true);
+  };
+
+  const handleOpenJobDetailsDialog = (job: JobDto) => {
+    setSelectedJobDetails(job);
+    setOpenJobDetailsDialog(true);
+  };
+
+  const handleOpenJobDialog = (job: JobDto) => {
     setSelectedJob(job);
-    setOpenDialog(true);
+    setOpenJobDialog(true);
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false);
-    setSelectedJob(undefined);
+  const handleCloseDialogs = () => {
+    setOpenJobApplicantDialog(false);
+    setOpenJobDetailsDialog(false);
+    setOpenJobDialog(false);
+    setSelectedJobApplicant(null);
+    setSelectedJobDetails(null);
+    setSelectedJob(null);
   };
-  const [jobDetailsOpen, setJobDetailsOpen] = useState(false);
-const [selectedJobDetails, setSelectedJobDetails] = useState<JobDto | null>(null);
-
-const handleOpenJobDetails = (job: JobDto) => {
-  setSelectedJobDetails(job);
-  setJobDetailsOpen(true);
-};
-
-const handleCloseJobDetails = () => {
-  setJobDetailsOpen(false);
-  setSelectedJobDetails(null);
-};
 
 
-  const handleExpandToggle = (jobId: number) => {
-    setExpandedJobId((prev) => (prev === jobId ? null : jobId));
-  };
 
   return (
     <Box sx={{ p: 3, backgroundColor: "#f4f4f4", minHeight: "10vh" }} onClick={() => setExpandedJobId(null)}>
@@ -84,15 +91,17 @@ const handleCloseJobDetails = () => {
                   }}
                   onClick={(e) => e.stopPropagation()} // Prevents collapse when clicking inside
                 >
-<Typography
-  variant="h6"
-  fontWeight="bold"
-  sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
-  onClick={() => handleOpenJobDetails(job)}
->
-  <WorkIcon sx={{ mr: 1 }} /> {job.title}
-</Typography>
+                  {/* Click on Title → Open JobApplicantDetailsDialog */}
+                  <Typography
+                    variant="h6"
+                    fontWeight="bold"
+                    sx={{ cursor: "pointer", "&:hover": { textDecoration: "underline" } }}
+                    onClick={() => handleOpenJobApplicantDialog(job)}
+                  >
+                    <WorkIcon sx={{ mr: 1 }} /> {job.title}
+                  </Typography>
 
+                  {/* Job Description with "More" Link */}
                   <Typography
                     variant="body2"
                     color="textSecondary"
@@ -101,7 +110,7 @@ const handleCloseJobDetails = () => {
                       overflow: "hidden",
                       textOverflow: "ellipsis",
                       display: "-webkit-box",
-                      WebkitLineClamp: isExpanded ? "unset" : 3, // Expand or limit lines
+                      WebkitLineClamp: isExpanded ? "unset" : 3,
                       WebkitBoxOrient: "vertical",
                     }}
                   >
@@ -113,18 +122,22 @@ const handleCloseJobDetails = () => {
                       sx={{ fontSize: "0.9rem", mt: 1, display: "block" }}
                       onClick={(e) => {
                         e.preventDefault();
-                        if (job.id !== undefined) handleExpandToggle(job.id);
+                        handleOpenJobDetailsDialog(job);
                       }}
                     >
                       More
                     </Link>
                   )}
+
+                  {/* Salary & Posted Date */}
                   <Typography variant="body2">
                     <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
                   </Typography>
+
+                  {/* Update Button */}
                   <Button
                     variant="contained"
                     color="primary"
@@ -135,7 +148,7 @@ const handleCloseJobDetails = () => {
                       transition: "0.3s",
                       "&:hover": { backgroundColor: "#1976d2" },
                     }}
-                    onClick={() => handleOpenDialog(job)}
+                    onClick={() => handleOpenJobDialog(job)}
                   >
                     Update
                   </Button>
@@ -152,7 +165,7 @@ const handleCloseJobDetails = () => {
         </Alert>
       )}
 
-      {/* Pagination now properly separated */}
+      {/* Pagination */}
       <Box sx={{ mt: 5, display: "flex", justifyContent: "center", width: "100%" }}>
         <Pagination
           pageNumber={pagination.pageNumber}
@@ -163,13 +176,16 @@ const handleCloseJobDetails = () => {
         />
       </Box>
 
-      {openDialog && (
-        <JobDialog onClose={handleCloseDialog} employerId={user.userId} job={selectedJob} title="Update Job" />
+      {/* Job Dialogs */}
+      {openJobApplicantDialog && (
+        <JobApplicantDetailsDialog open={openJobApplicantDialog} onClose={handleCloseDialogs} job={selectedJobApplicant} />
       )}
-      {jobDetailsOpen && (
-  <JobDetailsDialog open={jobDetailsOpen} onClose={handleCloseJobDetails} job={selectedJobDetails} />
-)}
-
+      {openJobDetailsDialog && (
+        <JobDetailsDialog open={openJobDetailsDialog} onClose={handleCloseDialogs} job={selectedJobDetails} />
+      )}
+      {openJobDialog && (
+        <JobDialog onClose={handleCloseDialogs} employerId={user.userId} job={selectedJob} title="Update Job" />
+      )}
     </Box>
   );
 };

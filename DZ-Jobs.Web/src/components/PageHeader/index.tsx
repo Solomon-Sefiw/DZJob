@@ -10,7 +10,7 @@ export const PageHeader = ({
 }) => (
   <Box sx={{ display: "flex", alignItems: "center" }}>
     <Typography sx={{ ml: 2, mb: 2 }} variant="h4" color="primary.dark">
-      {icon} {title}
+      {icon} Hi, {title}
     </Typography>
   </Box>
 );

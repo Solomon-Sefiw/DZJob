@@ -31,7 +31,7 @@ export const ClosedJobs = () => {
   const { data: items, isLoading: isListLoading } = useGetAllJobByStatusQuery({
     pageNumber: pagination.pageNumber + 1,
     pageSize: pagination.pageSize,
-    status: 1,
+    status: 3,
     employerId : user.userId
   });
 

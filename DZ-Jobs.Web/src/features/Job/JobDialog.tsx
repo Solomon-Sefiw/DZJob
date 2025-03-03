@@ -27,7 +27,7 @@ const emptyjobData = {
 } as JobDto;
 
 export const JobDialog = ({ onClose ,employerId,job,title}: 
-  { onClose: () => void ,employerId : string,job? : JobDto,title  : string}) => {
+  { onClose: () => void ,employerId : string,job? : JobDto | null,title  : string}) => {
   const [jobData, setJobRole] = useState<JobDto>();
   const [message, setMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();

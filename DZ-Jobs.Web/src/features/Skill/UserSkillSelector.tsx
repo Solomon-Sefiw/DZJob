@@ -5,127 +5,133 @@ import {
   Chip,
   CircularProgress,
   Paper,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useAddUserSkillMutation, useGetAllSkillQuery } from "../../app/api";
 import { RootState } from "../../app/store";
-  
-  interface Skill {
-    id: number; // id is required
-    name: string;
-  }
-  
-  const UserSkillSelector = () => {
-    const { userId } = useSelector((state: RootState) => state.auth);
-    const { data: skills, isLoading, error } = useGetAllSkillQuery();
-    const [addUserSkill, { isLoading: isSaving }] = useAddUserSkillMutation();
-    const [selectedSkills, setSelectedSkills] = useState<Skill[]>([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [filteredSkills, setFilteredSkills] = useState<Skill[]>([]);
+
+interface Skill {
+  id: number;
+  name: string;
+}
+
+const UserSkillSelector = () => {
+  const { userId } = useSelector((state: RootState) => state.auth);
+  const { data: skills, isLoading, error } = useGetAllSkillQuery();
+  const [addUserSkill, { isLoading: isSaving }] = useAddUserSkillMutation();
+  const [selectedSkills, setSelectedSkills] = useState<Skill[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
   const navigate = useNavigate();
-    // Filter skills based on search term
-    useEffect(() => {
-      if (skills) {
-        setFilteredSkills(
-          skills.filter((skill: any) => 
-            skill.id !== undefined && // Ensure id is defined
-            skill.name.toLowerCase().includes(searchTerm.toLowerCase())
-          ) as Skill[] // Cast to Skill[] after filtering
-        );
-      }
-    }, [searchTerm, skills]);
-  
-    const handleAddSkill = (skill: Skill) => {
-      if (!selectedSkills.some((s) => s.id === skill.id)) {
-        setSelectedSkills([...selectedSkills, skill]);
-      }
-    };
-  
-    const handleRemoveSkill = (skillId: number) => {
-      setSelectedSkills(selectedSkills.filter((skill) => skill.id !== skillId));
-    };
-  
-    const handleSaveSkills = async () => {
-      try {
-        for (const skill of selectedSkills) {
-          await addUserSkill({ addUserSkillCommand: { userId : userId, skillId: skill.id } });
-        }
-        navigate("/freelancer-dashboard"); 
-      } catch (error) {
-        console.error("Failed to save skills:", error);
-        alert("Failed to update skills. Please try again.");
-      }
-    };
-  
-    if (isLoading) return <CircularProgress />;
-    if (error) return <Typography color="error">Failed to load skills.</Typography>;
-  
-    return (
-      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 3, width: "600px" }}>
-        {/* Search Bar */}
-        <TextField
-          variant="outlined"
-          placeholder="Search Skills..."
-          onChange={(e) => setSearchTerm(e.target.value)}
-          fullWidth
-        />
-  
-        {/* Circular Skill Selector */}
-        <Paper elevation={3} sx={{ padding: 2, position: 'relative', width: '100%', height: '400px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-          <Typography variant="h6" gutterBottom sx={{ position: 'absolute', top: '10px' }}>
-            Select Skills
-          </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%', position: 'relative' }}>
-            {filteredSkills?.map((skill: Skill) => (
-              <Button
-                key={skill.id}
-                onClick={() => handleAddSkill(skill)}
-                sx={{
-                  borderRadius: '50%',
-                  width: '60px',
-                  height: '60px',
-                  margin: '5px',
-                  bgcolor: selectedSkills.some((s) => s.id === skill.id) ? 'lightgreen' : 'white',
-                  border: '1px solid #ccc',
-                  '&:hover': {
-                    bgcolor: selectedSkills.some((s) => s.id === skill.id) ? 'lightgreen' : '#f0f0f0',
-                  },
-                }}
-              >
-                <Typography variant="body2">{skill.name}</Typography>
-              </Button>
-            ))}
-          </Box>
-        </Paper>
-  
-        {/* Selected Skills Display */}
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {selectedSkills.map((skill) => (
-            <Chip
-              key={skill.id}
-              label={skill.name}
-              onDelete={() => handleRemoveSkill(skill.id)}
-              deleteIcon={<CloseIcon />}
-            />
-          ))}
-        </Box>
-  
-        {/* Save Button */}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSaveSkills}
-          disabled={isSaving || selectedSkills.length === 0}
-        >
-          {isSaving ? "Saving..." : "Save Skills"}
-        </Button>
-      </Box>
+
+  const filteredSkills = useMemo(
+    () =>
+      skills?.filter((skill): skill is Skill => skill.id !== undefined)
+        .filter((skill) => skill.name.toLowerCase().includes(searchTerm.toLowerCase())) || [],
+    [searchTerm, skills]
+  );
+
+  const handleAddSkill = (skill: Skill) => {
+    setSelectedSkills((prev) =>
+      prev.some((s) => s.id === skill.id) ? prev : [...prev, skill]
     );
   };
-  
-  export default UserSkillSelector;
-  
+
+  const handleRemoveSkill = (skillId: number) => {
+    setSelectedSkills((prev) => prev.filter((skill) => skill.id !== skillId));
+  };
+
+  const handleSaveSkills = async () => {
+    try {
+      const response = await Promise.all(
+        selectedSkills.map((skill) =>
+          addUserSkill({ addUserSkillCommand: { userId, skillId: skill.id } })
+        )
+      );
+      if (response.every((res) => "data" in res)) {
+        setSnackbarMessage("Skills updated successfully!");
+        navigate("/freelancer-dashboard");
+      } else {
+        throw new Error("Failed to save some skills.");
+      }
+    } catch (error) {
+      console.error("Failed to save skills:", error);
+      setSnackbarMessage("Failed to update skills. Please try again.");
+    }
+  };
+
+  if (isLoading) return <CircularProgress sx={{ display: "block", margin: "auto" }} />;
+  if (error) return <Typography color="error">Failed to load skills.</Typography>;
+
+  return (
+    <Paper elevation={4} sx={{ p: 4, maxWidth: 600, mx: "auto", textAlign: "center" }}>
+      <Typography variant="h5" fontWeight={600} gutterBottom>
+        Select Your Skills
+      </Typography>
+      
+      <TextField
+        variant="outlined"
+        placeholder="Search Skills..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        fullWidth
+        sx={{ mb: 2 }}
+      />
+
+      <Box sx={{ maxHeight: 300, overflowY: "auto", display: "flex", flexWrap: "wrap", gap: 1, p: 1 }}>
+        {filteredSkills.length > 0 ? (
+          filteredSkills.map((skill) => (
+            <Button
+              key={skill.id}
+              onClick={() => handleAddSkill(skill)}
+              variant="outlined"
+              sx={{ textTransform: "none", borderRadius: 2 }}
+            >
+              {skill.name}
+            </Button>
+          ))
+        ) : (
+          <Typography variant="body2" sx={{ color: "gray" }}>
+            No matching skills found.
+          </Typography>
+        )}
+      </Box>
+
+      <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
+        {selectedSkills.map((skill) => (
+          <Chip
+            key={skill.id}
+            label={skill.name}
+            onDelete={() => handleRemoveSkill(skill.id)}
+            deleteIcon={<CloseIcon />}
+            color="primary"
+          />
+        ))}
+      </Box>
+
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSaveSkills}
+        disabled={isSaving || selectedSkills.length === 0}
+        sx={{ mt: 3, textTransform: "none", fontWeight: 600 }}
+      >
+        {isSaving ? "Saving..." : "Save Skills"}
+      </Button>
+
+      <Snackbar
+        open={!!snackbarMessage}
+        autoHideDuration={3000}
+        onClose={() => setSnackbarMessage(null)}
+        message={snackbarMessage}
+      />
+    </Paper>
+  );
+};
+
+export default UserSkillSelector;

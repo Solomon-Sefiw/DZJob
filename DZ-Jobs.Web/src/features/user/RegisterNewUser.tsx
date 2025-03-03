@@ -1,4 +1,4 @@
-import { Box, Container, Paper, Typography } from "@mui/material";
+import { Alert, Box, Container, Paper, Typography } from "@mui/material";
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -28,10 +28,23 @@ export const RegisterNewUser = () => {
               lastName: response.lastName ?? "",
             })
           );
+          if(response.status){
+            <Alert variant="filled" severity="success">
+                          User Account Created Successfuly
+            </Alert>
           navigate(`/role-selection`);
+        }else{
+          <Alert variant="filled" severity="error">
+                  Someting is Wrog Please Revew you User Account.
+        </Alert>
+
+        }
         }
       } catch (error) {
         console.error("Registration error:", error);
+        <Alert variant="filled" severity="error">
+        Someting is Wrog Please Revew you User Account.
+</Alert>
       }
     },
     [dispatch, navigate, registerUser]

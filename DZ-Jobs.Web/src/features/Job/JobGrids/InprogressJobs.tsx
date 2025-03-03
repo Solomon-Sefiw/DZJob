@@ -13,6 +13,7 @@ import { Fragment, useState } from "react";
 import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { JobDto, useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/api";
+import { JobCategory, JobType } from "../../../app/api/enums";
 import { RootState } from "../../../app/store";
 import { Pagination } from "../../../components/Pagination";
 export const InprogressJobs = () => {
@@ -70,7 +71,7 @@ export const InprogressJobs = () => {
                 <TableRow>
                   <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>
-                    Job Category
+                    Description
                   </TableCell>
                   <TableCell sx={{ fontWeight: "bold" }}>
                     Job Role Category
@@ -102,22 +103,23 @@ export const InprogressJobs = () => {
                         sx={{
                   
                         }}
-                      >
-                        {item.description}
-                      </TableCell>
+                      
+                        dangerouslySetInnerHTML={{ __html: item.description || "" }}
+                        
+                      />
                       <TableCell
                         sx={{
 
                         }}
                       >
-                        {item.jobCategory}
+                        {item.jobCategory &&JobCategory[item.jobCategory] }
                       </TableCell>
                       <TableCell
                         sx={{
                         
                         }}
                       >
-                        {item.jobType}
+                        {item.jobType && JobType[item.jobType]}
                       </TableCell>
                       <TableCell>
                         <Box

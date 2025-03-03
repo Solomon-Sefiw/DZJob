@@ -42,8 +42,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeFreelancerAsync(updatePermissionDto);
             if (response.Status)
             {
-                //var message = new EmailContent(new string[] { response.Email },"Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
-                // _emailService.SendEmail(message);
+                var message = new EmailContent(new string[] { response.Email },"Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
+                 _emailService.SendEmail(message);
 
                 return Ok(response);
             }
@@ -57,8 +57,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeAdminAsync(updatePermissionDto);
             if (response.Status)
             {
-                //var message = new EmailContent(new string[] { response.Email }, "Congratulation", "you have Guaranted for <b>ADMIN Role</b> As Requested");
-                //_emailService.SendEmail(message);
+                var message = new EmailContent(new string[] { response.Email }, "Congratulation", "you have Guaranted for <b>ADMIN Role</b> As Requested");
+                _emailService.SendEmail(message);
 
                 return Ok(response);
             }
@@ -72,8 +72,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeEmployerAsync(updatePermissionDto);
             if (response.Status)
             {
-                //var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
-                //_emailService.SendEmail(message);
+                var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
+                _emailService.SendEmail(message);
                 return Ok(response);
             }
             return BadRequest(response);
@@ -126,8 +126,8 @@ namespace ANCIA.Controllers
             var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
-                //var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
-                //_emailService.SendEmail(message);
+                var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+                _emailService.SendEmail(message);
 
             }
             return Ok(response);

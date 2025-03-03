@@ -1,16 +1,7 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Alert, Box, Button, Chip, Grid, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -39,83 +30,61 @@ export const OpenJobsForApplication = () => {
   const showNoMatchingAlert = searchQuery && filteredJobRoles.length === 0;
   const [dialogOpened, setDialogOpened] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [expandedJobId, setExpandedJobId] = useState<number | null>(null);
-
-  const handleExpand = (jobId: number) => {
-    setExpandedJobId(expandedJobId === jobId ? null : jobId);
-  };
 
   return (
-    <Box sx={{ p: 5, backgroundColor: "#f4f4f4", minHeight: "10vh" }}>
+    <Box sx={{ p: 5, backgroundColor: "#fff", minHeight: "100vh", maxWidth: "900px", mx: "auto" }}>
       {!isListLoading && !!items?.totalCount && (
-        <Grid container spacing={4} justifyContent="center">
+        <Grid container spacing={4} direction="column">
           {filteredJobRoles.map((job) => (
-            <Grid item xs={12} sm={6} md={4} key={job.id}>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Card
+            <Grid item xs={12} key={job.id}>
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Box
                   sx={{
-                    background: "linear-gradient(to right,rgb(246, 241, 252),rgb(210, 215, 223))",
-                    boxShadow: 5,
-                    borderRadius: 3,
-                    overflow: "hidden",
+                    background: "#fff",
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    p: 3,
                     display: "flex",
                     flexDirection: "column",
-                    minHeight: "300px",
+                    gap: 2,
+                    border: "1px solid #ddd",
                   }}
                 >
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography variant="h5" fontWeight="bold" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <WorkIcon /> {job.title}
-                    </Typography>
-                    <Box mt={1}>
-                      <Chip label={job.jobCategory} color="secondary" sx={{ mr: 1, fontSize: "0.9rem" }} />
-                      <Chip label={job.jobType} color="primary" sx={{ fontSize: "0.9rem" }} />
-                    </Box>
+                  {/* Job Title */}
+                  <Typography variant="h5" fontWeight="bold" sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <WorkIcon color="primary" /> {job.title}
+                  </Typography>
 
-                    {/* Job Description with Expand/Collapse */}
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        mt: 2,
-                        maxHeight: expandedJobId === job.id ? "none" : "50px",
-                        overflow: expandedJobId === job.id ? "visible" : "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: expandedJobId === job.id ? "normal" : "nowrap",
-                        transition: "max-height 0.3s ease-in-out",
-                      }}
-                    >
-                      <div dangerouslySetInnerHTML={{ __html: job.description || "" }} />
-                    </Typography>
+                  {/* Job Description */}
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      mt: 1,
+                      color: "#555",
+                      fontSize: "1rem",
+                      lineHeight: 1.5,
+                      textAlign: "justify",
+                    }}
+                    dangerouslySetInnerHTML={{ __html: job.description || "" }}
+                  />
 
-                    {(job.description?.length ?? 0) > 100 && (
-                      <Button
-                        variant="text"
-                        sx={{  textTransform: "none" }}
-                        onClick={() => job.id !== undefined && handleExpand(job.id)}
-                      >
-                        {expandedJobId === job.id ? "Less" : "More"}
-                      </Button>
-                    )}
-
-                    <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                  {/* Job Details */}
+                  <Box display="flex" gap={2} flexWrap="wrap" mt={2}>
+                    <Chip label={job.jobCategory} color="secondary" />
+                    <Chip label={job.jobType} color="primary" />
+                    <Typography variant="body1" sx={{ display: "flex", alignItems: "center" }}>
                       <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
                     </Typography>
-
-                    <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                    <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
                       <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
                     </Typography>
-                  </CardContent>
+                  </Box>
 
+                  {/* Apply Button */}
                   <Button
                     variant="contained"
-                    sx={{
-                      m: 2,
-                      backgroundColor: "#fff",
-                      color: "#6a11cb",
-                      fontWeight: "bold",
-                    }}
+                    fullWidth
+                    sx={{ mt: 2, fontWeight: "bold", backgroundColor: "#0073b1" }}
                     onClick={() => {
                       if (job.id !== undefined) {
                         setSelectedId(job.id);
@@ -125,7 +94,7 @@ export const OpenJobsForApplication = () => {
                   >
                     Apply Now
                   </Button>
-                </Card>
+                </Box>
               </motion.div>
             </Grid>
           ))}
@@ -133,8 +102,8 @@ export const OpenJobsForApplication = () => {
       )}
 
       {showNoMatchingAlert && (
-        <Alert severity="info" sx={{ m: 2 }}>
-          No Approved Job Role found with name {searchQuery}!!
+        <Alert severity="info" sx={{ mt: 3 }}>
+          No Approved Job Role found with name &quot;{searchQuery}&quot;!!
         </Alert>
       )}
 

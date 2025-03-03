@@ -18,7 +18,7 @@ const getTabs = ({
   closed,
 }: JobCountsByStatus = {}): TabProps[] => [
   {
-    label: "Jobs",
+    label: "Closed",
     href: "/employer-dashboard",
     counts: closed,
     color: "success",
