@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using SMS.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
+// Add Frot End Permitions and Config
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
