@@ -8,13 +8,16 @@ import {
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import Stack from "@mui/material/Stack";
 import { Form, Formik } from "formik";
 import { useCallback, useEffect, useState } from "react";
 import * as Yup from "yup";
 
 import { FormRichTextField } from "../../components/form-controls/from-reach-text";
-import { JobDto, useCreateJobMutation, useUpdateJobMutation } from "../../app/services/DZJobsApi";
+import {
+  JobDto,
+  useCreateJobMutation,
+  useUpdateJobMutation,
+} from "../../app/services/DZJobsApi";
 import { removeEmptyFields } from "../../../utils";
 import { DialogHeader } from "../../components/dialog";
 import { Errors } from "../../components/Errors";
@@ -22,183 +25,154 @@ import { FormTextField } from "../../components/form-controls/form-text-field";
 import { FormSelectField } from "../../components/form-controls/form-select";
 import { JobCategory, JobType } from "../../app/services/enums";
 
-
-const emptyjobData = {
+const emptyjobData: JobDto = {
   title: "",
   description: "",
   jobCategory: 1,
   jobType: 1,
   salary: 1,
-} as JobDto;
+};
 
-export const JobDialog = ({ onClose ,employerId,job,title}: 
-  { onClose: () => void ,employerId : string,job? : JobDto | null,title  : string}) => {
-  const [jobData, setJobRole] = useState<JobDto>();
+export const JobDialog = ({
+  onClose,
+  employerId,
+  job,
+  title,
+}: {
+  onClose: () => void;
+  employerId: string;
+  job?: JobDto | null;
+  title: string;
+}) => {
+  const [jobData, setJobData] = useState<JobDto>();
   const [message, setMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();
 
   const [addJob, { error: AddJobError }] = useCreateJobMutation();
   const [updateJob, { error: UpdateJobError }] = useUpdateJobMutation();
 
-
   useEffect(() => {
-    setJobRole({
-      ...emptyjobData,
-      ...jobData,
-      ...job,
-    });
-  }, [jobData,job]);
+    setJobData({ ...emptyjobData, ...job });
+  }, [job]);
 
   const validationSchema = Yup.object({
-
+    title: Yup.string().required("Job title is required"),
+    description: Yup.string().required("Job description is required"),
+    jobCategory: Yup.number().required("Job category is required"),
+    jobType: Yup.number().required("Job type is required"),
+    salary: Yup.number()
+      .required("Salary is required")
+      .positive("Salary must be a positive number"),
   });
-  
+
   const handleSubmit = useCallback(
     (values: JobDto) => {
       values.employerId = employerId;
-      const payload = removeEmptyFields({
-        ...values,
-      });
-      console.log(payload);
+      const payload = removeEmptyFields(values);
+
       (job?.id
-        ? updateJob({
-            updateJobCommand: payload,
-          })
-        : addJob({
-            createJobCommand: payload,
-          })
+        ? updateJob({ updateJobCommand: payload })
+        : addJob({ createJobCommand: payload })
       )
         .unwrap()
         .then(() => {
           setAlertSeverity("success");
-          setMessage("Job Added successfully!");
+          setMessage("Job added successfully!");
           setTimeout(() => {
             onClose();
             window.location.reload();
-          }, 0);
+          }, 500);
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch(console.error);
     },
-    [onClose, addJob,employerId,job?.id,updateJob]
+    [onClose, addJob, employerId, job?.id, updateJob]
   );
-
 
   const errors = (
     (job?.id ? UpdateJobError : AddJobError) as any
   )?.data?.errors;
+
   return (
     <Dialog
-      scroll={"paper"}
-      disableEscapeKeyDown={true}
-      maxWidth={"md"}
-      open={true}
+      scroll="paper"
+      disableEscapeKeyDown
+      maxWidth="md"
+      open
       fullWidth
     >
       {!!jobData && (
         <Formik
           initialValues={jobData}
-          enableReinitialize={true}
+          enableReinitialize
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
-          validateOnChange={true}
-          validateOnBlur={true}
-          validateOnSubmit={true} // Ensure that validation happens on form submit
+          validateOnChange
+          validateOnBlur
+          validateOnSubmit
         >
           <Form>
             <DialogHeader title={title} onClose={onClose} />
-            <DialogContent dividers={true}>
+            <DialogContent dividers>
               <Grid container spacing={2}>
                 {message && (
-                  <Stack sx={{ width: "100%", marginBottom: 2 }} spacing={2}>
-                    <Alert
-                      severity={alertSeverity}
-                      onClose={() => setMessage(null)}
-                    >
-                      <AlertTitle>
-                        {alertSeverity === "success" ? "Success" : "Error"}
-                      </AlertTitle>
+                  <Grid item xs={12}>
+                    <Alert severity={alertSeverity} onClose={() => setMessage(null)}>
+                      <AlertTitle>{alertSeverity === "success" ? "Success" : "Error"}</AlertTitle>
                       {message}
                     </Alert>
-                  </Stack>
-                )}
-                {errors && (
-                  <Grid item xs={12}>
-                    <Errors errors={errors as any} />
                   </Grid>
                 )}
+
+                {errors && (
+                  <Grid item xs={12}>
+                    <Errors errors={errors} />
+                  </Grid>
+                )}
+
+                {/* Job Title */}
                 <Grid item xs={12}>
-                  <FormTextField
-                    name="title"
-                    label="Job Title"
-                    type="text"
-                    alwaysShowError={true}
-                  />
+                  <FormTextField name="title" label="Job Title" type="text" fullWidth />
                 </Grid>
 
+                {/* Job Description - Improved Styling */}
                 <Grid item xs={12}>
-                  <Box sx={{ display: "flex", gap: 2 }}>
+                  <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 1 }}>
                     <FormRichTextField name="description" />
                   </Box>
                 </Grid>
-                <Grid container spacing={3}>
-                        {errors && (
-                            <Grid item xs={12}>
-                                <Errors errors={errors} />
-                            </Grid>
-                        )}
-                        <Grid item xs={12}>
-                        <FormSelectField
-                      name="jobCategory"
-                      label="Job Category"
-                      options={[
-                        {
-                          label: "IT",
-                          value: JobCategory.IT,
-                        },
-                        {
-                          label: "Master",
-                          value: JobCategory.Consulting,
-                        },
-                      ]}
-                    />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormSelectField
-                      name="jobType"
-                      label="Job Type"
-                      options={[
-                        {
-                          label: "FullTime",
-                          value: JobType.FullTime,
-                        },
-                        {
-                          label: "PartTime",
-                          value: JobType.PartTime,
-                        },
-                        {
-                          label: "Contract",
-                          value: JobType.Contract,
-                        },
-                        {
-                          label: "Freelance",
-                          value: JobType.Freelance,
-                        },
-                      ]}
-                    />
-                    </Grid>
-                    <Grid item xs={12}>
-              <FormTextField
-                name="salary"
-                type="number"
-                placeholder="Salary"
-                label="Salary"
-                fullWidth
-              />
-            </Grid>
-                    </Grid>
 
+                {/* Job Category */}
+                <Grid item xs={6}>
+                  <FormSelectField
+                    name="jobCategory"
+                    label="Job Category"
+                    options={[
+                      { label: "IT", value: JobCategory.IT },
+                      { label: "Consulting", value: JobCategory.Consulting },
+                    ]}
+                    fullWidth
+                  />
+                </Grid>
+
+                {/* Job Type */}
+                <Grid item xs={6}>
+                  <FormSelectField
+                    name="jobType"
+                    label="Job Type"
+                    options={[
+                      { label: "Full-Time", value: JobType.FullTime },
+                      { label: "Part-Time", value: JobType.PartTime },
+                      { label: "Contract", value: JobType.Contract },
+                      { label: "Freelance", value: JobType.Freelance },
+                    ]}
+                    fullWidth
+                  />
+                </Grid>
+
+                {/* Salary */}
+                <Grid item xs={12}>
+                  <FormTextField name="salary" type="number" label="Salary" fullWidth />
+                </Grid>
               </Grid>
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
