@@ -1,9 +1,7 @@
 ﻿
 using DZJobs.Application.Models.Authentication.Login;
 using DZJobs.Application.Models.Authentication.Signup;
-using DZJobs.Domain.User;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using User.Managment.Service.Models;
@@ -42,8 +40,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeFreelancerAsync(updatePermissionDto);
             if (response.Status)
             {
-                var message = new EmailContent(new string[] { response.Email },"Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
-                 _emailService.SendEmail(message);
+                //var message = new EmailContent([response.Email],"Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
+                // _emailService.SendEmail(message);
 
                 return Ok(response);
             }
@@ -57,8 +55,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeAdminAsync(updatePermissionDto);
             if (response.Status)
             {
-                var message = new EmailContent(new string[] { response.Email }, "Congratulation", "you have Guaranted for <b>ADMIN Role</b> As Requested");
-                _emailService.SendEmail(message);
+                //var message = new EmailContent([response.Email], "Congratulation", "you have Guaranted for <b>ADMIN Role</b> As Requested");
+                //_emailService.SendEmail(message);
 
                 return Ok(response);
             }
@@ -72,8 +70,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeEmployerAsync(updatePermissionDto);
             if (response.Status)
             {
-                var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
+                //_emailService.SendEmail(message);
                 return Ok(response);
             }
             return BadRequest(response);
@@ -126,8 +124,8 @@ namespace ANCIA.Controllers
             var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
-                var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+                //_emailService.SendEmail(message);
 
             }
             return Ok(response);
@@ -147,13 +145,13 @@ namespace ANCIA.Controllers
 
         [HttpPost("Forgot-Password", Name = "ForgetPassword")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<Response>> ForgetPassword([Required] string email)
+        public async Task<ActionResult<ResponseDto>> ForgetPassword([Required] string email)
         {
             var response = await _userService.ForgetPasswordAsync(email);
             var forgotePasswordlink = Url.Action(nameof(ResetPassword), "Authentication", new { token = response.Token, email = response.Email }, Request.Scheme);
             var message = new EmailContent(new string[] { response.Email }, "Forget Password Email", forgotePasswordlink!);
             _emailService.SendEmail(message);
-            return NotFound(response);
+            return Ok(response);
         }
 
         //[HttpGet("Reset-Password/Auto", Name = "ResetPassword")]
@@ -186,20 +184,19 @@ namespace ANCIA.Controllers
         [HttpPost("Reset-Password", Name = "PasswordRest")]
         [ProducesResponseType(200)]
         [AllowAnonymous]
-        public async Task<ActionResult<Response>> PasswordRest(ResetPassword resetPassword)
+        public async Task<ActionResult<ResponseDto>> PasswordRest(ResetPassword resetPassword)
         {
             var response = await _userService.ResetPasswordAsync(resetPassword);
-            return new Response { Status = response.Status, Message = response.Message, StatusCode = response.StatusCode };
-
+            return Ok(response);
         }
 
 
         [HttpGet("Test Email")]
-        public async Task<ActionResult<Response>> TestEmail()
+        public async Task<IActionResult> TestEmail()
         {
             var message = new EmailContent(new string[] { "solomonsefiw91@gmail.com", "solayemam1234@gmail.com" }, "Melti Msg Test Message", "this is test message");
             _emailService.SendEmail(message);
-            return Ok(new Response { Status = true, Message = "Mail Server Worked Successfully" });
+            return Ok("Mail Server Worked Successfully");
 
         }
     }

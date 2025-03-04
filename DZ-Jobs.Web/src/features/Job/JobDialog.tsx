@@ -42,7 +42,7 @@ export const JobDialog = ({ onClose ,employerId,job,title}:
       ...jobData,
       ...job,
     });
-  }, [emptyjobData, jobData]);
+  }, [jobData,job]);
 
   const validationSchema = Yup.object({
 
@@ -76,7 +76,7 @@ export const JobDialog = ({ onClose ,employerId,job,title}:
           console.log(error);
         });
     },
-    [onClose, addJob,employerId]
+    [onClose, addJob,employerId,job?.id,updateJob]
   );
 
 
