@@ -36,18 +36,22 @@ export const JobTabs = ({ counts }: { counts?: JobCountsByStatus }) => {
     <Box
       sx={{
         width: "100%",
-        overflowX: "auto",
+        overflowX: "auto", // Allow horizontal scrolling for mobile
         bgcolor: "background.paper",
         position: "sticky", // Keeps tabs visible when scrolling (optional)
         top: 0,
         zIndex: 10,
+        boxShadow: isMobile ? "none" : 1, // Add shadow for desktop to separate from content
       }}
     >
       <Tabs
         value={getCurrentTabIndex()}
-        variant={isMobile ? "scrollable" : "standard"} // Enables horizontal scrolling on mobile
-        scrollButtons={isMobile ? "auto" : false}
+        variant={isMobile ? "scrollable" : "standard"} // Horizontal scroll for mobile
+        scrollButtons={isMobile ? "auto" : false} // Only show scroll buttons on mobile
         allowScrollButtonsMobile
+        sx={{
+          minHeight: isMobile ? "50px" : "auto", // Adjust the height for mobile
+        }}
       >
         {tabs.map(({ href, color, label, counts }) => (
           <Tab
@@ -59,6 +63,7 @@ export const JobTabs = ({ counts }: { counts?: JobCountsByStatus }) => {
               textTransform: "none",
               fontSize: isMobile ? "0.9rem" : "1rem",
               px: isMobile ? 1 : 2,
+              py: 1, // Add vertical padding for better clickability
             }}
             label={
               <Badge badgeContent={counts || 0} color={color} sx={{ "& .MuiBadge-badge": { fontSize: "0.75rem" } }}>

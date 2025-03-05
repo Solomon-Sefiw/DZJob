@@ -26,7 +26,14 @@ import { FormTextField } from "../../components/form-controls/form-text-field";
     salary: 0,
   } as any;
   
-  export const ApplayforJobDialog = ({ onClose ,freelancerId,jobId}: { onClose: () => void ,freelancerId : string,jobId : number | null}) => {
+  export const ApplayforJobDialog = ({ 
+    onClose ,
+    freelancerId,
+    jobId
+  }: { 
+    onClose: () => void ,
+    freelancerId : string,
+    jobId : number | null}) => {
     const [jobData, setJobRole] = useState<JobApplicationDto>();
     const [message, setMessage] = useState<string | null>(null);
     const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();

@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { RootState } from "../../app/store";
 
-import { JobApplicationDialog } from "./JobApplicationDialog";
 import { JobApplicationabs } from "./JobApplicationGrids/JobApplicationTabs";
 import { useGetAllJobsQuery, useGetJobApplicationCountByStatusQuery } from "../../app/services/DZJobsApi";
 import { PageHeader } from "../../components/PageHeader";
@@ -24,7 +23,6 @@ export const JobApplicationHome = () => {
 
   const user = useSelector((state: RootState) => state.auth);
   console.log(user)
-  const [dialogOpened, setDialogOpened] = useState(false);
   const { data: JobApplicationCounts } = useGetJobApplicationCountByStatusQuery({ freelancerId: user.userId });
   const { data = [] } = useGetAllJobsQuery();
 
@@ -49,27 +47,6 @@ export const JobApplicationHome = () => {
           title={user.username}
           icon={<WorkIcon sx={{ fontSize: 15, color: "#1976d2" }} />}
         />
-
-        {/* Button placed on the right side */}
-        {/* <Button
-          variant="outlined"
-          startIcon={<AddIcon />}
-          onClick={() => {
-            setDialogOpened(true);
-          }}
-          sx={{
-            color: "#fff",
-            borderColor: "#1976d2",
-            backgroundColor: "#1976d2",
-            "&:hover": {
-              backgroundColor: "#1976d2",
-              color: "#fff",
-              borderColor: "#1976d2",
-            },
-          }}
-        >
-          Add Job
-        </Button> */}
       </Box>
       <Box
         sx={{
@@ -157,16 +134,6 @@ export const JobApplicationHome = () => {
         <Divider />
         <Outlet context={{ searchQuery }} />
       </Paper>
-      {dialogOpened && (
-        <JobApplicationDialog
-          onClose={() => {
-            setDialogOpened(false);
-            window.location.reload();
-
-          }}
-          employerId = {user.userId}
-        />
-      )}
     </Box>
   );
 };

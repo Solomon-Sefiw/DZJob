@@ -1,7 +1,7 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
-import { Alert, Box, Button, Grid, Link, Typography, Divider, useTheme } from "@mui/material";
+import { Alert, Box, Button, Grid, Link, Typography, Divider, useTheme, Chip } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
@@ -130,12 +130,22 @@ export const OpenJobs = () => {
                   )}
 
                   {/* Salary & Posted Date */}
-                  <Typography variant="body2">
+                  {/* <Typography variant="body2">
                     <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
                   </Typography>
                   <Typography variant="body2" color="textSecondary">
                     <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
-                  </Typography>
+                  </Typography> */}
+                  <Box display="flex" gap={2} flexWrap="wrap" mt={2}>
+                    <Chip label={job.jobCategory} color="secondary" />
+                    <Chip label={job.jobType} color="primary" />
+                    <Typography variant="body1" sx={{ display: "flex", alignItems: "center" }}>
+                      <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
+                    </Typography>
+                    <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                      <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
+                    </Typography>
+                  </Box>
 
                   {/* Update Button */}
                   <Button
