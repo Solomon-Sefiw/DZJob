@@ -10,7 +10,7 @@ import {
   List, ListItem, ListItemText,
   Typography
 } from "@mui/material";
-import { useGetUserByIdQuery } from "../../app/services/DZJobsApi";
+import { useGetUserByIdQuery } from "../../../app/services/DZJobsApi";
 
 interface FreelancerDetailsDialogProps {
   open: boolean;
@@ -27,9 +27,9 @@ export const FreelancerDetailsDialog: React.FC<FreelancerDetailsDialogProps> = (
 
   // Sample demo data (replace with API data)
   const demoData = {
-    firstName: "John",
-    lastName: "Doe",
-    email: "johndoe@email.com",
+    firstName: freelancer?.firstName || undefined,
+    lastName: freelancer?.lastName || undefined,
+    email: freelancer?.email || undefined,
     location: "New York, USA",
     experienceYears: 5,
     bio: "Passionate full-stack developer with expertise in modern web technologies.",

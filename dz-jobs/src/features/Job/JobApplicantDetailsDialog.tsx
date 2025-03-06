@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 
-import { FreelancerDetailsDialog } from "../userProfile/FreelancerDetailsDialog";
+import { FreelancerDetailsDialog } from "../userProfile/freelancerProfile/FreelancerDetailsDialog";
 import { ApprovalDialog } from "./ApprovalDialog";
 import { JobDto, useGetJobApplicationByJobIdQuery } from "../../app/services/DZJobsApi";
   

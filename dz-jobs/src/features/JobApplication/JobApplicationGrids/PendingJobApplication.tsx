@@ -130,11 +130,11 @@ export const PendingJobApplication = () => {
 
                 <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
                   <MonetizationOnIcon sx={{ mr: 1 }} /> ${application.proposedSalary}
+                  <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {application.createdAt}
+
                 </Typography>
 
-                <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-                  <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {application.createdAt}
-                </Typography>
+
 
                 <Button
                   variant="contained"

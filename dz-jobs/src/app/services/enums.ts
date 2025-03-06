@@ -4,6 +4,13 @@ export enum ApplicationStatus
     Accepted = 2,
     Rejected = 3
 }
+export enum JobStatus
+{
+    Open = 1,
+    InProgress = 2,
+    Closed = 3,
+    Archived = 4
+}
 
 export enum EducationLevel {
   Primary = 1,

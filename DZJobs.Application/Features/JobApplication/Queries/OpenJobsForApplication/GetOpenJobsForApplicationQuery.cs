@@ -1,13 +1,6 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using DZJobs.Application.Jobs.DTOs;
 using DZJobs.Domain.Entities;
-using HCMS.Domain.Enum;
 using HCMS.Services.DataService;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -44,45 +37,14 @@ namespace DZJobs.Application.Features.Queries.GetJobList
                 EmployerName = job.Employer?.UserName ?? "Unknown",
                 Status = job.Status
             }).ToList();
-            //if (request.Status == JobStatus.InProgress)
-            //{
-            //    var result = joblist.Where(JR => JR.Status == JobStatus.InProgress)
-            //                                    .Skip((request.PageNumber - 1) * request.PageSize)
-            //                                    .Take(request.PageSize)
-            //                                    .ToList();
 
-            //    var count = await dataService.
-            //        Jobs.Where(JR => JR.Status == JobStatus.InProgress).CountAsync();
-            //    return new(result, count);
-            //}
-            //else if (request.Status == JobStatus.Archived)
-            //{
-            //    var result = joblist.Where(JR => JR.Status == JobStatus.Archived)
-            //                                     .Skip((request.PageNumber - 1) * request.PageSize)
-            //                                     .Take(request.PageSize)
-            //                                     .ToList();
-            //    var count = await dataService.Jobs.Where(JR =>
-            //            JR.Status == JobStatus.Archived).CountAsync();
-            //    return new(result, count);
-            //}
-            //else if (request.Status == JobStatus.Open)
-            //{
                 var result = joblist.Where(JR => JR.Status == JobStatus.Open)
                                             .Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize)
                                             .ToList();
                 var count = await dataService.Jobs.Where(JR =>
                         JR.Status == JobStatus.Open).CountAsync();
                 return new(result, count);
-            //}
-            //else
-            //{
-            //    var result = joblist.Where(JR => JR.Status == JobStatus.Closed)
-            //                                    .Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize)
-            //                                    .ToList();
-            //    var count = await dataService.Jobs.Where(JR =>
-            //                JR.Status == JobStatus.Closed).CountAsync();
-            //    return new(result, count);
-            //}
+
         }
     }
 

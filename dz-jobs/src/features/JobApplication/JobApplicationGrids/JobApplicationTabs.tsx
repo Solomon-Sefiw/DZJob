@@ -18,7 +18,7 @@ const getTabs = ({
   {
     label: "Open Jobs",
     href: "/freelancer-dashboard",
-    counts: accepted,
+    counts:0,
     color: "success",
   },
   {
