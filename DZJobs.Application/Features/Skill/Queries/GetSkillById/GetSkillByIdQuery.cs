@@ -33,7 +33,7 @@ namespace HCMS.Application.Skills.Queries
             {
                 Id = skill.Id,
                 Name = skill.Name,
-                Description = skill.Description
+                Category = skill.Category        
             };
         }
     }

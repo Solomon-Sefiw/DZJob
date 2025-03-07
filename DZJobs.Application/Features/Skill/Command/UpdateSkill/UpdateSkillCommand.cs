@@ -7,7 +7,7 @@ namespace HCMS.Application.Skills.Commands
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Category { get; set; }
     }
 
     public class UpdateSkillCommandHandler : IRequestHandler<UpdateSkillCommand, int>
@@ -26,7 +26,7 @@ namespace HCMS.Application.Skills.Commands
                 throw new KeyNotFoundException("Skill not found.");
 
             skill.Name = request.Name;
-            skill.Description = request.Description;
+            skill.Category = request.Category;
             skill.UpdatedAt = DateTime.UtcNow;
 
             _context.Skills.Update(skill);

@@ -1,6 +1,10 @@
 ﻿
+using DZJobs.Application.Features.Users.Commands.Documents;
 using DZJobs.Application.Models.Authentication.Login;
 using DZJobs.Application.Models.Authentication.Signup;
+using HCMS.Api.Dto;
+using HCMS.API.Controllers;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -13,7 +17,7 @@ namespace ANCIA.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class AuthenticationController : BaseController<AuthenticationController>
     {
         private readonly IEmailServices _emailService;
         private readonly IUserService _userService;
@@ -188,6 +192,15 @@ namespace ANCIA.Controllers
         {
             var response = await _userService.ResetPasswordAsync(resetPassword);
             return Ok(response);
+        }
+        [HttpPost("{id}/add-photo", Name = "AddEmployeePhoto")]
+        [ProducesResponseType(200)]
+        public async Task<DocumentMetadataDto> AddEmployeePhoto(string id, [FromForm] UploadDocumentDto document)
+        {
+            var command = new AddUserPhotoCommand(id, document.File);
+            var doc = await mediator.Send(command);
+
+            return new DocumentMetadataDto(GetDocumentUrl(doc.Id));
         }
 
 

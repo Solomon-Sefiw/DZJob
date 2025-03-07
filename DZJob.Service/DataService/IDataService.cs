@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using DZJobs.Domain.Entities;
+using HCMS.Domain.Document;
 using Microsoft.EntityFrameworkCore;
 
 namespace HCMS.Services.DataService
@@ -17,6 +18,9 @@ namespace HCMS.Services.DataService
         public DbSet<Geolocation> Geolocations { get; set; }
         public DbSet<EmploymentHistory> EmploymentHistories { get; set; }
         public DbSet<UserSkill> UserSkills { get; set; }
+        public DbSet<JobSkill> JobSkills { get; set; }
+        public DbSet<UserDocument> UserDocuments { get; set; }
+        public DbSet<Document> Documents { get; set; }
 
         void Save();
         Task SaveAsync(CancellationToken cancellationToken);

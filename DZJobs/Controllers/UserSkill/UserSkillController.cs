@@ -3,13 +3,15 @@ using DZJobs.Application.Features.UserSkill.Command.DeleteUserSkill;
 using DZJobs.Application.Features.UserSkill.Models;
 using DZJobs.Application.Features.UserSkill.Queries.GetUserSkills;
 using HCMS.API.Controllers;
+using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DZJobs.Controllers.UserSkill
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserSkillsController : BaseController<UserSkillsController>
+    public class UserSkillController : BaseController<UserSkillController>
     {
         [HttpGet("getByUserId{userId}", Name = "GetUserSkill")]
         [ProducesResponseType(200)]

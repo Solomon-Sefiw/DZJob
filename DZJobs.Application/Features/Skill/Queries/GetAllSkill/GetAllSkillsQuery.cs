@@ -24,7 +24,7 @@ namespace HCMS.Application.Skills.Queries
                 {
                     Id = s.Id,
                     Name = s.Name,
-                    Description = s.Description
+                    Category = s.Category
                 })
                 .ToListAsync(cancellationToken);
         }

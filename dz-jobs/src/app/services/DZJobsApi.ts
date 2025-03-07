@@ -767,6 +767,33 @@ export type Review = {
   rating?: number;
   reviewDate?: string;
 };
+export type UserSkill = {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  userId?: string | null;
+  user?: DzJobUser;
+  skillId?: number;
+  skill?: Skill;
+};
+export type Skill = {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  name?: string | null;
+  category?: string | null;
+  userSkills?: UserSkill[] | null;
+  jobSkills?: JobSkill[] | null;
+};
+export type JobSkill = {
+  id?: number;
+  createdAt?: string;
+  updatedAt?: string;
+  jobId?: number;
+  job?: Job;
+  skillId?: number;
+  skill?: Skill;
+};
 export type Job = {
   id?: number;
   createdAt?: string;
@@ -783,6 +810,7 @@ export type Job = {
   applications?: JobApplication[] | null;
   contracts?: Contract[] | null;
   reviews?: Review[] | null;
+  jobSkills?: JobSkill[] | null;
 };
 export type Message = {
   id?: number;
@@ -807,23 +835,6 @@ export type Notification = {
   isRead?: boolean;
   type?: NotificationType;
   createdAt?: string;
-};
-export type Skill = {
-  id?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  name?: string | null;
-  description?: string | null;
-  userSkills?: UserSkill[] | null;
-};
-export type UserSkill = {
-  id?: number;
-  createdAt?: string;
-  updatedAt?: string;
-  userId?: string | null;
-  user?: DzJobUser;
-  skillId?: number;
-  skill?: Skill;
 };
 export type DzJobUser = {
   id?: string | null;
@@ -1110,17 +1121,17 @@ export type RejectJobApplicationCommand = {
 };
 export type CreateSkillCommand = {
   name?: string | null;
-  description?: string | null;
+  category?: string | null;
 };
 export type UpdateSkillCommand = {
   id?: number;
   name?: string | null;
-  description?: string | null;
+  category?: string | null;
 };
 export type SkillDto = {
   id?: number;
   name?: string | null;
-  description?: string | null;
+  category?: string | null;
 };
 export type UserSkillDto = {
   id?: number;

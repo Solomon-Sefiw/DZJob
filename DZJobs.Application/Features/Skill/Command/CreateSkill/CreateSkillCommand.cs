@@ -7,7 +7,7 @@ namespace HCMS.Application.Skills.Commands
     public class CreateSkillCommand : IRequest<int>
     {
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string Category { get; set; }
     }
 
     public class CreateSkillCommandHandler : IRequestHandler<CreateSkillCommand, int>
@@ -24,7 +24,7 @@ namespace HCMS.Application.Skills.Commands
             var skill = new Skill
             {
                 Name = request.Name,
-                Description = request.Description,
+                Category = request.Category,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };

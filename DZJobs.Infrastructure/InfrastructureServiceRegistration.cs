@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using DZJobs.Domain.User;
 using DZJobs.Persistence.DBContext;
+using HCMS.Application.Contrats;
+using HCMS.Infrastructure;
 using HCMS.Services.DataService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +23,7 @@ public static class InfrastructureServiceRegistration
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IEmailServices, EmailServices>();
-
+        services.AddScoped<IDocumentUploadService, DocumentUploadService>();
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
