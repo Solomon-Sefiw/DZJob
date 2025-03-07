@@ -96,11 +96,39 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.resetPassword,
       }),
     }),
+    addEmployeePhoto: build.mutation<
+      AddEmployeePhotoApiResponse,
+      AddEmployeePhotoApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/Authentication/${queryArg.id}/add-photo`,
+        method: "POST",
+        body: queryArg.body,
+      }),
+    }),
     getApiAuthenticationTestEmail: build.query<
       GetApiAuthenticationTestEmailApiResponse,
       GetApiAuthenticationTestEmailApiArg
     >({
       query: () => ({ url: `/api/Authentication/Test Email` }),
+    }),
+    getApiDocumentsById: build.query<
+      GetApiDocumentsByIdApiResponse,
+      GetApiDocumentsByIdApiArg
+    >({
+      query: (queryArg) => ({ url: `/api/Documents/${queryArg.id}` }),
+    }),
+    documentRootPath: build.query<
+      DocumentRootPathApiResponse,
+      DocumentRootPathApiArg
+    >({
+      query: () => ({ url: `/api/Documents/root-path` }),
+    }),
+    downloadDocument: build.query<
+      DownloadDocumentApiResponse,
+      DownloadDocumentApiArg
+    >({
+      query: (queryArg) => ({ url: `/api/Documents/${queryArg.id}/download` }),
     }),
     createEducation: build.mutation<
       CreateEducationApiResponse,
@@ -415,6 +443,29 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.rejectJobApplicationCommand,
       }),
     }),
+    getJobSkill: build.query<GetJobSkillApiResponse, GetJobSkillApiArg>({
+      query: (queryArg) => ({
+        url: `/api/JobSkill/getByJobId`,
+        params: { jobId: queryArg.jobId },
+      }),
+    }),
+    addJobSkill: build.mutation<AddJobSkillApiResponse, AddJobSkillApiArg>({
+      query: (queryArg) => ({
+        url: `/api/JobSkill/add`,
+        method: "POST",
+        body: queryArg.addJobSkillCommand,
+      }),
+    }),
+    removeJobSkill: build.mutation<
+      RemoveJobSkillApiResponse,
+      RemoveJobSkillApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/JobSkill/remove`,
+        method: "DELETE",
+        params: { jobSkillId: queryArg.jobSkillId },
+      }),
+    }),
     createSkill: build.mutation<CreateSkillApiResponse, CreateSkillApiArg>({
       query: (queryArg) => ({
         url: `/api/Skill/Create`,
@@ -437,12 +488,12 @@ const injectedRtkApi = api.injectEndpoints({
     }),
     getUserSkill: build.query<GetUserSkillApiResponse, GetUserSkillApiArg>({
       query: (queryArg) => ({
-        url: `/api/UserSkills/getByUserId${queryArg.userId}`,
+        url: `/api/UserSkill/getByUserId${queryArg.userId}`,
       }),
     }),
     addUserSkill: build.mutation<AddUserSkillApiResponse, AddUserSkillApiArg>({
       query: (queryArg) => ({
-        url: `/api/UserSkills/add`,
+        url: `/api/UserSkill/add`,
         method: "POST",
         body: queryArg.addUserSkillCommand,
       }),
@@ -452,7 +503,7 @@ const injectedRtkApi = api.injectEndpoints({
       RemoveUserSkillApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/UserSkills/remove${queryArg.userSkillId}`,
+        url: `/api/UserSkill/remove${queryArg.userSkillId}`,
         method: "DELETE",
       }),
     }),
@@ -512,8 +563,27 @@ export type PasswordRestApiResponse = /** status 200 OK */ ResponseDto;
 export type PasswordRestApiArg = {
   resetPassword: ResetPassword;
 };
+export type AddEmployeePhotoApiResponse =
+  /** status 200 OK */ DocumentMetadataDto;
+export type AddEmployeePhotoApiArg = {
+  id: string;
+  body: {
+    File?: Blob;
+  };
+};
 export type GetApiAuthenticationTestEmailApiResponse = unknown;
 export type GetApiAuthenticationTestEmailApiArg = void;
+export type GetApiDocumentsByIdApiResponse = /** status 200 OK */ Blob;
+export type GetApiDocumentsByIdApiArg = {
+  id: string;
+};
+export type DocumentRootPathApiResponse =
+  /** status 200 OK */ DocumentEndpointRootPath;
+export type DocumentRootPathApiArg = void;
+export type DownloadDocumentApiResponse = /** status 200 OK */ Blob;
+export type DownloadDocumentApiArg = {
+  id: string;
+};
 export type CreateEducationApiResponse = /** status 200 OK */ number;
 export type CreateEducationApiArg = {
   createEducationCommand: CreateEducationCommand;
@@ -667,6 +737,18 @@ export type RejectJobApplicationApiResponse = /** status 200 OK */ number;
 export type RejectJobApplicationApiArg = {
   rejectJobApplicationCommand: RejectJobApplicationCommand;
 };
+export type GetJobSkillApiResponse = /** status 200 OK */ JobSkillDto[];
+export type GetJobSkillApiArg = {
+  jobId?: number;
+};
+export type AddJobSkillApiResponse = /** status 200 OK */ number;
+export type AddJobSkillApiArg = {
+  addJobSkillCommand: AddJobSkillCommand;
+};
+export type RemoveJobSkillApiResponse = /** status 200 OK */ boolean;
+export type RemoveJobSkillApiArg = {
+  jobSkillId?: number;
+};
 export type CreateSkillApiResponse = /** status 200 OK */ number;
 export type CreateSkillApiArg = {
   createSkillCommand: CreateSkillCommand;
@@ -802,6 +884,7 @@ export type Job = {
   description?: string | null;
   jobCategory?: JobCategory;
   jobType?: JobType;
+  location?: string | null;
   salary?: number;
   postedDate?: string;
   employerId?: string | null;
@@ -880,6 +963,12 @@ export type ResetPassword = {
   confirmPassword?: string | null;
   email?: string | null;
   token?: string | null;
+};
+export type DocumentMetadataDto = {
+  id?: string | null;
+};
+export type DocumentEndpointRootPath = {
+  path?: string | null;
 };
 export type EducationLevelEnum =
   | 1
@@ -1119,6 +1208,16 @@ export type RejectJobApplicationCommand = {
   applicantId?: number;
   jobId?: number;
 };
+export type JobSkillDto = {
+  id?: number;
+  skillId?: number;
+  skillName?: string | null;
+  jobId?: number;
+};
+export type AddJobSkillCommand = {
+  jobId?: number;
+  skillId?: number;
+};
 export type CreateSkillCommand = {
   name?: string | null;
   category?: string | null;
@@ -1161,8 +1260,15 @@ export const {
   useResetPasswordQuery,
   useLazyResetPasswordQuery,
   usePasswordRestMutation,
+  useAddEmployeePhotoMutation,
   useGetApiAuthenticationTestEmailQuery,
   useLazyGetApiAuthenticationTestEmailQuery,
+  useGetApiDocumentsByIdQuery,
+  useLazyGetApiDocumentsByIdQuery,
+  useDocumentRootPathQuery,
+  useLazyDocumentRootPathQuery,
+  useDownloadDocumentQuery,
+  useLazyDownloadDocumentQuery,
   useCreateEducationMutation,
   useUpdateEducationMutation,
   useGetEducationByIdQuery,
@@ -1218,6 +1324,10 @@ export const {
   useApproveJobApplicationMutation,
   useCloseJobApplicationMutation,
   useRejectJobApplicationMutation,
+  useGetJobSkillQuery,
+  useLazyGetJobSkillQuery,
+  useAddJobSkillMutation,
+  useRemoveJobSkillMutation,
   useCreateSkillMutation,
   useUpdateSkillMutation,
   useGetSkillByIdQuery,
