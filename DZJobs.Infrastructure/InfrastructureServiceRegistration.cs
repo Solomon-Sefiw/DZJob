@@ -21,7 +21,7 @@ public static class InfrastructureServiceRegistration
 {
     public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserAccontService, UserAccountService>();
         services.AddScoped<IEmailServices, EmailServices>();
         services.AddScoped<IDocumentUploadService, DocumentUploadService>();
         services.AddAuthentication(options =>

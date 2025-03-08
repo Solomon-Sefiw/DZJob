@@ -13,6 +13,8 @@ public class DZJobUser : IdentityUser
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
     public ICollection<Message> Messages { get; set; } = new List<Message>();
     public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+    public ICollection<UserDocument> UserDocuments { get; set; }
+
 
     // Navigation Property
     public ICollection<UserSkill> UserSkills { get; set; } = new List<UserSkill>();

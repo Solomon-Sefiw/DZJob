@@ -1,9 +1,12 @@
 ﻿
 
+using HCMS.Domain.Common;
+
 namespace HCMS.Domain.Document
 {
-    public class Document : BaseEntity
+    public class Document : AuditableEntity
     {
+
         public string Id { get; set; }
         public string FileName { get; set; }
         public string ContentType { get; set; }

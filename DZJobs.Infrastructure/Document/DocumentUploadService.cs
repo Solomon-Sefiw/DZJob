@@ -34,6 +34,7 @@ namespace HCMS.Infrastructure
 
                 var document = new Document()
                 {
+                    Id = Guid.NewGuid().ToString(), // Assign a unique string ID
                     FileName = file.FileName,
                     Length = file.Length,
                     ContentDescription = file.ContentDisposition,

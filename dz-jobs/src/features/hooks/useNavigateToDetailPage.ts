@@ -12,7 +12,7 @@ export const getDetailPageUrl = ({
     `/employee-detail/${id}${
       (versionNumber && `?version=${versionNumber}`) || ""
     }`) ||
-  undefined;
+  undefined;  
 
 export const useNavigateToDetailPage = () => {
   const navigate = useNavigate();

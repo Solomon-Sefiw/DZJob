@@ -66,6 +66,7 @@ export const FreelancerDetailsDialog: React.FC<FreelancerDetailsDialogProps> = (
                 alt={demoData.firstName} 
                 sx={{ width: 100, height: 100, mb: 1 }}
               />
+              
               <Typography variant="h6" fontWeight="bold">
                 {demoData.firstName} {demoData.lastName}
               </Typography>

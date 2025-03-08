@@ -6,7 +6,7 @@ using User.Managment.Service.Models.DTO;
 
 namespace User.Managment.Service.Services
 {
-    public interface IUserService
+    public interface IUserAccontService
     {
         public Task<ResponseDto> SeedRoleAsync();
         Task<ResponseDto> CreateuserAsync(RegisterUser registerUser);

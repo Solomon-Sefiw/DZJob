@@ -4,9 +4,11 @@ using System.Reflection.Emit;
 using DZJobs.Domain.Entities;
 using DZJobs.Domain.User;
 using HCMS.Domain.Document;
+using HCMS.Persistance.Interceptors;
 using HCMS.Services.DataService;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SMS.Persistence.Interceptors;
 
 namespace DZJobs.Persistence.DBContext
 {
@@ -18,7 +20,8 @@ namespace DZJobs.Persistence.DBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            modelBuilder.Entity<Document>()
+                 .HasKey(d => d.Id); // Ensure Id is primary key
             modelBuilder.Entity<Contract>()
                         .HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
                         .WithMany(j => j.Contracts)
@@ -93,6 +96,9 @@ namespace DZJobs.Persistence.DBContext
 
         }
 
+
+        private readonly AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor;
+        private readonly PublishDomainEventsInterceptor publishDomainEventsInterceptor;
         public DbSet<Job> Jobs { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
         public DbSet<FreelancerProfile> FreelancerProfiles { get; set; }
@@ -483,9 +489,23 @@ new Skill { Name = "Store Associate", Category = "Retail", CreatedAt = DateTime.
                 context.SaveChanges();
             }
         }
+
         public async Task SaveAsync(CancellationToken cancellationToken)
         {
             await SaveChangesAsync(cancellationToken);
+        }
+        public DZJobsDBContext(DbContextOptions<DZJobsDBContext> options,
+               AuditableEntitySaveChangesInterceptor auditableEntitySaveChangesInterceptor,
+               PublishDomainEventsInterceptor publishDomainEventsInterceptor) : base(options)
+        {
+            this.auditableEntitySaveChangesInterceptor = auditableEntitySaveChangesInterceptor;
+            this.publishDomainEventsInterceptor = publishDomainEventsInterceptor;
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(publishDomainEventsInterceptor, auditableEntitySaveChangesInterceptor);
+
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }

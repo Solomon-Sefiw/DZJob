@@ -1,4 +1,5 @@
 ﻿
+using DZJobs.Domain.Common;
 using HCMS.Domain.Enum;
 
 namespace DZJobs.Domain.Entities

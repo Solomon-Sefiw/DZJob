@@ -1,6 +1,4 @@
-﻿
-
-namespace DZJobs.Domain.Entities
+﻿namespace DZJobs.Domain.Common
 {
     public class AuditableSoftDeleteEntity
     {

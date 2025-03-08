@@ -16,14 +16,14 @@ using DZJobs.Application.Models.Authentication.Signup;
 
 namespace User.Managment.Service.Repository
 {
-    public class UserService : IUserService
+    public class UserAccountService : IUserAccontService
     {
         private readonly UserManager<DZJobUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<DZJobUser> _signInManager;
 
-        public UserService(UserManager<DZJobUser> userManager,
+        public UserAccountService(UserManager<DZJobUser> userManager,
             RoleManager<IdentityRole> roleManager, IConfiguration configuration,
             SignInManager<DZJobUser> signInManager)
         {

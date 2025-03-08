@@ -20,9 +20,9 @@ namespace ANCIA.Controllers
     public class AuthenticationController : BaseController<AuthenticationController>
     {
         private readonly IEmailServices _emailService;
-        private readonly IUserService _userService;
+        private readonly IUserAccontService _userService;
 
-        public AuthenticationController(IEmailServices emailService, IUserService userService)
+        public AuthenticationController(IEmailServices emailService, IUserAccontService userService)
         {
 
             _emailService = emailService;
@@ -193,9 +193,9 @@ namespace ANCIA.Controllers
             var response = await _userService.ResetPasswordAsync(resetPassword);
             return Ok(response);
         }
-        [HttpPost("{id}/add-photo", Name = "AddEmployeePhoto")]
+        [HttpPost("{id}/add-photo", Name = "AddUserPhoto")]
         [ProducesResponseType(200)]
-        public async Task<DocumentMetadataDto> AddEmployeePhoto(string id, [FromForm] UploadDocumentDto document)
+        public async Task<DocumentMetadataDto> AddUserPhoto(string id, [FromForm] UploadDocumentDto document)
         {
             var command = new AddUserPhotoCommand(id, document.File);
             var doc = await mediator.Send(command);
