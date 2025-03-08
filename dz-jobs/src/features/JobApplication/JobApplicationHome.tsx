@@ -67,7 +67,7 @@ export const JobApplicationHome = () => {
               backgroundColor: "#1976d2",
             },
           }}
-        ></Button>
+        >Back</Button>
       </Box>
       {/* Search section in a new line */}
       <Box sx={{ marginTop: 2, display: "flex", justifyContent: "flex-start" }}>

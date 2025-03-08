@@ -74,8 +74,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeEmployerAsync(updatePermissionDto);
             if (response.Status)
             {
-                //var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
-                //_emailService.SendEmail(message);
+                var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
+                _emailService.SendEmail(message);
                 return Ok(response);
             }
             return BadRequest(response);
