@@ -20,6 +20,9 @@ import * as yup from "yup";
 
 import { FormTextField } from "../../components/form-controls";
 import { useForgetPasswordMutation, useLoginMutation } from "../../app/services/DZJobsApi";
+import { useDispatch } from "react-redux";
+import { logout } from "../../app/slicies/authSlice";
+
 
 const validationSchema = yup.object({
   email: yup.string().email("Please enter a valid email address").required("Email is required"),
@@ -39,6 +42,8 @@ export const Login = () => {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  dispatch(logout());
 
   const handleSubmit = useCallback(
     (values: any) => {
@@ -69,7 +74,6 @@ export const Login = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          minHeight: "100vh",
           backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#f7f7f7",
         }}
       >

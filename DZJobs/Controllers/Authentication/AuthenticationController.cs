@@ -2,8 +2,9 @@
 using DZJobs.Application.Features.Users.Commands.Documents;
 using DZJobs.Application.Models.Authentication.Login;
 using DZJobs.Application.Models.Authentication.Signup;
+using DZJobs.Controllers;
+using DZJobs.Domain.User;
 using HCMS.Api.Dto;
-using HCMS.API.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -74,8 +75,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeEmployerAsync(updatePermissionDto);
             if (response.Status)
             {
-                var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
+                //_emailService.SendEmail(message);
                 return Ok(response);
             }
             return BadRequest(response);
@@ -91,9 +92,10 @@ namespace ANCIA.Controllers
 
         [HttpGet("GetById", Name = "GetUserById")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<DZJobUser>> GetUserById(string Id)
+        public async Task<ActionResult<DZJobUserDto>> GetUserById(string Id)
         {
-            var response = await _userService.GetUserByIdAsync(Id);
+            var response = await _userService.GetUserByIdAsync(Id); 
+            response.PhotoUrl = GetDocumentUrl(response.PhotoId);
             return Ok(response);
         }
 
@@ -128,8 +130,8 @@ namespace ANCIA.Controllers
             var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
-                var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+                //_emailService.SendEmail(message);
 
             }
             return Ok(response);
@@ -193,6 +195,15 @@ namespace ANCIA.Controllers
             var response = await _userService.ResetPasswordAsync(resetPassword);
             return Ok(response);
         }
+        //[HttpPost("{id}/add-photo", Name = "AddUserPhoto")]
+        //[ProducesResponseType(200)]
+        //public async Task<DocumentMetadataDto> AddUserPhoto(string id, [FromForm] UploadDocumentDto document)
+        //{
+        //    var command = new AddUserPhotoCommand(id, document.File);
+        //    var doc = await mediator.Send(command);
+
+        //    return new DocumentMetadataDto(GetDocumentUrl(doc.Id));
+        //}
         [HttpPost("{id}/add-photo", Name = "AddUserPhoto")]
         [ProducesResponseType(200)]
         public async Task<DocumentMetadataDto> AddUserPhoto(string id, [FromForm] UploadDocumentDto document)

@@ -90,9 +90,10 @@ export const AcceptedJobApplication = () => {
                     <Typography
                       variant="body2"
                       sx={{ display: "inline", fontSize: "0.9rem", color: "text.secondary" }}
-                    >
-                      {truncateText(application.coverLetter || "", 60)}
-                    </Typography>
+                      dangerouslySetInnerHTML={{ __html: truncateText(application.coverLetter || "", 60)}}
+                    />
+                      
+                      
                     {application.coverLetter && application.coverLetter.length > 60 && (
                       <Typography
                         component="span"

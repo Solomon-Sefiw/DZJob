@@ -1,4 +1,5 @@
-﻿using HCMS.Api.Dto;
+﻿using DZJobs.Controllers;
+using HCMS.Api.Dto;
 using HCMS.Application;
 using HCMS.Application.Features.Documents.Query;
 using Microsoft.AspNetCore.Mvc;

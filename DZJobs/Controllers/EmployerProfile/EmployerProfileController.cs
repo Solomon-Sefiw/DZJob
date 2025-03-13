@@ -1,5 +1,4 @@
 ﻿using DZJobs.Application.Features.EmployerProfile.Queries.GetAllEmployerProfile;
-using HCMS.API.Controllers;
 using HCMS.Application.EmployerProfiles.Commands;
 using HCMS.Application.EmployerProfiles.Models;
 using HCMS.Application.EmployerProfiles.Queries;

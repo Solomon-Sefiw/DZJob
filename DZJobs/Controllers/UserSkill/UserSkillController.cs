@@ -2,7 +2,6 @@
 using DZJobs.Application.Features.UserSkill.Command.DeleteUserSkill;
 using DZJobs.Application.Features.UserSkill.Models;
 using DZJobs.Application.Features.UserSkill.Queries.GetUserSkills;
-using HCMS.API.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

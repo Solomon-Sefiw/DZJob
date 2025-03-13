@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HCMS.Application.JobApplications.Queries
 {
-    public record GetJobApplicationByJobIdQuery(int Id) : IRequest<JobApplicationSearchByJobIdResult>;
+    public record GetJobApplicationByJobIdQuery(ApplicationStatus Status, int Id) : IRequest<JobApplicationSearchByJobIdResult>;
 
     public record JobApplicationSearchByJobIdResult(List<JobApplicationDto> Items, int TotalCount);
     public class GetJobApplicationByJobIdQueryHandler : IRequestHandler<GetJobApplicationByJobIdQuery, JobApplicationSearchByJobIdResult>
@@ -24,7 +24,7 @@ namespace HCMS.Application.JobApplications.Queries
             var applications = await _context.JobApplications
                                             .Include(ja => ja.Job)
                                             .Include(ja => ja.Freelancer)
-                                            .Where(ja => ja.JobId == request.Id).ToListAsync();
+                                            .Where(ja => ja.JobId == request.Id && ja.Status == request.Status).ToListAsync();
             var applicationList = applications.Select(ja => new JobApplicationDto
             {
                 Id = ja.Id,
@@ -40,7 +40,7 @@ namespace HCMS.Application.JobApplications.Queries
                 UpdatedAt = ja.UpdatedAt
             }).ToList();
 
-            var count = await _context.JobApplications.Where(ja => ja.JobId == request.Id).CountAsync();
+            var count = await _context.JobApplications.Where(ja => ja.JobId == request.Id && ja.Status == request.Status).CountAsync();
             return new(applicationList, count);
         }
     }

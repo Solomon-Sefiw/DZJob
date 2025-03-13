@@ -1,5 +1,4 @@
-﻿using HCMS.API.Controllers;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DZJobs.Controllers.EmploymentHistory

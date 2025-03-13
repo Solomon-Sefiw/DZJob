@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DZJobs.Application.Features.Users.Commands.Documents
 {
-    public record AddUserPhotoCommand(string EmployeeId, IFormFile File) : IRequest<Document>;
+    public record AddUserPhotoCommand(string UserId, IFormFile File) : IRequest<Document>;
 
     public class AddUserPhotoCommandHandler : IRequestHandler<AddUserPhotoCommand, Document>
     {
@@ -30,14 +30,14 @@ namespace DZJobs.Application.Features.Users.Commands.Documents
             });
 
             var currentPhoto = await dataService.UserDocuments
-                .Where(sd => sd.userId == request.EmployeeId &&
+                .Where(sd => sd.userId == request.UserId &&
                 sd.DocumentType == DocumentType.EmployeePicture).ToListAsync();
 
             dataService.UserDocuments.RemoveRange(currentPhoto);
 
             dataService.UserDocuments.Add(new UserDocument()
             {
-                userId = request.EmployeeId,
+                userId = request.UserId,
                 DocumentType = DocumentType.EmployeePicture,
                 DocumentId = document.Id,
                 FileName = document.FileName

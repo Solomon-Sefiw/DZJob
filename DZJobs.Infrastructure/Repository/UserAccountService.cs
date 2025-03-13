@@ -13,6 +13,9 @@ using System.IdentityModel.Tokens.Jwt;
 using Org.BouncyCastle.Crypto;
 using DZJobs.Application.Models.Authentication.Login;
 using DZJobs.Application.Models.Authentication.Signup;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using HCMS.Domain.Enum;
 
 namespace User.Managment.Service.Repository
 {
@@ -22,15 +25,17 @@ namespace User.Managment.Service.Repository
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private readonly SignInManager<DZJobUser> _signInManager;
+        private readonly IMapper mapper;
 
         public UserAccountService(UserManager<DZJobUser> userManager,
             RoleManager<IdentityRole> roleManager, IConfiguration configuration,
-            SignInManager<DZJobUser> signInManager)
+            SignInManager<DZJobUser> signInManager,IMapper mapper)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
             _signInManager = signInManager;
+             this.mapper = mapper;
         }
 
         public async Task<ResponseDto> SeedRoleAsync()
@@ -409,6 +414,50 @@ namespace User.Managment.Service.Repository
         public async Task<ICollection<DZJobUser>> GetAllUserAsync() => await _userManager.Users.ToListAsync();
 
 
-        public async Task<DZJobUser> GetUserByIdAsync(string Id) => await _userManager.Users.FirstOrDefaultAsync(u => u.Id == Id);
+        public async Task<DZJobUserDto> GetUserByIdAsync(string Id)
+        {
+
+            var user = await _userManager.Users.Where(s => s.Id == Id)
+                           .ProjectTo<DZJobUserDto>(mapper.ConfigurationProvider)
+                           .FirstOrDefaultAsync();
+            var userinfo = new DZJobUserDto()
+            {
+               Id = user.Id,
+               FirstName = user.FirstName,
+               LastName = user.LastName,
+               UserName = user.UserName,
+               Email = user.Email,
+               PhotoId = user.PhotoId,
+               PhotoUrl = user.PhotoUrl,
+                UserDocuments = user.UserDocuments,
+            };
+            if (userinfo != null)
+            {
+                var current = await _userManager
+                .Users
+                .Include(s => s.UserDocuments)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(sh => sh.Id == Id);
+
+
+                //var shareholderDocuments = await _userManager.UserDocuments
+                //    .Where(s => s.EmployeeId == request.employeeId &&
+                //        (s.DocumentType == DocumentType.EmployeePicture) &&
+                //        s.IsDeleted != true)
+                //    .Select(d => new { d.DocumentType, d.DocumentId }).ToListAsync();
+
+                userinfo.PhotoId = current?.UserDocuments
+                    .Where(d => d.DocumentType == DocumentType.EmployeePicture)
+                    .Select(d => d.DocumentId).FirstOrDefault();
+            }
+
+
+            return userinfo;
+
+
+           // return await _userManager.Users.FirstOrDefaultAsync(u => u.Id == Id);
+
+
+        }
     }
 }

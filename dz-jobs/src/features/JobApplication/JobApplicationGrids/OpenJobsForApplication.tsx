@@ -10,6 +10,7 @@ import { JobDto, useGetAllOpenJobByStatusQuery } from "../../../app/services/DZJ
 import { Pagination } from "../../../components/Pagination";
 import { JobDetailsDialog } from "../../Job/JobDetailsDialog";
 import { ApplayforJobDialog } from "../ApplayforJobDialog";
+import { JobApplicationStatus } from "../../../app/services/enums";
 
 export const OpenJobsForApplication = () => {
   const user = useSelector((state: RootState) => state.auth);
@@ -26,7 +27,7 @@ export const OpenJobsForApplication = () => {
   const { data: items, isLoading: isListLoading, refetch } = useGetAllOpenJobByStatusQuery({
     pageNumber: pagination.pageNumber + 1,
     pageSize: pagination.pageSize,
-    status: 1,
+    status: JobApplicationStatus.Pending,
   });
 
   const filteredJobRoles = searchQuery

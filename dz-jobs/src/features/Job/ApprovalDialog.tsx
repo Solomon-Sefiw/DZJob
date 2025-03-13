@@ -28,7 +28,7 @@ export const ApprovalDialog: React.FC<ApprovalDialogProps> = ({ open, onClose, a
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>Approve Applicant</DialogTitle>
       <DialogContent>
-        <Typography>Are you sure you want to approve this applicant?</Typography>
+        <Typography>Are you sure you want to Interview this applicant?</Typography>
         {error && <Typography color="error">{error}</Typography>}
       </DialogContent>
       <DialogActions>

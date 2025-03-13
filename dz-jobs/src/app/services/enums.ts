@@ -11,7 +11,12 @@ export enum JobStatus
     Closed = 3,
     Archived = 4
 }
-
+export enum JobApplicationStatus {
+  Pending = 1,
+  Accepted = 2,
+  Rejected = 3,
+  Approved = 4
+}
 export enum EducationLevel {
   Primary = 1,
   MiddleSchool = 2,

@@ -1,5 +1,4 @@
 ﻿using DZJobs.Application.Features.FreelancerProfile.Models;
-using HCMS.API.Controllers;
 using HCMS.Application.FreelancerProfiles.Commands;
 using HCMS.Application.FreelancerProfiles.Queries;
 using Microsoft.AspNetCore.Http;

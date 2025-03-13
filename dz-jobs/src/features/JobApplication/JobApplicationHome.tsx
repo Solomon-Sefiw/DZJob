@@ -22,7 +22,7 @@ import { PageHeader } from "../../components/PageHeader";
 export const JobApplicationHome = () => {
 
   const user = useSelector((state: RootState) => state.auth);
-  console.log(user)
+
   const { data: JobApplicationCounts } = useGetJobApplicationCountByStatusQuery({ freelancerId: user.userId });
   const { data = [] } = useGetAllJobsQuery();
 

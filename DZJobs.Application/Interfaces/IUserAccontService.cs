@@ -1,6 +1,6 @@
 ﻿using DZJobs.Application.Models.Authentication.Login;
 using DZJobs.Application.Models.Authentication.Signup;
-
+using DZJobs.Domain.User;
 using User.Managment.Service.Models.Authentication;
 using User.Managment.Service.Models.DTO;
 
@@ -19,6 +19,6 @@ namespace User.Managment.Service.Services
         Task<ResponseDto> MakeEmployerAsync(UpdatePermissionDto updatePermissionDto);
         Task<ResponseDto> MakeFreelancerAsync(UpdatePermissionDto updatePermissionDto);
         Task<ICollection<DZJobUser>> GetAllUserAsync();
-        Task<DZJobUser> GetUserByIdAsync(string Id);
+        Task<DZJobUserDto> GetUserByIdAsync(string Id);
     }
 }

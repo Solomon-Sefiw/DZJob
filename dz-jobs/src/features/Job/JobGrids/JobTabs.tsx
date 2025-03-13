@@ -36,21 +36,21 @@ export const JobTabs = ({ counts }: { counts?: JobCountsByStatus }) => {
     <Box
       sx={{
         width: "100%",
-        overflowX: "auto", // Allow horizontal scrolling for mobile
+        overflowX: "auto", // Horizontal scrolling for small screens
         bgcolor: "background.paper",
-        position: "sticky", // Keeps tabs visible when scrolling (optional)
+        position: "sticky", // Keeps tabs visible while scrolling
         top: 0,
         zIndex: 10,
-        boxShadow: isMobile ? "none" : 1, // Add shadow for desktop to separate from content
+        boxShadow: isMobile ? "none" : 1, // Adds shadow for desktop
       }}
     >
       <Tabs
         value={getCurrentTabIndex()}
         variant={isMobile ? "scrollable" : "standard"} // Horizontal scroll for mobile
-        scrollButtons={isMobile ? "auto" : false} // Only show scroll buttons on mobile
+        scrollButtons={isMobile ? "auto" : false} // Scroll buttons visible only on mobile
         allowScrollButtonsMobile
         sx={{
-          minHeight: isMobile ? "50px" : "auto", // Adjust the height for mobile
+          minHeight: isMobile ? "50px" : "auto", // Adjust height for mobile
         }}
       >
         {tabs.map(({ href, color, label, counts }) => (
@@ -63,10 +63,14 @@ export const JobTabs = ({ counts }: { counts?: JobCountsByStatus }) => {
               textTransform: "none",
               fontSize: isMobile ? "0.9rem" : "1rem",
               px: isMobile ? 1 : 2,
-              py: 1, // Add vertical padding for better clickability
+              py: 1, // Vertical padding for better clickability
             }}
             label={
-              <Badge badgeContent={counts || 0} color={color} sx={{ "& .MuiBadge-badge": { fontSize: "0.75rem" } }}>
+              <Badge
+                badgeContent={counts || 0}
+                color={color}
+                sx={{ "& .MuiBadge-badge": { fontSize: "0.75rem" } }}
+              >
                 <Box>{label}</Box>
               </Badge>
             }

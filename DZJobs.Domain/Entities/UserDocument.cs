@@ -7,9 +7,11 @@ namespace DZJobs.Domain.Entities
     public class UserDocument : AuditableSoftDeleteEntity
     {
         public int Id { get; set; }
-        public string userId { get; set; }
         public DocumentType DocumentType { get; set; }
         public string DocumentId { get; set; }
         public string FileName { get; set; }
+
+        public string userId { get; set; }
+        public virtual DZJobUser User { get; set; }
     }
 }

@@ -8,7 +8,6 @@ using DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationCountB
 using DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationList;
 using DZJobs.Application.Features.Queries.GetJobList;
 using DZJobs.Domain.Entities;
-using HCMS.API.Controllers;
 using HCMS.Application.JobApplications.Commands;
 using HCMS.Application.JobApplications.Queries;
 using Microsoft.AspNetCore.Http;
@@ -30,9 +29,9 @@ namespace DZJobs.Controllers.JobApplication
 
         [HttpGet("getByJobId{id:int}", Name = "GetJobApplicationByJobId")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<JobApplicationSearchByJobIdResult>> GetJobApplicationByJobId(int id)
+        public async Task<ActionResult<JobApplicationSearchByJobIdResult>> GetJobApplicationByJobId(ApplicationStatus status,int id)
         {
-            var applications = await mediator.Send(new GetJobApplicationByJobIdQuery(id));
+            var applications = await mediator.Send(new GetJobApplicationByJobIdQuery(status,id));
             return Ok(applications);
         }
 

@@ -66,11 +66,11 @@ namespace DZJobs.Application.Features.Job.Queries.GetJobList
             }
             else if (request.Status == JobStatus.Open)
             {
-                var result = joblist.Where(JR => JR.Status == JobStatus.Open && JR.EmployerId == request.EmployerId)
+                var result = joblist.Where(JR => (JR.Status == JobStatus.Open || JR.Status == JobStatus.InProgress) && JR.EmployerId == request.EmployerId)
                                             .Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize)
                                             .ToList();
                 var count = await dataService.Jobs.Where(JR =>
-                        JR.Status == JobStatus.Open && JR.EmployerId == request.EmployerId).CountAsync();
+                        (JR.Status == JobStatus.Open || JR.Status == JobStatus.InProgress) && JR.EmployerId == request.EmployerId).CountAsync();
                 return new(result, count);
             }
             else

@@ -1,7 +1,7 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
-import { Box, Button, Grid, Typography, Divider, useTheme, Alert, Dialog, DialogContent, DialogTitle, IconButton, Link } from "@mui/material";
+import { Box, Grid, Typography, Divider, useTheme, Alert, Dialog, DialogContent, DialogTitle, IconButton, Link } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
@@ -136,19 +136,8 @@ export const PendingJobApplication = () => {
 
 
 
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{
-                    mt: 1.5, 
-                    backgroundColor: "#0073b1",
-                    fontWeight: "bold",
-                    fontSize: "0.85rem",
-                    padding: "6px 0",
-                  }}
-                >
-                  Apply Now
-                </Button>
+             
+             
               </Box>
             </Grid>
           ))}

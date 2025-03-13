@@ -23,28 +23,39 @@ namespace DZJobs.Domain.Entities
     {
         Pending = 1,
         Accepted = 2,
-        Rejected = 3
+        Rejected = 3,
+        Approved = 4
     }
 
     public enum ContractStatus
     {
-        Ongoing = 1,
-        Completed = 2,
-        Terminated = 3,
-        OnHold = 4
+        Pending = 1,      // Contract is created but not yet signed by both parties
+        Active = 2,       // Both freelancer and employer have agreed, and work has started
+        Completed = 3,    // All milestones are completed, and the contract is successfully finished
+        Terminated = 4,    // Contract was canceled before completion
+        Disputed = 5
     }
     public enum MilestoneStatus
     {
-        Pending = 1,
-        Completed = 2,
-        Released = 3
+        Pending,
+        InProgress,
+        Completed,
+        Canceled
     }
     public enum PaymentStatus
     {
         Pending = 1,
-        Successful = 2,
+        Completed = 2,
         Failed = 3,
         Refunded = 4
+    }
+    public enum PaymentMethod
+    {
+        BankTransfer = 1,
+        Stripe = 2,
+       CreditCard = 3,
+        DebitCard = 4,
+        PayPal = 5,
     }
     public enum NotificationType
     {
@@ -154,12 +165,12 @@ namespace DZJobs.Domain.Entities
         Read = 1,
         Unread = 2
     }
-    public enum PaymentMethod
-    {
-        CreditCard = 1,
-        DebitCard = 2,
-        PayPal = 3,
-        BankTransfer = 4
-    }
+    //public enum PaymentMethod
+    //{
+    //    CreditCard = 1,
+    //    DebitCard = 2,
+    //    PayPal = 3,
+    //    BankTransfer = 4
+    //}
 
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
-namespace HCMS.API.Controllers
+namespace DZJobs.Controllers
 {
     [ApiController]
     [ServiceFilter(typeof(ApiExceptionFilterAttribute))]

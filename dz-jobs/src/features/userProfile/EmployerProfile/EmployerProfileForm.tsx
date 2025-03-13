@@ -40,8 +40,13 @@ export const EmployerProfileForm = ({ onCancel, onSubmit, errors }: Props) => {
   );
 
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema} validateOnChange>
-      {({ isSubmitting }) => (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+      validationSchema={validationSchema}
+      validateOnMount
+    >
+      {({ isSubmitting, isValid }) => (
         <Form>
           <Grid container spacing={3}>
             {errors && (
@@ -59,13 +64,20 @@ export const EmployerProfileForm = ({ onCancel, onSubmit, errors }: Props) => {
               <FormTextField name="logo" label="Company Logo URL" placeholder="Enter logo URL" fullWidth />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField name="jobHistoryCount" type="number" label="Job History Count" placeholder="Total jobs posted" fullWidth />
+              <FormTextField name="jobHistoryCount" type="number" label="Job History Count" placeholder="Total jobs posted" fullWidth InputProps={{ readOnly: true }} />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField name="averageRating" type="number" label="Average Rating (0-5)" placeholder="Enter rating" fullWidth />
+              <FormTextField name="averageRating" type="number" label="Average Rating (0-5)" placeholder="Enter rating" fullWidth InputProps={{ readOnly: true }} />
             </Grid>
             <Grid item xs={12}>
-              <Button color="primary" variant="contained" type="submit" disabled={isSubmitting} fullWidth sx={{ textTransform: "none", padding: "10px" }}>
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                disabled={!isValid || isSubmitting}
+                fullWidth
+                sx={{ textTransform: "none", padding: "10px" }}
+              >
                 Create Employer Profile
               </Button>
             </Grid>

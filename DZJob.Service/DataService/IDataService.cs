@@ -21,6 +21,10 @@ namespace HCMS.Services.DataService
         public DbSet<JobSkill> JobSkills { get; set; }
         public DbSet<UserDocument> UserDocuments { get; set; }
         public DbSet<Document> Documents { get; set; }
+        public DbSet<Contract> Contracts { get; set; }
+        public DbSet<Milestone> Milestones { get; set; }
+        public DbSet<ContractPayment> ContractPayments { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         void Save();
         Task SaveAsync(CancellationToken cancellationToken);

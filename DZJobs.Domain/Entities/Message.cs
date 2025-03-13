@@ -12,5 +12,6 @@ public class Message : BaseEntity
     [ForeignKey("ReceiverId")]
     public DZJobUser Receiver { get; set; }
     public string Content { get; set; }
-    public DateTime SentDate { get; set; }
+    public DateTime SentAt { get; set; } // When the message was sent
+    public bool IsRead { get; set; } // Whether the message is read or not
 }

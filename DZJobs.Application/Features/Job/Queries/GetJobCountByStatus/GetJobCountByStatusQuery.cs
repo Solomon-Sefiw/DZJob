@@ -28,7 +28,7 @@ namespace DZJobs.Application.Features.Job.Queries.GetJobCountByStatus
             var closed = await dataService.Jobs.Where(JR => JR.Status == JobStatus.Closed && JR.EmployerId == request.EmployerId).CountAsync();
             var inProgress = await dataService.Jobs.Where(JR => JR.Status == JobStatus.InProgress && JR.EmployerId == request.EmployerId).CountAsync();
             var archived =  await dataService.Jobs.Where(JR => JR.Status == JobStatus.Archived && JR.EmployerId == request.EmployerId).CountAsync();
-            var open = await dataService.Jobs.Where(JR => JR.Status == JobStatus.Open && JR.EmployerId == request.EmployerId).CountAsync();
+            var open = await dataService.Jobs.Where(JR => (JR.Status == JobStatus.Open || JR.Status == JobStatus.InProgress) && JR.EmployerId == request.EmployerId).CountAsync();
             return new (closed, inProgress, archived, open);
         }
     }

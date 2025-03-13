@@ -2,7 +2,6 @@
 using DZJobs.Application.Features.JobSkill.Command.DeleteJobSkill;
 using DZJobs.Application.Features.JobSkill.Models;
 using DZJobs.Application.Features.JobSkill.Queries.GetJobSkills;
-using HCMS.API.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

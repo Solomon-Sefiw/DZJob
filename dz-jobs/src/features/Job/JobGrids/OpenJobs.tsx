@@ -11,6 +11,7 @@ import { JobDetailsDialog } from "../JobDetailsDialog";
 import { JobDialog } from "../JobDialog";
 import { JobDto, useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/services/DZJobsApi";
 import { Pagination } from "../../../components/Pagination";
+import { JobApplicationStatus } from "../../../app/services/enums";
 
 export const OpenJobs = () => {
   const user = useSelector((state: RootState) => state.auth);
@@ -191,7 +192,7 @@ export const OpenJobs = () => {
 
       {/* Job Dialogs */}
       {openJobApplicantDialog && (
-        <JobApplicantDetailsDialog open={openJobApplicantDialog} onClose={handleCloseDialogs} job={selectedJobApplicant} />
+        <JobApplicantDetailsDialog open={openJobApplicantDialog} onClose={handleCloseDialogs} job={selectedJobApplicant} approvalStatus ={JobApplicationStatus.Pending}/>
       )}
       {openJobDetailsDialog && (
         <JobDetailsDialog open={openJobDetailsDialog} onClose={handleCloseDialogs} job={selectedJobDetails} />

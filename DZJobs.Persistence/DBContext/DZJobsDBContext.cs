@@ -20,8 +20,25 @@ namespace DZJobs.Persistence.DBContext
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ContractPayment>()
+                        .HasOne(c => c.Employer)
+                        .WithMany(u => u.ContractPayments)
+                        .HasForeignKey(c => c.EmployerId)
+                        .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+
+            modelBuilder.Entity<ContractPayment>()
+                        .HasOne(c => c.Freelancer)
+                        .WithMany() // You can define this if JobSeeker has Contracts
+                        .HasForeignKey(c => c.FreelancerId)
+                        .OnDelete(DeleteBehavior.Restrict); // Prevent cascade delete
+            modelBuilder.Entity<UserDocument>()
+                        .HasOne(d => d.User)
+                        .WithMany(u => u.UserDocuments)
+                        .HasForeignKey(d => d.userId)
+                        .OnDelete(DeleteBehavior.Cascade); // Cascade delete if needed
             modelBuilder.Entity<Document>()
-                 .HasKey(d => d.Id); // Ensure Id is primary key
+                         .HasKey(d => d.Id); // Ensure Id is primary key
             modelBuilder.Entity<Contract>()
                         .HasOne(c => c.Job)  // Assuming 'Job' navigation exists in Contract
                         .WithMany(j => j.Contracts)
@@ -111,6 +128,11 @@ namespace DZJobs.Persistence.DBContext
         public DbSet<JobSkill> JobSkills { get; set; }
         public DbSet<Document> Documents { get; set; }
         public DbSet<UserDocument> UserDocuments { get; set; }
+        public DbSet<Contract> Contracts { get; set; }
+        public DbSet<Milestone> Milestones { get; set; }
+        public DbSet<ContractPayment> ContractPayments { get; set; }
+        public DbSet<Message> Messages { get; set; }
+
         public void Save()
         {
             SaveChanges();

@@ -38,11 +38,11 @@ namespace DZJobs.Application.Features.Queries.GetJobList
                 Status = job.Status
             }).ToList();
 
-                var result = joblist.Where(JR => JR.Status == JobStatus.Open)
+                var result = joblist.Where(JR => JR.Status == JobStatus.Open || JR.Status == JobStatus.InProgress)
                                             .Skip((request.PageNumber - 1) * request.PageSize).Take(request.PageSize)
                                             .ToList();
                 var count = await dataService.Jobs.Where(JR =>
-                        JR.Status == JobStatus.Open).CountAsync();
+                        JR.Status == JobStatus.Open || JR.Status == JobStatus.InProgress).CountAsync();
                 return new(result, count);
 
         }

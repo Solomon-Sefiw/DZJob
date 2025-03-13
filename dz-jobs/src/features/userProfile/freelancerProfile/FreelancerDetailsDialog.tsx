@@ -1,16 +1,16 @@
 import { GitHub, LinkedIn, Web } from "@mui/icons-material";
 import {
-  Avatar,
   Box,
   Button,
   Chip,
   Dialog, DialogActions, DialogContent, DialogTitle,
   Divider,
   IconButton, Link,
-  List, ListItem, ListItemText,
+  List, ListItem, ListItemText, 
   Typography
 } from "@mui/material";
 import { useGetUserByIdQuery } from "../../../app/services/DZJobsApi";
+import { UserPhoto } from "../UserPhoto";
 
 interface FreelancerDetailsDialogProps {
   open: boolean;
@@ -53,7 +53,9 @@ export const FreelancerDetailsDialog: React.FC<FreelancerDetailsDialogProps> = (
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle textAlign="center">Freelancer Profile</DialogTitle>
+      <DialogTitle textAlign="center">              
+        <Typography variant="h5" fontWeight="bold">{demoData.firstName} {demoData.lastName}</Typography>
+      </DialogTitle>
       <DialogContent>
         {isLoading ? (
           <Typography>Loading...</Typography>
@@ -61,11 +63,7 @@ export const FreelancerDetailsDialog: React.FC<FreelancerDetailsDialogProps> = (
           <>
             {/* Profile Photo & Basic Details */}
             <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 2 }}>
-              <Avatar 
-                src={demoData.profileImage} 
-                alt={demoData.firstName} 
-                sx={{ width: 100, height: 100, mb: 1 }}
-              />
+              <UserPhoto user={freelancer} />
               
               <Typography variant="h6" fontWeight="bold">
                 {demoData.firstName} {demoData.lastName}

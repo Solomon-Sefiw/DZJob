@@ -1,5 +1,4 @@
-﻿using HCMS.API.Controllers;
-using HCMS.Application.Geolocations.Commands;
+﻿using HCMS.Application.Geolocations.Commands;
 using HCMS.Application.Geolocations.Models;
 using HCMS.Application.Geolocations.Queries;
 using Microsoft.AspNetCore.Http;

@@ -1,5 +1,4 @@
 ﻿using DZJobs.Application.Features.Skill.Models;
-using HCMS.API.Controllers;
 using HCMS.Application.Skills.Commands;
 using HCMS.Application.Skills.Queries;
 using Microsoft.AspNetCore.Http;

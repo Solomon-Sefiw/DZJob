@@ -1,5 +1,4 @@
-﻿using HCMS.API.Controllers;
-using HCMS.Application.Educations.Commands;
+﻿using HCMS.Application.Educations.Commands;
 using HCMS.Application.Educations.Models;
 using HCMS.Application.Educations.Queries;
 using Microsoft.AspNetCore.Http;

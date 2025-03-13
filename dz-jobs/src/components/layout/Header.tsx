@@ -29,19 +29,28 @@ import {
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { toggleDarkMode } from "../../app/slicies/themeSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
 
 const Header: React.FC = () => {
   const darkMode = useAppSelector((state) => state.theme.darkMode);
+  const user = useSelector((state: RootState) => state.auth); 
+
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+
   const [isProfileOpen, setProfileOpen] = useState(false);
 
   const menuItems = [
-    { label: "About Me", href: "/about", icon: <AccountCircle /> },
-    { label: "Skills", href: "/skills", icon: <Work /> },
-    { label: "Projects", href: "/projects", icon: <PinDropRounded /> },
-    { label: "Contact", href: "/contact", icon: <Phone /> },
+    // { label: "About Me", href: "/about", icon: <AccountCircle /> },
+    // { label: "Skills", href: "/skills", icon: <Work /> },
+    // { label: "Projects", href: "/projects", icon: <PinDropRounded /> },
+    // { label: "Contact", href: "/contact", icon: <Phone /> },
+    { label: "Jobs", href: "#", icon: <AccountCircle /> },
+    { label: "Contracts", href: "#", icon: <Work /> },
+    { label: "My Work", href: "#", icon: <PinDropRounded /> },
+    { label: "Message", href: "#", icon: <Phone /> },
   ];
 
   const currentIndex = menuItems.findIndex((item) => item.href === location.pathname);
@@ -88,7 +97,7 @@ const Header: React.FC = () => {
               justifyContent: "center",
             }}
           >
-            {menuItems.map((item, index) => (
+            { user.userId &&  menuItems.map((item, index) => (
               <Button
                 key={item.label}
                 onClick={() => navigate(item.href)}
