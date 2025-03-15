@@ -152,8 +152,7 @@ export const AcceptedJobApplication = () => {
                     fontWeight: "bold",
                   }}
                   onClick={() => application?.jobId && application.freelancer && application.freelancerId && goToChat(application.jobId, application.freelancerId, application.employerId ?? undefined)}
-
-                >
+                >  
                   Message
                 </Button>
               </Card>
@@ -202,7 +201,7 @@ export const AcceptedJobApplication = () => {
             Cover Letter
           </Typography>
           <Typography variant="body1" sx={{ mt: 2 }}>
-            {selectedCoverLetter}
+            <span dangerouslySetInnerHTML={{ __html: selectedCoverLetter || "" }} />
           </Typography>
           <Button
             onClick={() => setSelectedCoverLetter(null)}
