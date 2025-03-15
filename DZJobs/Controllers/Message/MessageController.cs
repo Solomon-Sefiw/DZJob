@@ -19,9 +19,9 @@ namespace DZJobs.Controllers.Message
 
         [HttpGet("messages{jobId}/{userId}", Name = "GetMessages")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<List<MessageDto>>> GetMessages(int jobId, string userId)
+        public async Task<ActionResult<List<MessageDto>>> GetMessages(int jobId, string userId, string ReceiverId)
         {
-            var messages = await mediator.Send(new GetMessagesQuery(jobId, userId));
+            var messages = await mediator.Send(new GetMessagesQuery(jobId, userId, ReceiverId));
             return Ok(messages);
         }
     }

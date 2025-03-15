@@ -570,6 +570,7 @@ const injectedRtkApi = api.injectEndpoints({
     getMessages: build.query<GetMessagesApiResponse, GetMessagesApiArg>({
       query: (queryArg) => ({
         url: `/api/Message/messages${queryArg.jobId}/${queryArg.userId}`,
+        params: { ReceiverId: queryArg.receiverId },
       }),
     }),
     postApiMilestones: build.mutation<
@@ -940,6 +941,7 @@ export type GetMessagesApiResponse = /** status 200 OK */ MessageDto[];
 export type GetMessagesApiArg = {
   jobId: number;
   userId: string;
+  receiverId?: string;
 };
 export type PostApiMilestonesApiResponse = unknown;
 export type PostApiMilestonesApiArg = {
@@ -1476,6 +1478,7 @@ export type JobApplicationDto = {
   job?: string | null;
   freelancerId?: string | null;
   freelancer?: string | null;
+  employerId?: string | null;
   coverLetter?: string | null;
   proposedSalary?: number;
   appliedDate?: string;

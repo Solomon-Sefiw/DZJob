@@ -31,6 +31,7 @@ import { toggleDarkMode } from "../../app/slicies/themeSlice";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { UserRole } from "../../app/services/enums";
 
 const Header: React.FC = () => {
   const darkMode = useAppSelector((state) => state.theme.darkMode);
@@ -47,7 +48,9 @@ const Header: React.FC = () => {
     // { label: "Skills", href: "/skills", icon: <Work /> },
     // { label: "Projects", href: "/projects", icon: <PinDropRounded /> },
     // { label: "Contact", href: "/contact", icon: <Phone /> },
-    { label: "Jobs", href: "#", icon: <AccountCircle /> },
+    {
+      label: "Jobs",
+      href: user.role === UserRole.EMPLOYER ? "/employer-dashboard" : "/freelancer-dashboard",icon: <AccountCircle />},
     { label: "Contracts", href: "#", icon: <Work /> },
     { label: "My Work", href: "#", icon: <PinDropRounded /> },
     { label: "Message", href: "#", icon: <Phone /> },

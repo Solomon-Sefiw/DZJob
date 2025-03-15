@@ -22,6 +22,7 @@ import ApplicantCoverLetterDialog from "../JobApplication/ApplicantCoverLetterDi
 import { RejectDialog } from "./JobGrids/RejectDialog";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
+import { useNavigate } from "react-router-dom";
 
 interface JobDetailsDialogProps {
   open: boolean;
@@ -32,6 +33,7 @@ interface JobDetailsDialogProps {
 
 export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ open, onClose, job, approvalStatus }) => {
    const user = useSelector((state: RootState) => state.auth);
+   const navigate = useNavigate();
   const { data: applicants, isLoading } = useGetJobApplicationByJobIdQuery(
     { status: approvalStatus, id: job?.id ?? 0 },
     { skip: !job }
@@ -70,6 +72,12 @@ export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ ope
 
   const handleOpenCoverLetter = (coverLetter: string) => {
     setCoverLetterDialog({ open: true, coverLetter });
+  };
+
+  const goToChat = (jobId : number ,senderId : string ,receiverId : string) => {
+    
+    // Navigate with dynamic parameters in URL
+    navigate(`/chat/${jobId}/${senderId}/${receiverId}`);
   };
 
   return (
@@ -153,6 +161,16 @@ export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ ope
                               onClick={() => applicant.id !== undefined && handleRejectClick(applicant.id)}
                             >
                               Reject
+                            </Button>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Button
+                              fullWidth
+                              variant="contained"
+                              color="primary"
+                              onClick={() => job?.id && applicant.freelancerId && goToChat(job.id, user.userId, applicant.freelancerId)}
+                            >
+                              Message
                             </Button>
                           </Grid>
                         </Grid>

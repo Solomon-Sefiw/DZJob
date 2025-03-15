@@ -28,6 +28,7 @@ import Layout from "./layout/Layout";
 import AboutMe from "../pages/AboutMe";
 import Projects from "../pages/Projects";
 import Contact from "../pages/Contact";
+import Chat from "../features/Chat/Chat";
 
 
 
@@ -52,6 +53,10 @@ const AppRoutes = () => {
         {/* <Route path="skills" element={<Skills />} /> */}
         <Route path="projects" element={<Projects />} />
         <Route path="contact" element={<Contact />} />
+        <Route
+          path="/chat/:jobId/:senderId/:receiverId"
+          element={<Chat />}
+        />
 
 
         {/* <Route index path="login" element={<Login />} /> */}

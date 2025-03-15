@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "homepage": "https://Solomon-Sefiw.github.io/portfolio",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "ts-generate": "rtk-query-codegen-openapi api-config.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

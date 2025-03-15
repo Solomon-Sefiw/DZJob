@@ -6,28 +6,30 @@ using HCMS.Api.Filters;
 using HCMS.Api.Services;
 using HCMS.Common;
 using HCMS.Persistance.DBContext;
+using Microsoft.AspNetCore.SignalR;
 using SMS.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ✅ Add Frontend CORS Permissions and Config
+// ✅ 1. Configure CORS (MUST allow credentials for WebSockets)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
                         .AllowAnyHeader()
-                        .AllowAnyMethod());
+                        .AllowAnyMethod()
+                        .AllowCredentials()); // ✅ Required for SignalR WebSockets
 });
 
-// ✅ Add services to the container
+// ✅ 2. Add services
 builder.Services.AddControllers();
 builder.Services.AddScoped<ApiExceptionFilterAttribute>();
 builder.Services.AddScoped<IUserService, UserService>();
 
-// ✅ Add SignalR for real-time messaging
+// ✅ 3. Add SignalR for real-time chat
 builder.Services.AddSignalR();
 
-// ✅ Register Other Services (Swagger, Database, Application Layer)
+// ✅ 4. Register application layers
 builder.Services.AddEndpointsApiExplorer()
     .AddSwagger()
     .AddPersistenceService(builder.Configuration)
@@ -37,7 +39,7 @@ builder.Services.AddEndpointsApiExplorer()
 
 var app = builder.Build();
 
-// ✅ Configure Middleware
+// ✅ 5. Configure Middleware (ORDER MATTERS)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -45,16 +47,18 @@ if (app.Environment.IsDevelopment())
     await DataSeeder.SeedData(app);
 }
 
+// ✅ CORS MUST COME BEFORE authentication and controllers!
 app.UseCors("AllowReactApp");
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+
+// ✅ 6. Register controllers & SignalR hubs
 app.MapControllers();
+app.MapHub<ChatHub>("/chatHub"); // ✅ Ensure this is correctly mapped
 
-// ✅ Map SignalR Hub for Real-time Chat
-app.MapHub<ChatHub>("/chatHub"); // 🔥 Now clients can connect to /chatHub
-
-// ✅ Seed Database
+// ✅ 7. Seed Database (if needed)
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<DZJobsDBContext>();

@@ -55,7 +55,6 @@ export const InprogressJobs = () => {
   const handleCloseDialogs = () => {
     setOpenJobApplicantDialog(false);
     setOpenJobDetailsDialog(false);
-
     setSelectedJobApplicant(null);
     setSelectedJobDetails(null);
   };

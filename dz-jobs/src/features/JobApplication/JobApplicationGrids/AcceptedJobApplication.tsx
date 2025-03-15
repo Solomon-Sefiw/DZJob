@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import { RootState } from "../../../app/store";
 import {
   useGetAllJobApplicationByStatusQuery,
@@ -26,6 +26,7 @@ import { ApplicationStatus } from "../../../app/services/enums";
 import { Pagination } from "../../../components/Pagination";
 
 export const AcceptedJobApplication = () => {
+     const navigate = useNavigate();
   const theme = useTheme();
   const user = useSelector((state: RootState) => state.auth);
   const [selectedCoverLetter, setSelectedCoverLetter] = useState<string | null>(null);
@@ -56,6 +57,11 @@ export const AcceptedJobApplication = () => {
   // Truncate text for cover letter preview
   const truncateText = (text: string, limit: number) => {
     return text.length > limit ? text.substring(0, limit) + "..." : text;
+  };
+
+  const goToChat = (jobId : number ,senderId : string, receiverId: string | undefined) => {
+    
+    navigate(`/chat/${jobId}/${senderId}/${receiverId}`);
   };
 
   return (
@@ -145,8 +151,10 @@ export const AcceptedJobApplication = () => {
                     color: "white",
                     fontWeight: "bold",
                   }}
+                  onClick={() => application?.jobId && application.freelancer && application.freelancerId && goToChat(application.jobId, application.freelancerId, application.employerId ?? undefined)}
+
                 >
-                  Apply Now
+                  Message
                 </Button>
               </Card>
             </Grid>

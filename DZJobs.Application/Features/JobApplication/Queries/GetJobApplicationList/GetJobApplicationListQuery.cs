@@ -39,6 +39,7 @@ namespace DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationLi
                 Job = ja.Job.Title, // Adjust if your Job entity has a different property for the job title
                 FreelancerId = ja.Freelancer.Id.ToString(), // Converting to string if necessary
                 Freelancer = ja.Freelancer.UserName, // Adjust if your Freelancer entity has a different property name
+                EmployerId = ja.Job.EmployerId,
                 CoverLetter = ja.CoverLetter,
                 ProposedSalary = ja.ProposedSalary,
                 AppliedDate = ja.AppliedDate,
