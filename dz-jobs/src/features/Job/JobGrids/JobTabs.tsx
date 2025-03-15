@@ -16,8 +16,8 @@ const getTabs = ({
   open,
   closed,
 }: JobCountsByStatus = {}): TabProps[] => [
-  { label: "Closed", href: "/employer-dashboard", counts: closed, color: "success" },
-  { label: "In Progress", href: "/employer-dashboard/inprogress-jobs", counts: inProgress, color: "success" },
+  { label: "Approved", href: "/employer-dashboard", counts: closed, color: "success" },
+  { label: "In Progress", href: "/employer-dashboard/inprogress-jobs", counts: inProgress, color: "primary" },
   { label: "Archived", href: "/employer-dashboard/archived-jobs", counts: archived, color: "error" },
   { label: "Open", href: "/employer-dashboard/open-jobs", counts: open, color: "info" },
 ];

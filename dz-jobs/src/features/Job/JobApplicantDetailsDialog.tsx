@@ -163,14 +163,14 @@ export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ ope
                               Reject
                             </Button>
                           </Grid>
-                          <Grid item xs={6}>
+                          <Grid item xs={12}>
                             <Button
                               fullWidth
                               variant="contained"
                               color="primary"
                               onClick={() => job?.id && applicant.freelancerId && goToChat(job.id, user.userId, applicant.freelancerId)}
                             >
-                              Message
+                              Chat
                             </Button>
                           </Grid>
                         </Grid>

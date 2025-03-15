@@ -118,7 +118,7 @@ const Header: React.FC = () => {
           </Box>
 
           {/* Right Section - Profile Icon */}
-          <IconButton
+          { user.userId &&  <IconButton
             onClick={() => setProfileOpen(!isProfileOpen)}
             sx={{
               color: darkMode ? "#fff" : "#000",
@@ -128,6 +128,7 @@ const Header: React.FC = () => {
           >
             <AccountCircle />
           </IconButton>
+}
         </Toolbar>
       </AppBar>
 
