@@ -16,19 +16,22 @@ namespace DZJobs.Domain.Entities
     {
         Open = 1,
         InProgress = 2,
-        Closed = 3,
-        Archived = 4
+        Approved = 3,
+        Archived = 4,
+        Closed = 5
     }
     public enum ApplicationStatus
     {
         Pending = 1,
         Accepted = 2,
         Rejected = 3,
-        Approved = 4
+        Approved = 4,
+        InContract = 5
     }
 
     public enum ContractStatus
     {
+        Draft = 0,
         Pending = 1,      // Contract is created but not yet signed by both parties
         Active = 2,       // Both freelancer and employer have agreed, and work has started
         Completed = 3,    // All milestones are completed, and the contract is successfully finished
@@ -37,7 +40,7 @@ namespace DZJobs.Domain.Entities
     }
     public enum MilestoneStatus
     {
-        Pending,
+        Pending = 1,
         InProgress,
         Completed,
         Canceled

@@ -23,6 +23,7 @@ import { RejectDialog } from "./JobGrids/RejectDialog";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { useNavigate } from "react-router-dom";
+import { ContractDialog } from "../Contract/ContractDialog";
 
 interface JobDetailsDialogProps {
   open: boolean;
@@ -36,30 +37,38 @@ export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ ope
    const navigate = useNavigate();
   const { data: applicants, isLoading } = useGetJobApplicationByJobIdQuery(
     { status: approvalStatus, id: job?.id ?? 0 },
-    { skip: !job }
+    { skip: !job } 
   );
-
+console.log(applicants)
   const [selectedApplicant, setSelectedApplicant] = useState<number | null>(null);
-  const [dialogState, setDialogState] = useState<{ approvalOpen: boolean; closingOpen: boolean; rejectingOpen: boolean; }>({
+  
+  const [dialogState, setDialogState] = useState<{ approvalOpen: boolean; closingOpen: boolean; rejectingOpen: boolean; contractOpen: boolean; }>({
     approvalOpen: false,
     closingOpen: false,
     rejectingOpen : false,
+    contractOpen: false,
   });
   const [selectedFreelancer, setSelectedFreelancer] = useState<string | null>(null);
+  const [selectedFreelancerForContract, setSelectedFreelancerForContrac] = useState<string | null>(null);
+
   const [coverLetterDialog, setCoverLetterDialog] = useState<{ open: boolean; coverLetter: string }>({ open: false, coverLetter: "" });
 
   const handleApproveClick = (applicantId: number) => {
     setSelectedApplicant(applicantId);
-    setDialogState({ approvalOpen: true, closingOpen: false, rejectingOpen : false,});
+    setDialogState({ approvalOpen: true, closingOpen: false, rejectingOpen : false,contractOpen: false,});
+  };
+  const handleContractClick = (applicantId: string) => {
+    setSelectedFreelancerForContrac(applicantId);
+    setDialogState({ approvalOpen: false, closingOpen: false, rejectingOpen : false,contractOpen: true});
   };
 
   const handleCloseClick = (applicantId: number) => {
     setSelectedApplicant(applicantId);
-    setDialogState({ approvalOpen: false, closingOpen: true ,rejectingOpen : false,});
+    setDialogState({ approvalOpen: false, closingOpen: true ,rejectingOpen : false,contractOpen: false});
   };
   const handleRejectClick = (applicantId: number) => {
     setSelectedApplicant(applicantId);
-    setDialogState({ approvalOpen: false, closingOpen: false ,rejectingOpen : true,});
+    setDialogState({ approvalOpen: false, closingOpen: false ,rejectingOpen : true,contractOpen: false});
   };
   const handleFreelancerClick = (freelancerId: string) => {
     setSelectedFreelancer(freelancerId);
@@ -67,7 +76,7 @@ export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ ope
 
   const handleCloseDialog = () => {
     setSelectedApplicant(null);
-    setDialogState({ approvalOpen: false, closingOpen: false,rejectingOpen : false, });
+    setDialogState({ approvalOpen: false, closingOpen: false,rejectingOpen : false,contractOpen: false });
   };
 
   const handleOpenCoverLetter = (coverLetter: string) => {
@@ -141,6 +150,16 @@ export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ ope
                           Interview
                         </Button>
                       )}
+                       {approvalStatus === JobApplicationStatus.Approved && (
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="success"
+                          onClick={() => applicant.id !== undefined && handleContractClick(applicant.freelancerId ?? '')}
+                        >
+                          Propose| Intiate Contract
+                        </Button>
+                      )}
                       {approvalStatus === JobApplicationStatus.Accepted && (
                         <Grid container spacing={1}>
                           <Grid item xs={6}>
@@ -196,9 +215,11 @@ export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ ope
           <ApprovalDialog open={dialogState.approvalOpen} onClose={handleCloseDialog} applicantId={selectedApplicant} jobId={job?.id || 0} />
           <ClosingDialog open={dialogState.closingOpen} onClose={handleCloseDialog} applicantId={selectedApplicant} jobId={job?.id || 0} />
           <RejectDialog open={dialogState.rejectingOpen} onClose={handleCloseDialog} applicantId={selectedApplicant} jobId={job?.id || 0} />
-
         </>
       )}
+     {selectedFreelancerForContract && (
+      <ContractDialog  onClose={handleCloseDialog} freelancerId={selectedFreelancerForContract.toString()} jobId={job?.id || 0} />
+      )} 
 
       {selectedFreelancer && (
         <FreelancerDetailsDialog open={!!selectedFreelancer} onClose={() => setSelectedFreelancer(null)} freelancerId={selectedFreelancer} />

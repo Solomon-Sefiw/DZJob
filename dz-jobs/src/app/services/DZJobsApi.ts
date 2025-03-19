@@ -119,51 +119,68 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.messageRequest,
       }),
     }),
-    getApiContractById: build.query<
-      GetApiContractByIdApiResponse,
-      GetApiContractByIdApiArg
+    getContractById: build.query<
+      GetContractByIdApiResponse,
+      GetContractByIdApiArg
     >({
       query: (queryArg) => ({ url: `/api/Contract/${queryArg.id}` }),
     }),
-    putApiContractById: build.mutation<
-      PutApiContractByIdApiResponse,
-      PutApiContractByIdApiArg
+    getContractsByFreelancer: build.query<
+      GetContractsByFreelancerApiResponse,
+      GetContractsByFreelancerApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Contract/${queryArg.id}`,
-        method: "PUT",
-        body: queryArg.updateContractCommand,
+        url: `/api/Contract/freelancer`,
+        params: { freelancerId: queryArg.freelancerId },
       }),
     }),
-    getApiContractFreelancerByFreelancerId: build.query<
-      GetApiContractFreelancerByFreelancerIdApiResponse,
-      GetApiContractFreelancerByFreelancerIdApiArg
+    getContractsCountByEmployer: build.query<
+      GetContractsCountByEmployerApiResponse,
+      GetContractsCountByEmployerApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Contract/freelancer/${queryArg.freelancerId}`,
+        url: `/api/Contract/countsByEmployer`,
+        params: { EmployerId: queryArg.employerId },
       }),
     }),
-    getApiContractEmployerByEmployerId: build.query<
-      GetApiContractEmployerByEmployerIdApiResponse,
-      GetApiContractEmployerByEmployerIdApiArg
+    getContractsByEmployer: build.query<
+      GetContractsByEmployerApiResponse,
+      GetContractsByEmployerApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Contract/employer/${queryArg.employerId}`,
+        url: `/api/Contract/employer`,
+        params: {
+          status: queryArg.status,
+          EmployerId: queryArg.employerId,
+          pageNumber: queryArg.pageNumber,
+          pageSize: queryArg.pageSize,
+        },
       }),
     }),
-    postApiContract: build.mutation<
-      PostApiContractApiResponse,
-      PostApiContractApiArg
+    createContract: build.mutation<
+      CreateContractApiResponse,
+      CreateContractApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Contract`,
+        url: `/api/Contract/Create`,
         method: "POST",
         body: queryArg.createContractCommand,
       }),
     }),
-    putApiContractTerminateById: build.mutation<
-      PutApiContractTerminateByIdApiResponse,
-      PutApiContractTerminateByIdApiArg
+    updateContract: build.mutation<
+      UpdateContractApiResponse,
+      UpdateContractApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/Contract/update`,
+        method: "PUT",
+        body: queryArg.updateContractCommand,
+        params: { id: queryArg.id },
+      }),
+    }),
+    terminateContract: build.mutation<
+      TerminateContractApiResponse,
+      TerminateContractApiArg
     >({
       query: (queryArg) => ({
         url: `/api/Contract/terminate/${queryArg.id}`,
@@ -466,7 +483,7 @@ const injectedRtkApi = api.injectEndpoints({
       UpdateJobApplicationApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/JobApplications/all`,
+        url: `/api/JobApplications/update`,
         method: "PUT",
         body: queryArg.updateJobApplicationCommand,
       }),
@@ -573,30 +590,42 @@ const injectedRtkApi = api.injectEndpoints({
         params: { ReceiverId: queryArg.receiverId },
       }),
     }),
-    postApiMilestones: build.mutation<
-      PostApiMilestonesApiResponse,
-      PostApiMilestonesApiArg
+    createMilestone: build.mutation<
+      CreateMilestoneApiResponse,
+      CreateMilestoneApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Milestones`,
+        url: `/api/Milestones/Create`,
         method: "POST",
         body: queryArg.createMilestoneCommand,
       }),
     }),
-    getApiMilestonesById: build.query<
-      GetApiMilestonesByIdApiResponse,
-      GetApiMilestonesByIdApiArg
-    >({
-      query: (queryArg) => ({ url: `/api/Milestones/${queryArg.id}` }),
-    }),
-    putApiMilestonesById: build.mutation<
-      PutApiMilestonesByIdApiResponse,
-      PutApiMilestonesByIdApiArg
+    getMilestoneById: build.query<
+      GetMilestoneByIdApiResponse,
+      GetMilestoneByIdApiArg
     >({
       query: (queryArg) => ({
-        url: `/api/Milestones/${queryArg.id}`,
+        url: `/api/Milestones/getById${queryArg.contractId}`,
+        params: { id: queryArg.id },
+      }),
+    }),
+    getMilestonesByContractId: build.query<
+      GetMilestonesByContractIdApiResponse,
+      GetMilestonesByContractIdApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/Milestones/getByContractId${queryArg.contractId}`,
+      }),
+    }),
+    updateMilestone: build.mutation<
+      UpdateMilestoneApiResponse,
+      UpdateMilestoneApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/Milestones/update`,
         method: "PUT",
         body: queryArg.updateMilestoneCommand,
+        params: { id: queryArg.id },
       }),
     }),
     createSkill: build.mutation<CreateSkillApiResponse, CreateSkillApiArg>({
@@ -709,31 +738,39 @@ export type PostApiChatSendMessageApiResponse = unknown;
 export type PostApiChatSendMessageApiArg = {
   messageRequest: MessageRequest;
 };
-export type GetApiContractByIdApiResponse = /** status 200 OK */ ContractDto;
-export type GetApiContractByIdApiArg = {
+export type GetContractByIdApiResponse = /** status 200 OK */ ContractDto;
+export type GetContractByIdApiArg = {
   id: number;
 };
-export type PutApiContractByIdApiResponse = /** status 200 OK */ number;
-export type PutApiContractByIdApiArg = {
-  id: number;
-  updateContractCommand: UpdateContractCommand;
-};
-export type GetApiContractFreelancerByFreelancerIdApiResponse =
+export type GetContractsByFreelancerApiResponse =
   /** status 200 OK */ ContractDto;
-export type GetApiContractFreelancerByFreelancerIdApiArg = {
-  freelancerId: string;
+export type GetContractsByFreelancerApiArg = {
+  freelancerId?: string;
 };
-export type GetApiContractEmployerByEmployerIdApiResponse =
-  /** status 200 OK */ ContractDto;
-export type GetApiContractEmployerByEmployerIdApiArg = {
-  employerId: string;
+export type GetContractsCountByEmployerApiResponse =
+  /** status 200 OK */ ContractCountsByStatus;
+export type GetContractsCountByEmployerApiArg = {
+  employerId?: string;
 };
-export type PostApiContractApiResponse = /** status 200 OK */ number;
-export type PostApiContractApiArg = {
+export type GetContractsByEmployerApiResponse =
+  /** status 200 OK */ ContractSearchResult;
+export type GetContractsByEmployerApiArg = {
+  status?: ContractStatus;
+  employerId?: string;
+  pageNumber?: number;
+  pageSize?: number;
+};
+export type CreateContractApiResponse = /** status 200 OK */ number;
+export type CreateContractApiArg = {
   createContractCommand: CreateContractCommand;
 };
-export type PutApiContractTerminateByIdApiResponse = unknown;
-export type PutApiContractTerminateByIdApiArg = {
+export type UpdateContractApiResponse = /** status 200 OK */ number;
+export type UpdateContractApiArg = {
+  id?: number;
+  updateContractCommand: UpdateContractCommand;
+};
+export type TerminateContractApiResponse = unknown;
+export type TerminateContractApiArg = {
   id: number;
   terminateContractCommand: TerminateContractCommand;
 };
@@ -943,17 +980,23 @@ export type GetMessagesApiArg = {
   userId: string;
   receiverId?: string;
 };
-export type PostApiMilestonesApiResponse = unknown;
-export type PostApiMilestonesApiArg = {
+export type CreateMilestoneApiResponse = unknown;
+export type CreateMilestoneApiArg = {
   createMilestoneCommand: CreateMilestoneCommand;
 };
-export type GetApiMilestonesByIdApiResponse = /** status 200 OK */ MilestoneDto;
-export type GetApiMilestonesByIdApiArg = {
-  id: number;
+export type GetMilestoneByIdApiResponse = /** status 200 OK */ MilestoneDto;
+export type GetMilestoneByIdApiArg = {
+  id?: number;
+  contractId: string;
 };
-export type PutApiMilestonesByIdApiResponse = unknown;
-export type PutApiMilestonesByIdApiArg = {
-  id: number;
+export type GetMilestonesByContractIdApiResponse =
+  /** status 200 OK */ MilestoneSearchByContractResult;
+export type GetMilestonesByContractIdApiArg = {
+  contractId: number;
+};
+export type UpdateMilestoneApiResponse = unknown;
+export type UpdateMilestoneApiArg = {
+  id?: number;
   updateMilestoneCommand: UpdateMilestoneCommand;
 };
 export type CreateSkillApiResponse = /** status 200 OK */ number;
@@ -1000,8 +1043,8 @@ export type UpdatePermissionDto = {
 };
 export type JobCategory = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
 export type JobType = 1 | 2 | 3 | 4;
-export type JobStatus = 1 | 2 | 3 | 4;
-export type ApplicationStatus = 1 | 2 | 3 | 4;
+export type JobStatus = 1 | 2 | 3 | 4 | 5;
+export type ApplicationStatus = 1 | 2 | 3 | 4 | 5;
 export type JobApplication = {
   id?: number;
   createdAt?: string;
@@ -1015,8 +1058,8 @@ export type JobApplication = {
   appliedDate?: string;
   status?: ApplicationStatus;
 };
-export type ContractStatus = 1 | 2 | 3 | 4 | 5;
-export type MilestoneStatus = 0 | 1 | 2 | 3;
+export type ContractStatus = 0 | 1 | 2 | 3 | 4 | 5;
+export type MilestoneStatus = 1 | 2 | 3 | 4;
 export type Milestone = {
   id?: number;
   createdAt?: string;
@@ -1238,18 +1281,27 @@ export type MessageRequest = {
 export type ContractDto = {
   id?: number;
   jobId?: number;
+  jobTitle?: string | null;
   freelancerId?: string | null;
+  freelancer?: string | null;
   employerId?: string | null;
+  employer?: string | null;
   agreedAmount?: number;
   startDate?: string;
   endDate?: string;
   status?: ContractStatus;
 };
-export type UpdateContractCommand = {
-  id?: number;
-  agreedAmount?: number;
-  endDate?: string;
-  status?: ContractStatus;
+export type ContractCountsByStatus = {
+  draft?: number;
+  pending?: number;
+  active?: number;
+  completed?: number;
+  terminated?: number;
+  disputed?: number;
+};
+export type ContractSearchResult = {
+  items?: ContractDto[] | null;
+  totalCount?: number;
 };
 export type CreateContractCommand = {
   jobId?: number;
@@ -1258,6 +1310,12 @@ export type CreateContractCommand = {
   agreedAmount?: number;
   startDate?: string;
   endDate?: string;
+};
+export type UpdateContractCommand = {
+  id?: number;
+  agreedAmount?: number;
+  endDate?: string;
+  status?: ContractStatus;
 };
 export type TerminateContractCommand = {
   id?: number;
@@ -1459,6 +1517,7 @@ export type UpdateJobCommand = {
 export type JobCountsByStatus = {
   closed?: number;
   inProgress?: number;
+  approved?: number;
   archived?: number;
   open?: number;
 };
@@ -1556,11 +1615,16 @@ export type CreateMilestoneCommand = {
 export type MilestoneDto = {
   id?: number;
   contractId?: number;
+  contract?: string | null;
   title?: string | null;
   description?: string | null;
   amount?: number;
   dueDate?: string;
   status?: MilestoneStatus;
+};
+export type MilestoneSearchByContractResult = {
+  items?: MilestoneDto[] | null;
+  totalCount?: number;
 };
 export type UpdateMilestoneCommand = {
   id?: number;
@@ -1616,15 +1680,17 @@ export const {
   useGetApiAuthenticationTestEmailQuery,
   useLazyGetApiAuthenticationTestEmailQuery,
   usePostApiChatSendMessageMutation,
-  useGetApiContractByIdQuery,
-  useLazyGetApiContractByIdQuery,
-  usePutApiContractByIdMutation,
-  useGetApiContractFreelancerByFreelancerIdQuery,
-  useLazyGetApiContractFreelancerByFreelancerIdQuery,
-  useGetApiContractEmployerByEmployerIdQuery,
-  useLazyGetApiContractEmployerByEmployerIdQuery,
-  usePostApiContractMutation,
-  usePutApiContractTerminateByIdMutation,
+  useGetContractByIdQuery,
+  useLazyGetContractByIdQuery,
+  useGetContractsByFreelancerQuery,
+  useLazyGetContractsByFreelancerQuery,
+  useGetContractsCountByEmployerQuery,
+  useLazyGetContractsCountByEmployerQuery,
+  useGetContractsByEmployerQuery,
+  useLazyGetContractsByEmployerQuery,
+  useCreateContractMutation,
+  useUpdateContractMutation,
+  useTerminateContractMutation,
   usePostApiContractPaymentsMutation,
   useGetApiContractPaymentsByIdQuery,
   useLazyGetApiContractPaymentsByIdQuery,
@@ -1699,10 +1765,12 @@ export const {
   useSendMessageMutation,
   useGetMessagesQuery,
   useLazyGetMessagesQuery,
-  usePostApiMilestonesMutation,
-  useGetApiMilestonesByIdQuery,
-  useLazyGetApiMilestonesByIdQuery,
-  usePutApiMilestonesByIdMutation,
+  useCreateMilestoneMutation,
+  useGetMilestoneByIdQuery,
+  useLazyGetMilestoneByIdQuery,
+  useGetMilestonesByContractIdQuery,
+  useLazyGetMilestonesByContractIdQuery,
+  useUpdateMilestoneMutation,
   useCreateSkillMutation,
   useUpdateSkillMutation,
   useGetSkillByIdQuery,

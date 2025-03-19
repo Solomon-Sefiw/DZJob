@@ -1,6 +1,9 @@
 ﻿using DZJobs.Application.Features.Contract.Queries.GetContractById;
 using DZJobs.Application.Features.Contract.Queries.GetContractsByEmployer;
 using DZJobs.Application.Features.Contract.Queries.GetContractsByFreelancer;
+using DZJobs.Application.Features.Contract.Queries.GetContractsCountByEmployer;
+using DZJobs.Application.Features.JobApplication.Queries.GetJobApplicationCountByStatus;
+using DZJobs.Domain.Entities;
 using HCMS.Application.Educations.Models;
 using HCMS.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
@@ -14,30 +17,41 @@ namespace DZJobs.Controllers.Contract
     {
         // Queries
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetContractById")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<ContractDto>> GetContractById(int id)
         {
                 var result = await mediator.Send(new GetContractByIdQuery(id));
                 return Ok(result);
         }
 
-        [HttpGet("freelancer/{freelancerId}")]
+        [HttpGet("freelancer", Name = "GetContractsByFreelancer")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<ContractDto>> GetContractsByFreelancer(string freelancerId)
         {
             var result = await mediator.Send(new GetContractsByFreelancerQuery(freelancerId));
             return Ok(result);
         }
 
-        [HttpGet("employer/{employerId}")]
-        public async Task<ActionResult<ContractDto>> GetContractsByEmployer(string employerId)
+        [HttpGet("countsByEmployer", Name = "GetContractsCountByEmployer")]
+        [ProducesResponseType(200)]
+        public async Task<ContractCountsByStatus> GetContractsCountByEmployer(string EmployerId)
         {
-            var result = await mediator.Send(new GetContractsByEmployerQuery(employerId));
+            return await mediator.Send(new GetContractsCountByEmployerQuery(EmployerId));
+        }
+        [HttpGet("employer", Name = "GetContractsByEmployer")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<ContractSearchResult>> GetContractsByEmployer(ContractStatus status, string EmployerId, int pageNumber, int pageSize)
+        {
+            var result = await mediator.Send(new GetContractsByEmployerQuery(status, EmployerId, pageNumber, pageSize));
             return Ok(result);
         }
 
-        // Commands
 
-        [HttpPost]
+
+        // Commands
+        [HttpPost("Create", Name = "CreateContract")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> CreateContract([FromBody] CreateContractCommand command)
         {
 
@@ -46,14 +60,16 @@ namespace DZJobs.Controllers.Contract
 
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("update", Name = "UpdateContract")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<int>> UpdateContract(int id, [FromBody] UpdateContractCommand command)
         {
             var contractId = await mediator.Send(command);
                 return Ok(contractId); // Successfully updated
         }
 
-        [HttpPut("terminate/{id}")]
+        [HttpPut("terminate/{id}", Name = "TerminateContract")]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> TerminateContract(int id, [FromBody] TerminateContractCommand command)
         {
             var contractId = await mediator.Send(command);

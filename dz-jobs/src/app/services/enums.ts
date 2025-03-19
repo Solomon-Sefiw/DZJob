@@ -1,3 +1,19 @@
+export enum MilestoneStatus
+{
+    Pending = 1,
+    InProgress,
+    Completed,
+    Canceled
+}
+export enum ContractStatus
+{
+    Draft = 0,
+    Pending = 1,      // Contract is created but not yet signed by both parties
+    Active = 2,       // Both freelancer and employer have agreed, and work has started
+    Completed = 3,    // All milestones are completed, and the contract is successfully finished
+    Terminated = 4,    // Contract was canceled before completion
+    Disputed = 5
+}
 export enum ApplicationStatus
 {
     Pending = 1,
@@ -6,17 +22,20 @@ export enum ApplicationStatus
 }
 export enum JobStatus
 {
-    Open = 1,
-    InProgress = 2,
-    Closed = 3,
-    Archived = 4
+  Open = 1,
+  InProgress = 2,
+  Approved = 3,
+  Archived = 4,
+  // Closed = 5
 }
 export enum JobApplicationStatus {
   Pending = 1,
   Accepted = 2,
   Rejected = 3,
-  Approved = 4
+  Approved = 4,
+  InContract = 5,
 }
+
 export enum EducationLevel {
   Primary = 1,
   MiddleSchool = 2,

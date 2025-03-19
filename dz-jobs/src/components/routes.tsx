@@ -29,6 +29,8 @@ import AboutMe from "../pages/AboutMe";
 import Projects from "../pages/Projects";
 import Contact from "../pages/Contact";
 import Chat from "../features/Chat/Chat";
+import { EmployerContractHome } from "../features/Contract/Employer/EmployerContractHome";
+import { DraftEmployerContract } from "../features/Contract/Employer/EmployerContractGrids/DraftEmployerContract";
 
 
 
@@ -72,6 +74,15 @@ const AppRoutes = () => {
           <Route path="archived-jobs" element={<ArchivedJobs />} />
           <Route path="open-jobs" element={<OpenJobs />} />
         </Route>
+        <Route path="/employer-Contract" element={<EmployerContractHome />}>
+          <Route index element={<ClosedJobs />} />
+          <Route path="inprogress-jobs" element={<InprogressJobs />} />
+          <Route path="archived-jobs" element={<ArchivedJobs />} />
+          <Route path="draft-Contract" element={<DraftEmployerContract />} />
+        </Route>
+
+
+
         <Route path="/freelancer-dashboard" element={<JobApplicationHome />}>
           <Route index element={<OpenJobsForApplication />} />
           <Route path="rejected" element={<RejectedJobApplication />} />
@@ -79,6 +90,7 @@ const AppRoutes = () => {
           <Route path="pending" element={<PendingJobApplication />} />
         </Route>
         <Route path="role-selection" element={<RoleSelection />} />
+
 
         {/* <Route path="dashboard" element={<Dashboard />} /> */}
 

@@ -31,7 +31,7 @@ public class CreateContractCommandHandler : IRequestHandler<CreateContractComman
             AgreedAmount = request.AgreedAmount,
             StartDate = request.StartDate,
             EndDate = request.EndDate,
-            Status = ContractStatus.Pending // Default status
+            Status = ContractStatus.Draft // Default status
         };
 
         _context.Contracts.Add(contract);

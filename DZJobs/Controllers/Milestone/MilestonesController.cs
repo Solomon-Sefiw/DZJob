@@ -8,23 +8,34 @@ namespace DZJobs.Controllers.Milestone
     [ApiController]
     public class MilestonesController : BaseController<MilestonesController>
     {
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateMilestoneCommand command)
+        [HttpPost("Create", Name = "CreateMilestone")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> CreateMilestone(CreateMilestoneCommand command)
         {
             var id = await mediator.Send(command);
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            return Ok(id);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<MilestoneDto>> GetById(int id)
+        [HttpGet("getById{contractId:int}", Name = "GetMilestoneById")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<MilestoneDto>> GetMilestoneById(int id)
         {
             return await mediator.Send(new GetMilestoneByIdQuery(id));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateMilestoneCommand command)
+
+
+        [HttpGet("getByContractId{contractId:int}", Name = "GetMilestonesByContractId")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<MilestoneSearchByContractResult>> GetMilestonesByContractId(int contractId)
         {
-            command.Id = id;
+            return await mediator.Send(new GetMilestonesByContractQuery(contractId));
+        }
+
+        [HttpPut("update", Name = "UpdateMilestone")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> UpdateMilestone(UpdateMilestoneCommand command)
+        {
             await mediator.Send(command);
             return NoContent();
         }

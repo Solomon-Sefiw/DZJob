@@ -15,6 +15,6 @@ public class Contract : BaseEntity
     public decimal AgreedAmount { get; set; } // More appropriate name
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
-    public ContractStatus Status { get; set; }  // Enum: Ongoing, Completed, Terminated
+    public ContractStatus Status { get; set; } = ContractStatus.Draft; // Enum: Ongoing, Completed, Terminated
     public ICollection<Milestone> Milestones { get; set; }
 }

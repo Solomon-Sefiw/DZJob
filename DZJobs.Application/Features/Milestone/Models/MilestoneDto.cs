@@ -11,6 +11,7 @@ namespace DZJobs.Application.Features.Milestone.Models
     {
         public int Id { get; set; }
         public int ContractId { get; set; }
+        public string Contract { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public decimal Amount { get; set; }

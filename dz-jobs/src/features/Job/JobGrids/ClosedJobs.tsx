@@ -20,7 +20,7 @@ export const ClosedJobs = () => {
   const { data: items, isLoading: isListLoading } = useGetAllJobByStatusQuery({
     pageNumber: pagination.pageNumber + 1,
     pageSize: pagination.pageSize,
-    status: JobStatus.Closed,
+    status: JobStatus.Approved,
     employerId: user.userId,
   });
 
@@ -62,7 +62,7 @@ export const ClosedJobs = () => {
 
   return (
     <Box sx={{ p: 3, backgroundColor: theme.palette.background.default, minHeight: "10vh" }} onClick={() => setExpandedJobId(null)}>
-      {!isLoading && !!counts?.closed && (
+      {!isLoading && !!counts?.approved && (
         <Grid container spacing={3} sx={{ alignItems: "stretch" }}>
           {filteredJobRoles?.map((job) => {
             const isExpanded = expandedJobId === job.id;
@@ -162,14 +162,14 @@ export const ClosedJobs = () => {
           pageNumber={pagination.pageNumber}
           pageSize={pagination.pageSize}
           onChange={setPagination}
-          totalRowsCount={counts?.closed}
+          totalRowsCount={counts?.approved}
           rowsPerPageOptions={[10, 20, 50]}
         />
       </Box>
 
       {/* Job Dialogs */}
       {openJobApplicantDialog && (
-        <JobApplicantDetailsDialog open={openJobApplicantDialog} onClose={handleCloseDialogs} job={selectedJobApplicant} approvalStatus={JobApplicationStatus.Accepted}/>
+        <JobApplicantDetailsDialog open={openJobApplicantDialog} onClose={handleCloseDialogs} job={selectedJobApplicant} approvalStatus={JobApplicationStatus.Approved}/>
       )}
       {openJobDetailsDialog && (
         <JobDetailsDialog open={openJobDetailsDialog} onClose={handleCloseDialogs} job={selectedJobDetails} />

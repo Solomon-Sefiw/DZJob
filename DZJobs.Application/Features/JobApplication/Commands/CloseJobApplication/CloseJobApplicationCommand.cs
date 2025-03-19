@@ -22,9 +22,9 @@ namespace DZJobs.Application.Features.JobApplication.Commands.CloseJobApplicatio
         public async Task<int> Handle(CloseJobApplicationCommand command, CancellationToken cancellationtoken)
         {
             var job = dataService.Jobs.Where(bu => bu.Id == command.jobId).FirstOrDefault();
-            job.Status = JobStatus.Closed;
+            job.Status = JobStatus.Approved;
             var application = dataService.JobApplications.Where(bu => bu.Id == command.applicantId).FirstOrDefault();
-            application.Status = ApplicationStatus.Accepted;
+            application.Status = ApplicationStatus.Approved;
 
             await dataService.SaveAsync(cancellationtoken);
             return job.Id;

@@ -44,7 +44,7 @@ namespace DZJobs.Controllers.JobApplication
             return Ok(applications);
         }
 
-        [HttpPut("all", Name = "UpdateJobApplication")]
+        [HttpPut("update", Name = "UpdateJobApplication")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<int>> UpdateJobApplication([FromBody] UpdateJobApplicationCommand command)
         {
@@ -62,7 +62,6 @@ namespace DZJobs.Controllers.JobApplication
         public async Task<ActionResult<JobApplicationSearchResult>> GetAllJobApplicationByStatus(ApplicationStatus status, string FreelancerId, int pageNumber, int pageSize)
         {
             var searchResult = await mediator.Send(new GetJobApplicationListQuery(status, FreelancerId, pageNumber, pageSize));
-
             return searchResult;
         }
         [HttpGet("allOpenJobByStatus", Name = "GetAllOpenJobByStatus")]
