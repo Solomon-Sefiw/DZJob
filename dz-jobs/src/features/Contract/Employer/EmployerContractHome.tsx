@@ -1,5 +1,4 @@
-import AddIcon from "@mui/icons-material/Add";
-import WorkIcon from "@mui/icons-material/Work";
+
 import {
   Autocomplete,
   Box,
@@ -16,13 +15,10 @@ import { useSelector } from "react-redux";
 import { Outlet } from "react-router-dom";
 import { RootState } from "../../../app/store";
 import { useGetAllJobsQuery, useGetContractsCountByEmployerQuery } from "../../../app/services/DZJobsApi";
-import { PageHeader } from "../../../components/PageHeader";
-import { JobDialog } from "../../Job/JobDialog";
 import { EmployerContractTabs } from "./EmployerContractGrids/EmployerContractTabs";
 
 export const EmployerContractHome = () => {
   const user = useSelector((state: RootState) => state.auth);
-  const [dialogOpened, setDialogOpened] = useState(false);
   const { data: JobRoleCounts } = useGetContractsCountByEmployerQuery({ employerId: user.userId });
   const { data = [] } = useGetAllJobsQuery();
 

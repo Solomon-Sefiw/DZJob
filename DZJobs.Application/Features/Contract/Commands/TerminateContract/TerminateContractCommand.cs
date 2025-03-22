@@ -20,8 +20,6 @@ public class TerminateContractCommandHandler : IRequestHandler<TerminateContract
     public async Task<int> Handle(TerminateContractCommand request, CancellationToken cancellationToken)
     {
         var contract = await _context.Contracts.FindAsync(request.Id);
-        if (contract == null)
-            throw new NotFoundException(nameof(Contract), request.Id);
         contract.Status = ContractStatus.Terminated;
         await _context.SaveAsync(cancellationToken);
         return contract.Id;

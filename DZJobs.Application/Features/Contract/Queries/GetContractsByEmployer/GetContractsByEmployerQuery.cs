@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DZJobs.Application.Features.Contract.Queries.GetContractsByFreelancer;
 using DZJobs.Domain.Entities;
 using HCMS.Application.Exceptions;
 using HCMS.Services.DataService;
@@ -12,44 +13,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DZJobs.Application.Features.Contract.Queries.GetContractsByEmployer
 {
-    //public record GetContractsByEmployerQuery(string EmployerId) : IRequest<List<ContractDto>>;
-    //public class GetContractsByEmployerQueryHandler : IRequestHandler<GetContractsByEmployerQuery, List<ContractDto>>
-    //{
-    //    private readonly IDataService _context;
 
-    //    public GetContractsByEmployerQueryHandler(IDataService context)
-    //    {
-    //        _context = context;
-    //    }
-
-    //    public async Task<List<ContractDto>> Handle(GetContractsByEmployerQuery request, CancellationToken cancellationToken)
-    //    {
-    //        var contracts = await _context.Contracts
-    //            .Where(c => c.EmployerId == request.EmployerId)
-    //            .Include(c => c.Job)
-    //            .Include(c => c.Freelancer)
-    //            .Select(c => new ContractDto
-    //            {
-    //                Id = c.Id,
-    //                JobId = c.JobId,
-    //                FreelancerId = c.FreelancerId,
-    //                EmployerId = c.EmployerId,
-    //                AgreedAmount = c.AgreedAmount,
-    //                StartDate = c.StartDate,
-    //                EndDate = c.EndDate,
-    //                Status = c.Status
-    //            })
-    //            .ToListAsync(cancellationToken);
-
-    //        if (contracts == null || contracts.Count == 0)
-    //            throw new NotFoundException(nameof(Contract), "No contracts found for this employer.");
-
-    //        return contracts;
-    //    }
-    //}
-
-
-    public record ContractSearchResult(List<ContractDto> Items, int TotalCount);
+  
     public record GetContractsByEmployerQuery(ContractStatus Status, string EmployerId, int PageNumber, int PageSize) : IRequest<ContractSearchResult>;
     public class GetContractsByEmployerQueryHandler : IRequestHandler<GetContractsByEmployerQuery, ContractSearchResult>
     {
@@ -83,13 +48,6 @@ namespace DZJobs.Application.Features.Contract.Queries.GetContractsByEmployer
                 EndDate = contract.EndDate,
                 Status = contract.Status
             }).ToList();
-
-            //    Draft = 0,
-            //    Pending = 1,      // Contract is created but not yet signed by both parties
-            //    Active = 2,       // Both freelancer and employer have agreed, and work has started
-            //    Completed = 3,    // All milestones are completed, and the contract is successfully finished
-            //    Terminated = 4,    // Contract was canceled before completion
-            //    Disputed = 5
             if (request.Status == ContractStatus.Draft)
             {
                 var result = contractlist.Where(JR => JR.Status == ContractStatus.Draft)

@@ -59,10 +59,12 @@ export const AcceptedJobApplication = () => {
     return text.length > limit ? text.substring(0, limit) + "..." : text;
   };
 
-  const goToChat = (jobId : number ,senderId : string, receiverId: string | undefined) => {
+  const goToChat = (chatPartnerId : string) => {
     
-    navigate(`/chat/${jobId}/${senderId}/${receiverId}`);
+    // Navigate with dynamic parameters in URL
+    navigate(`/chat/${chatPartnerId}`);
   };
+
 
   return (
     <Box sx={{ p: 3, backgroundColor: theme.palette.background.default, minHeight: "100vh" }}>
@@ -151,7 +153,7 @@ export const AcceptedJobApplication = () => {
                     color: "white",
                     fontWeight: "bold",
                   }}
-                  onClick={() => application?.jobId && application.freelancer && application.freelancerId && goToChat(application.jobId, application.freelancerId, application.employerId ?? undefined)}
+                  onClick={() =>  application.employerId && goToChat(application.employerId ?? undefined)}
                 >  
                   Message
                 </Button>

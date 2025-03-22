@@ -11,10 +11,10 @@ using Microsoft.EntityFrameworkCore;
 namespace DZJobs.Application.Features.Contract.Queries.GetContractsCountByEmployer
 {
 
-    public record GetContractsCountByEmployerQuery(string EmployerId) : IRequest<ContractCountsByStatus>;
-    public record ContractCountsByStatus(int draft,int pending, int active, int completed, int terminated, int disputed);
+    public record GetContractsCountByEmployerQuery(string EmployerId) : IRequest<ContractCountsByEmployer>;
+    public record ContractCountsByEmployer(int draft,int pending, int active, int completed, int terminated, int disputed);
 
-    public class GetContractsCountByEmployerQueryHandler : IRequestHandler<GetContractsCountByEmployerQuery, ContractCountsByStatus>
+    public class GetContractsCountByEmployerQueryHandler : IRequestHandler<GetContractsCountByEmployerQuery, ContractCountsByEmployer>
     {
         private readonly IDataService dataService;
 
@@ -22,7 +22,7 @@ namespace DZJobs.Application.Features.Contract.Queries.GetContractsCountByEmploy
         {
             this.dataService = dataService;
         }
-        public async Task<ContractCountsByStatus> Handle(GetContractsCountByEmployerQuery request, CancellationToken cancellationToken)
+        public async Task<ContractCountsByEmployer> Handle(GetContractsCountByEmployerQuery request, CancellationToken cancellationToken)
         {
             var draft = await dataService.Contracts.Where(JR => JR.Status == ContractStatus.Draft && JR.EmployerId == request.EmployerId).CountAsync();
             var pending = await dataService.Contracts.Where(JR => JR.Status == ContractStatus.Pending && JR.EmployerId == request.EmployerId).CountAsync();
@@ -35,9 +35,3 @@ namespace DZJobs.Application.Features.Contract.Queries.GetContractsCountByEmploy
         }
     }
 }
-//    Draft = 0,
-//    Pending = 1,      // Contract is created but not yet signed by both parties
-//    Active = 2,       // Both freelancer and employer have agreed, and work has started
-//    Completed = 3,    // All milestones are completed, and the contract is successfully finished
-//    Terminated = 4,    // Contract was canceled before completion
-//    Disputed = 5

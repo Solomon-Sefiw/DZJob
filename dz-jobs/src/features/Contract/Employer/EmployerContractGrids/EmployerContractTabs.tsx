@@ -1,7 +1,8 @@
 import { Badge, Box, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
 import { useMemo } from "react";
 import { Link } from "react-router-dom";
-import { ContractCountsByStatus } from "../../../../app/services/DZJobsApi";
+import { ContractCountsByEmployer } from "../../../../app/services/DZJobsApi";
+
 
 interface TabProps {
   label: string;
@@ -17,14 +18,14 @@ const getTabs = ({
   completed,
 //   terminated,
 //   disputed,
-}: ContractCountsByStatus = {}): TabProps[] => [
+}: ContractCountsByEmployer = {}): TabProps[] => [
   { label: "completed", href: "/employer-Contract", counts: completed, color: "success" },
   { label: "active", href: "/employer-Contract/active-Contract", counts: active, color: "primary" },
   { label: "pending", href: "/employer-Contract/pending-Contract", counts: pending, color: "error" },
   { label: "draft", href: "/employer-Contract/draft-Contract", counts: draft, color: "info" },
 ];
 
-export const EmployerContractTabs = ({ counts }: { counts?: ContractCountsByStatus }) => {
+export const EmployerContractTabs = ({ counts }: { counts?: ContractCountsByEmployer }) => {
   const tabs = useMemo(() => getTabs(counts), [counts]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));

@@ -28,9 +28,18 @@ import Layout from "./layout/Layout";
 import AboutMe from "../pages/AboutMe";
 import Projects from "../pages/Projects";
 import Contact from "../pages/Contact";
-import Chat from "../features/Chat/Chat";
+//import Chat from "../features/Chat/Chat";
 import { EmployerContractHome } from "../features/Contract/Employer/EmployerContractHome";
 import { DraftEmployerContract } from "../features/Contract/Employer/EmployerContractGrids/DraftEmployerContract";
+import { PendingEmployerContract } from "../features/Contract/Employer/EmployerContractGrids/PendingEmployerContract";
+import { FreelancerContractHome } from "../features/Contract/Freelancer/FreelancerContractHome";
+import { PendingFreelancerContract } from "../features/Contract/Freelancer/FreelancerContractGrids/PendingFreelancerContract";
+import { ActiveEmployerContract } from "../features/Contract/Employer/EmployerContractGrids/ActiveEmployerContract";
+import { CompletedEmployerContract } from "../features/Contract/Employer/EmployerContractGrids/CompletedEmployerContract";
+import { ActiveFreelancerContract } from "../features/Contract/Freelancer/FreelancerContractGrids/ActiveFreelancerContract";
+import { CompletedFreelancerContract } from "../features/Contract/Freelancer/FreelancerContractGrids/CompletedFreelancerContract";
+import ChatList from "../features/Chat/ChatList";
+import ChatDetail from "../features/Chat/ChatDetail";
 
 
 
@@ -55,10 +64,14 @@ const AppRoutes = () => {
         {/* <Route path="skills" element={<Skills />} /> */}
         <Route path="projects" element={<Projects />} />
         <Route path="contact" element={<Contact />} />
-        <Route
+        <Route path="message" element={<ChatList />} />
+        <Route path="/" element={<ChatList />} />
+        <Route path="/chat/:chatPartnerId" element={<ChatDetail />} />
+
+        {/* <Route
           path="/chat/:jobId/:senderId/:receiverId"
           element={<Chat />}
-        />
+        /> */}
 
 
         {/* <Route index path="login" element={<Login />} /> */}
@@ -75,9 +88,16 @@ const AppRoutes = () => {
           <Route path="open-jobs" element={<OpenJobs />} />
         </Route>
         <Route path="/employer-Contract" element={<EmployerContractHome />}>
-          <Route index element={<ClosedJobs />} />
-          <Route path="inprogress-jobs" element={<InprogressJobs />} />
-          <Route path="archived-jobs" element={<ArchivedJobs />} />
+          <Route index element={<CompletedEmployerContract />} />
+          <Route path="active-Contract" element={<ActiveEmployerContract />} />
+          <Route path="pending-Contract" element={<PendingEmployerContract />} />
+          <Route path="draft-Contract" element={<DraftEmployerContract />} />
+        </Route>
+
+        <Route path="/freelancer-Contract" element={<FreelancerContractHome />}>
+          <Route index element={<CompletedFreelancerContract />} />
+          <Route path="active-Contract" element={<ActiveFreelancerContract />} />
+          <Route path="pending-Contract" element={<PendingFreelancerContract />} />
           <Route path="draft-Contract" element={<DraftEmployerContract />} />
         </Route>
 

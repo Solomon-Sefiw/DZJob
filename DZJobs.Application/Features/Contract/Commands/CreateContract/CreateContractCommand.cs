@@ -1,6 +1,7 @@
 ﻿using DZJobs.Domain.Entities;
 using HCMS.Services.DataService;
 using MediatR;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 public class CreateContractCommand : IRequest<int>
 {
@@ -33,9 +34,12 @@ public class CreateContractCommandHandler : IRequestHandler<CreateContractComman
             EndDate = request.EndDate,
             Status = ContractStatus.Draft // Default status
         };
-
+        var application = _context.JobApplications.
+            Where(bu => bu.JobId == contract.JobId && bu.FreelancerId == contract.FreelancerId).FirstOrDefault();
+        application.Status = ApplicationStatus.InContract;
         _context.Contracts.Add(contract);
         await _context.SaveAsync(cancellationToken);
+
 
         return contract.Id; // Return the created contract's ID
     }

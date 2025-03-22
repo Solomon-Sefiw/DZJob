@@ -1,1 +1,1 @@
-﻿public record MessageDto(int Id, int JobId, string SenderId, string ReceiverId, string Content, DateTime SentAt, bool IsRead);
+﻿public record MessageDto(int Id, string SenderId, string ReceiverId, string Content, DateTime SentAt, bool IsRead);

@@ -1,6 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
 import WorkIcon from "@mui/icons-material/Work";
-import { ArrowBackIosNew } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
@@ -14,13 +13,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { RootState } from "../../app/store";
 import { JobDialog } from "./JobDialog";
 import { JobTabs } from "./JobGrids/JobTabs";
 import { PageHeader } from "../../components/PageHeader";
 import { useGetAllJobsQuery, useGetJobCountByStatusQuery } from "../../app/services/DZJobsApi";
-
 export const JobHome = () => {
   const user = useSelector((state: RootState) => state.auth);
   const [dialogOpened, setDialogOpened] = useState(false);
@@ -30,7 +28,6 @@ export const JobHome = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
-  const navigate = useNavigate();
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Detects mobile screens
@@ -118,7 +115,7 @@ export const JobHome = () => {
       </Paper>
 
       {/* Back Button */}
-      <Box sx={{ position: "fixed", bottom: 16, left: 16 }}>
+      {/* <Box sx={{ position: "fixed", bottom: 16, left: 16 }}>
         <Button
           startIcon={<ArrowBackIosNew />}
           onClick={() => navigate("/dashboard")}
@@ -130,7 +127,7 @@ export const JobHome = () => {
         >
           Back
         </Button>
-      </Box>
+      </Box> */}
 
       {/* Job Dialog */}
       {dialogOpened && (

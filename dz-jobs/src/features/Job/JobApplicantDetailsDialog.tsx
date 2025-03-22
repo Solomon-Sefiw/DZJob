@@ -20,8 +20,7 @@ import { JobApplicationStatus } from "../../app/services/enums";
 import { ClosingDialog } from "./JobGrids/ClosingDialog";
 import ApplicantCoverLetterDialog from "../JobApplication/ApplicantCoverLetterDialog";
 import { RejectDialog } from "./JobGrids/RejectDialog";
-import { useSelector } from "react-redux";
-import { RootState } from "../../app/store";
+
 import { useNavigate } from "react-router-dom";
 import { ContractDialog } from "../Contract/ContractDialog";
 
@@ -33,13 +32,12 @@ interface JobDetailsDialogProps {
 }
 
 export const JobApplicantDetailsDialog: React.FC<JobDetailsDialogProps> = ({ open, onClose, job, approvalStatus }) => {
-   const user = useSelector((state: RootState) => state.auth);
    const navigate = useNavigate();
   const { data: applicants, isLoading } = useGetJobApplicationByJobIdQuery(
     { status: approvalStatus, id: job?.id ?? 0 },
     { skip: !job } 
   );
-console.log(applicants)
+
   const [selectedApplicant, setSelectedApplicant] = useState<number | null>(null);
   
   const [dialogState, setDialogState] = useState<{ approvalOpen: boolean; closingOpen: boolean; rejectingOpen: boolean; contractOpen: boolean; }>({
@@ -83,10 +81,10 @@ console.log(applicants)
     setCoverLetterDialog({ open: true, coverLetter });
   };
 
-  const goToChat = (jobId : number ,senderId : string ,receiverId : string) => {
+  const goToChat = (chatPartnerId : string) => {
     
     // Navigate with dynamic parameters in URL
-    navigate(`/chat/${jobId}/${senderId}/${receiverId}`);
+    navigate(`/chat/${chatPartnerId}`);
   };
 
   return (
@@ -106,10 +104,12 @@ console.log(applicants)
           {isLoading ? (
             <Typography>Loading applicants...</Typography>
           ) : applicants?.items?.length ? (
-            <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid container  spacing={3} sx={{ mt: 2 }}>
               {applicants.items.map((applicant) => (
-                <Grid item xs={12} sm={6} md={4} key={applicant.id}>
-                  <Card variant="outlined" sx={{ display: "flex", flexDirection: "column", height: "100%", width: "100%" }}>
+                <Grid  item xs={12} md={6}  key={applicant.id}>
+                  <Card  variant="outlined"
+                  sx={{ display: "flex", flexDirection: "column", height: "100%", padding: 3 }}
+                >
                     <CardContent sx={{ flex: "1 1 auto" }}>
                       <Typography
                         variant="h6"
@@ -121,9 +121,9 @@ console.log(applicants)
 
                       <Typography variant="body2" sx={{ mt: 1 }} color="text.secondary">
                         {applicant.coverLetter && (
-                          <span dangerouslySetInnerHTML={{ __html: applicant.coverLetter.slice(0, 100) }} />
+                          <span dangerouslySetInnerHTML={{ __html: applicant.coverLetter.slice(0, 400) }} />
                         )}
-                        {applicant.coverLetter && applicant.coverLetter.length > 100 && (
+                        {applicant.coverLetter && applicant.coverLetter.length > 400 && (
                           <Link
                             component="button"
                             variant="body2"
@@ -187,7 +187,7 @@ console.log(applicants)
                               fullWidth
                               variant="contained"
                               color="primary"
-                              onClick={() => job?.id && applicant.freelancerId && goToChat(job.id, user.userId, applicant.freelancerId)}
+                              onClick={() => job?.id && applicant.freelancerId && goToChat(applicant.freelancerId)}
                             >
                               Chat
                             </Button>

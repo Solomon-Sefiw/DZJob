@@ -30,6 +30,7 @@ import {
 import { Pagination } from "../../../../components/Pagination";
 import { ContractStatus } from "../../../../app/services/enums";
 import { MilestonesDialogDetail } from "../../Milestone/MilestonesDialogDetail";
+import { SubmitContractDialog } from "../../ContractWorkflowDialog/SubmitContractDialog";
 
 export const DraftEmployerContract = () => {
   const user = useSelector((state: RootState) => state.auth);
@@ -61,14 +62,28 @@ export const DraftEmployerContract = () => {
   const [openJobDialog, setOpenJobDialog] = useState(false);
   const [selectedJob, setSelectedJob] = useState<ContractDto | null>(null);
 
+  const [selectedContract, setSelectedContract] = useState<number | null>(null);
+
+  const [dialogState, setDialogState] = useState<{ submitContract: boolean; }>({
+    submitContract: false,
+  });
+  const handleCloseClick = (applicantId: number) => {
+    setSelectedContract(applicantId);
+    setDialogState({ submitContract: true,});
+  };
   const handleOpenJobDialog = (job: ContractDto) => {
     setSelectedJob(job);
     setOpenJobDialog(true);
   };
 
+  // const handleCloseDialogs = () => {
+  //   setOpenJobDialog(false);
+  //   setSelectedJob(null);
+  // };
   const handleCloseDialogs = () => {
+    setSelectedContract(null);
     setOpenJobDialog(false);
-    setSelectedJob(null);
+    setDialogState({ submitContract: false });
   };
 
   const handleSort = (property: keyof ContractDto) => {
@@ -95,7 +110,6 @@ export const DraftEmployerContract = () => {
                       Job Title
                     </TableSortLabel>
                   </TableCell>
-
                   <TableCell>Freelancer</TableCell>
                   <TableCell>
                     <TableSortLabel
@@ -151,9 +165,9 @@ export const DraftEmployerContract = () => {
                         variant="contained"
                         color="primary"
                         size="small"
-                        onClick={() => handleOpenJobDialog(job)}
+                        onClick={() => job.id !== undefined && handleCloseClick(job.id)}
                       >
-                        Submit for {job.freelancer}
+                        Submit To {job.freelancer}
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -168,7 +182,12 @@ export const DraftEmployerContract = () => {
               <Grid item xs={12} key={job.id}>
                 <Card sx={{ display: "flex", flexDirection: "column", p: 2 }}>
                   <CardContent>
-                    <Typography variant="h6" color="primary" sx={{ cursor: "pointer" }} onClick={() => handleOpenJobDialog(job)}>
+                    <Typography
+                      variant="h6"
+                      color="primary"
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => handleOpenJobDialog(job)}
+                    >
                       <WorkIcon sx={{ mr: 1, verticalAlign: "middle" }} />
                       {job.jobTitle}
                     </Typography>
@@ -214,8 +233,20 @@ export const DraftEmployerContract = () => {
       </Box>
 
       {/* Job Details Dialog */}
-            {openJobDialog && (
-              <MilestonesDialogDetail open={openJobDialog} onClose={handleCloseDialogs} contract={selectedJob} approvalStatus ={ContractStatus.Draft}/>
+      {openJobDialog && selectedJob && (
+        <MilestonesDialogDetail
+          open={openJobDialog}
+          onClose={handleCloseDialogs}
+          contract={selectedJob}
+          approvalStatus={ContractStatus.Draft}
+        />
+      )}
+            {selectedContract && (
+              <>
+                <SubmitContractDialog open={dialogState.submitContract} onClose={handleCloseDialogs} contractId={selectedContract}  />
+                {/* <ClosingDialog open={dialogState.closingOpen} onClose={handleCloseDialog} applicantId={selectedApplicant} jobId={job?.id || 0} />
+                <RejectDialog open={dialogState.rejectingOpen} onClose={handleCloseDialog} applicantId={selectedApplicant} jobId={job?.id || 0} /> */}
+              </>
             )}
     </Box>
   );

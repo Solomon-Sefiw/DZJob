@@ -1,4 +1,6 @@
-﻿using DZJobs.Application.Features.Milestone.Models;
+﻿using DZJobs.Application.Features.Contract.Commands.ActiveContract;
+using DZJobs.Application.Features.Milestone.Commands.CompletedMilestone;
+using DZJobs.Application.Features.Milestone.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,6 +40,13 @@ namespace DZJobs.Controllers.Milestone
         {
             await mediator.Send(command);
             return NoContent();
+        }
+        [HttpPut("complete", Name = "CompleteMilestone")]
+        [ProducesResponseType(200)]
+        public async Task<IActionResult> CompleteMilestone([FromBody] CompleteMilestoneCommand command)
+        {
+            var contractId = await mediator.Send(command);
+            return Ok(contractId); // Successfully terminated
         }
     }
 }

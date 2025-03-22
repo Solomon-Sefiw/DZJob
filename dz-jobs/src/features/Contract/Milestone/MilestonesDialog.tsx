@@ -13,13 +13,12 @@ import {
   import { Form, Formik } from "formik";
   import { useCallback, useEffect, useState } from "react";
   import * as Yup from "yup";
-  import { MilestoneDto, useCreateMilestoneMutation } from "../../../app/services/DZJobsApi";
-  import { useSelector } from "react-redux";
-  import { RootState } from "../../../app/store";
+  import { MilestoneDto, useCreateMilestoneMutation, useUpdateMilestoneMutation } from "../../../app/services/DZJobsApi";
   import { DialogHeader } from "../../../components/dialog";
   import { Errors } from "../../../components/Errors";
   import { FormTextField } from "../../../components/form-controls/form-text-field";
   import { FormRichTextField } from "../../../components/form-controls/from-reach-text";
+import { removeEmptyFields } from "../../../../utils/utils";
   
   const emptymilestoneData = {
     jobId: 0,
@@ -37,13 +36,14 @@ import {
   }: {
     onClose: () => void;
     contractId: number;
-    milestone?: MilestoneDto;
+    milestone?: MilestoneDto | null;
   }) => {
     const [milestoneData, setMilestone] = useState<MilestoneDto>();
     const [message, setMessage] = useState<string | null>(null);
     const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();
-    const user = useSelector((state: RootState) => state.auth);
-    const [addMilestone, { error: AddJobRoleError }] = useCreateMilestoneMutation();
+    //const user = useSelector((state: RootState) => state.auth);
+    const [addMilestone, { error: AddMilestoneError }] = useCreateMilestoneMutation();
+     const [updateMilestole, { error: UpdateMilestoneError }] = useUpdateMilestoneMutation();
   
     useEffect(() => {
         setMilestone({
@@ -63,27 +63,30 @@ import {
     const handleSubmit = useCallback(
       (values: MilestoneDto) => {
         values.contractId = contractId;
-        addMilestone({
-          createMilestoneCommand: values,
+      const payload = removeEmptyFields(values);
+
+      (milestone?.id
+        ? updateMilestole({ updateMilestoneCommand: payload })
+        : addMilestone({ createMilestoneCommand: payload })
+      )
+        .unwrap()
+        .then(() => {
+          setAlertSeverity("success");
+          setMessage("Milestone added successfully!");
+          setTimeout(() => {
+            onClose();
+            window.location.reload();
+          }, 500);
         })
-          .unwrap()
-          .then(() => {
-            setAlertSeverity("success");
-            setMessage("Milestone Added successfully!");
-            setTimeout(() => {
-              onClose();
-              window.location.reload();
-            }, 0);
-          })
-          .catch((error) => {
-            setAlertSeverity("error");
-            setMessage("Failed to add milestone");
-          });
-      },
-      [onClose, addMilestone, contractId]
+        .catch(console.error);
+    },
+    [onClose, addMilestone, contractId, milestone?.id, updateMilestole]
     );
   
-    const errors = (AddJobRoleError as any)?.data.errors;
+
+    const errors = (
+        (milestone?.id ? UpdateMilestoneError : AddMilestoneError) as any
+      )?.data?.errors;
     return (
       <Dialog
         scroll={"paper"}

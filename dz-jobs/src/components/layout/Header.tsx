@@ -53,7 +53,7 @@ const Header: React.FC = () => {
       href: user.role === UserRole.EMPLOYER ? "/employer-dashboard" : "/freelancer-dashboard",icon: <AccountCircle />},
     { label: "Contracts", href: user.role === UserRole.EMPLOYER ? "/employer-Contract" : "/freelancer-Contract", icon: <Work /> },
     { label: "My Work", href: "#", icon: <PinDropRounded /> },
-    { label: "Message", href: "#", icon: <Phone /> },
+    { label: "Message", href: "/message", icon: <Phone /> },
   ];
 
   const currentIndex = menuItems.findIndex((item) => item.href === location.pathname);
