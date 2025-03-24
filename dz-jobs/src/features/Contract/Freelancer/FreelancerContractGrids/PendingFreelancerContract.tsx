@@ -110,7 +110,7 @@ export const PendingFreelancerContract = () => {
                       Job Title
                     </TableSortLabel>
                   </TableCell>
-                  <TableCell>Freelancer</TableCell>
+                  <TableCell>Employer</TableCell>
                   <TableCell>
                     <TableSortLabel
                       active={orderBy === "agreedAmount"}
@@ -140,15 +140,15 @@ export const PendingFreelancerContract = () => {
                         </Typography>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>{job.freelancer}</TableCell>
+                    <TableCell>{job.employer}</TableCell>
                     <TableCell>
                       <Chip label={`ETB ${job.agreedAmount}`} color="secondary" />
                     </TableCell>
                     <TableCell>
-                      <CalendarTodayIcon sx={{ mr: 1, verticalAlign: "middle" }} /> {job.startDate}
+                       {job.startDate}
                     </TableCell>
                     <TableCell>
-                      <CalendarTodayIcon sx={{ mr: 1, verticalAlign: "middle" }} /> {job.endDate}
+                        {job.endDate}
                     </TableCell>
                     <TableCell>
                       <Button
@@ -168,7 +168,7 @@ export const PendingFreelancerContract = () => {
                         size="small"
                         onClick={() => job.id !== undefined && handleCloseClick(job.id)}
                       >
-                        Accept {job.employer}'s Contract
+                        Accept Contract
                       </Button>
                       </Tooltip>
                     </TableCell>
@@ -193,7 +193,7 @@ export const PendingFreelancerContract = () => {
                       <WorkIcon sx={{ mr: 1, verticalAlign: "middle" }} />
                       {job.jobTitle}
                     </Typography>
-                    <Typography variant="body2">Freelancer: {job.freelancer}</Typography>
+                    <Typography variant="body2">Employer: {job.employer}</Typography>
                     <Typography variant="body2">Agreed Amount: ETB {job.agreedAmount}</Typography>
                     <Typography variant="body2">
                       <CalendarTodayIcon sx={{ mr: 1, verticalAlign: "middle" }} />

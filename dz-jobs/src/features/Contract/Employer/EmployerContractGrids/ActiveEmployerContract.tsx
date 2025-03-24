@@ -160,7 +160,7 @@ export const ActiveEmployerContract = () => {
                         View Milestones
                       </Button>
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <Button
                         variant="contained"
                         color="primary"
@@ -169,7 +169,7 @@ export const ActiveEmployerContract = () => {
                       >
                         Approve Contract as Completed
                       </Button>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))}
               </TableBody>

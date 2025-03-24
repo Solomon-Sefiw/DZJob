@@ -18,9 +18,11 @@ import {
   MilestoneDto,
   useGetMilestonesByContractIdQuery,
 } from "../../../app/services/DZJobsApi";
-import { ContractStatus, MilestoneStatus } from "../../../app/services/enums";
+import { ContractStatus, MilestoneStatus, UserRole } from "../../../app/services/enums";
 import { MilestonesDialog } from "./MilestonesDialog";
 import { CompleteMilestoneDialog } from "./MilestoleWorkflowDilog/CompleteMilestoneDialog";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
 
 interface MilestonesDialogDetailProps {
   open: boolean;
@@ -35,7 +37,7 @@ export const MilestonesDialogDetail: React.FC<MilestonesDialogDetailProps> = ({
   contract,
   approvalStatus,
 }) => {
-  //const user = useSelector((state: RootState) => state.auth);
+  const user = useSelector((state: RootState) => state.auth);
 
   // Fetch milestones
   const { data: milestonesData, isLoading } = useGetMilestonesByContractIdQuery(
@@ -160,6 +162,7 @@ export const MilestonesDialogDetail: React.FC<MilestonesDialogDetailProps> = ({
                   </CardContent>
                   <CardActions sx={{ justifyContent: "center", padding: 2 }}>
                     {approvalStatus === ContractStatus.Active && (
+                      <>
                       <Button
                         fullWidth
                         variant="contained"
@@ -168,10 +171,19 @@ export const MilestonesDialogDetail: React.FC<MilestonesDialogDetailProps> = ({
                       >
                         Approve
                       </Button>
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        color="error"
+                        onClick={() => milestone.id !== undefined && handleApproveMilestone(milestone.id)}
+                      >
+                        Reject
+                      </Button>
+                      </>
                     )}
-                    <Button fullWidth variant="outlined" color="primary" onClick={() => handleMilestoneDialog(milestone)}>
+                 {user.role === UserRole.EMPLOYER&& approvalStatus === ContractStatus.Pending && ( <Button fullWidth variant="outlined" color="primary" onClick={() => handleMilestoneDialog(milestone)}>
                       Update
-                    </Button>
+                    </Button>)}
                   </CardActions>
                 </Card>
               </Grid>

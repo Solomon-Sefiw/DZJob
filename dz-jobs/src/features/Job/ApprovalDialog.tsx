@@ -36,7 +36,7 @@ export const ApprovalDialog: React.FC<ApprovalDialogProps> = ({ open, onClose, a
           Cancel
         </Button>
         <Button onClick={handleApprove} color="primary" variant="contained" disabled={isLoading}> 
-           {isLoading ? "Approving..." : "Approve"} 
+           {isLoading ? "Approving..." : "Yes"} 
          </Button>
       </DialogActions>
     </Dialog>

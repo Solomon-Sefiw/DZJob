@@ -35,7 +35,7 @@ export const AcceptContractDialog: React.FC<AcceptContractDialogProps> = ({ open
           Cancel
         </Button>
         <Button onClick={handleApprove} color="primary" variant="contained" disabled={isLoading}> 
-           {isLoading ? "Approving..." : "Approve"} 
+           {isLoading ? "Approving..." : "Yes"} 
          </Button>
       </DialogActions>
     </Dialog>

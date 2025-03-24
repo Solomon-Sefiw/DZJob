@@ -160,7 +160,7 @@ export const ActiveFreelancerContract = () => {
                         View Milestones
                       </Button>
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                     <Tooltip title="Submit to Applicant for Approving all milestons and going to Start the contract">
                       <Button
                         variant="contained"
@@ -171,7 +171,7 @@ export const ActiveFreelancerContract = () => {
                         Accept {job.employer}'s Contract
                       </Button>
                       </Tooltip>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))}
               </TableBody>

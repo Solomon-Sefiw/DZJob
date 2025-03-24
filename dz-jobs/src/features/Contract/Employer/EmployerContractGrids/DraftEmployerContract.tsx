@@ -20,7 +20,6 @@ import {
   Grid,
 } from "@mui/material";
 import WorkIcon from "@mui/icons-material/Work";
-import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import { RootState } from "../../../../app/store";
 import {
   ContractDto,
@@ -145,10 +144,10 @@ export const DraftEmployerContract = () => {
                       <Chip label={`ETB ${job.agreedAmount}`} color="secondary" />
                     </TableCell>
                     <TableCell>
-                      <CalendarTodayIcon sx={{ mr: 1, verticalAlign: "middle" }} /> {job.startDate}
+                       {job.startDate}
                     </TableCell>
                     <TableCell>
-                      <CalendarTodayIcon sx={{ mr: 1, verticalAlign: "middle" }} /> {job.endDate}
+                    {job.endDate}
                     </TableCell>
                     <TableCell>
                       <Button
@@ -194,7 +193,7 @@ export const DraftEmployerContract = () => {
                     <Typography variant="body2">Freelancer: {job.freelancer}</Typography>
                     <Typography variant="body2">Agreed Amount: ETB {job.agreedAmount}</Typography>
                     <Typography variant="body2">
-                      <CalendarTodayIcon sx={{ mr: 1, verticalAlign: "middle" }} />
+                      
                       {job.startDate} - {job.endDate}
                     </Typography>
                   </CardContent>
