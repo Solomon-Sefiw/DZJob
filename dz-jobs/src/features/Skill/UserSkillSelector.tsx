@@ -12,7 +12,6 @@ import {
 import { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import { RootState } from "../../app/store";
 import { useAddUserSkillMutation, useGetAllSkillQuery } from "../../app/services/DZJobsApi";
 
@@ -66,32 +65,69 @@ const UserSkillSelector = () => {
     }
   };
 
-  if (isLoading) return <CircularProgress sx={{ display: "block", margin: "auto" }} />;
-  if (error) return <Typography color="error">Failed to load skills.</Typography>;
+  if (isLoading)
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <CircularProgress />
+      </Box>
+    );
+
+  if (error)
+    return (
+      <Typography color="error" sx={{ textAlign: "center", mt: 4 }}>
+        Failed to load skills. Please try again later.
+      </Typography>
+    );
 
   return (
-    <Paper elevation={4} sx={{ p: 4, maxWidth: 600, mx: "auto", textAlign: "center" }}>
-      <Typography variant="h5" fontWeight={600} gutterBottom>
+    <Paper
+      elevation={4}
+      sx={{
+        p: 3,
+        maxWidth: 500,
+        mx: "auto",
+        textAlign: "center",
+        borderRadius: 3,
+        boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
+      }}
+    >
+      <Typography variant="h5" fontWeight={700} gutterBottom>
         Select Your Skills
       </Typography>
-      
+
       <TextField
         variant="outlined"
-        placeholder="Search Skills..."
+        placeholder="Search skills..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         fullWidth
         sx={{ mb: 2 }}
       />
 
-      <Box sx={{ maxHeight: 300, overflowY: "auto", display: "flex", flexWrap: "wrap", gap: 1, p: 1 }}>
+      <Box
+        sx={{
+          maxHeight: 250,
+          overflowY: "auto",
+          display: "flex",
+          flexWrap: "wrap",
+          gap: 1,
+          justifyContent: "center",
+          p: 1,
+        }}
+      >
         {filteredSkills.length > 0 ? (
           filteredSkills.map((skill) => (
             <Button
               key={skill.id}
               onClick={() => handleAddSkill(skill)}
               variant="outlined"
-              sx={{ textTransform: "none", borderRadius: 2 }}
+              sx={{
+                textTransform: "none",
+                borderRadius: 2,
+                fontWeight: 500,
+                transition: "all 0.2s",
+                "&:hover": { bgcolor: "primary.main", color: "white" },
+              }}
             >
               {skill.name}
             </Button>
@@ -103,24 +139,43 @@ const UserSkillSelector = () => {
         )}
       </Box>
 
-      <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 1 }}>
-        {selectedSkills.map((skill) => (
-          <Chip
-            key={skill.id}
-            label={skill.name}
-            onDelete={() => handleRemoveSkill(skill.id)}
-            deleteIcon={<CloseIcon />}
-            color="primary"
-          />
-        ))}
-      </Box>
+      {selectedSkills.length > 0 && (
+        <Box
+          sx={{
+            mt: 2,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 1,
+            justifyContent: "center",
+            p: 1,
+          }}
+        >
+          {selectedSkills.map((skill) => (
+            <Chip
+              key={skill.id}
+              label={skill.name}
+              onDelete={() => handleRemoveSkill(skill.id)}
+              deleteIcon={<CloseIcon />}
+              color="primary"
+              sx={{ fontWeight: 500 }}
+            />
+          ))}
+        </Box>
+      )}
 
       <Button
         variant="contained"
         color="primary"
         onClick={handleSaveSkills}
         disabled={isSaving || selectedSkills.length === 0}
-        sx={{ mt: 3, textTransform: "none", fontWeight: 600 }}
+        sx={{
+          mt: 3,
+          textTransform: "none",
+          fontWeight: 600,
+          borderRadius: 2,
+          transition: "all 0.2s",
+          "&:hover": { boxShadow: "0px 4px 15px rgba(0,0,0,0.2)" },
+        }}
       >
         {isSaving ? "Saving..." : "Save Skills"}
       </Button>

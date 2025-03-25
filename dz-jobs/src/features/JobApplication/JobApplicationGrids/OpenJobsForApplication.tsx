@@ -62,7 +62,7 @@ export const OpenJobsForApplication = () => {
       ) : (
         <>
           {items?.totalCount ? (
-            <Grid container spacing={2}>
+            <Grid container spacing={2} sx={{ display: 'grid', gridTemplateColumns: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr', gap: 2 }}>
               {filteredJobRoles.map((job) => (
                 <Grid item xs={12} sm={6} md={4} key={job.id}>
                   <Box
@@ -162,7 +162,7 @@ export const OpenJobsForApplication = () => {
 
           <Divider sx={{ my: 1 }} />
 
-          <Box sx={{ display: "flex", justifyContent: "center", width: "100%", mt: 1 }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", mt: 1 }}>
             <Pagination
               pageNumber={pagination.pageNumber}
               pageSize={pagination.pageSize}

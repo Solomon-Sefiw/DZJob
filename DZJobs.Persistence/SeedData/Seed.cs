@@ -11,10 +11,7 @@ namespace HCMS.Persistance.SeedData
   
         public static async Task SeedData (DZJobsDBContext context,UserManager <DZJobUser> userManager)
         {
-     
-
             await context.SaveChangesAsync ();
-
         }
     }
 }

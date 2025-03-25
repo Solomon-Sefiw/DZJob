@@ -94,7 +94,7 @@ import { FormTextField } from "../../components/form-controls/form-text-field";
             validateOnSubmit={true} // Ensure that validation happens on form submit
           >
             <Form>
-              <DialogHeader title="Add Job Role" onClose={onClose} />
+              <DialogHeader title="Job Application" onClose={onClose} />
               <DialogContent dividers={true}>
                 <Grid container spacing={2}>
                   {message && (

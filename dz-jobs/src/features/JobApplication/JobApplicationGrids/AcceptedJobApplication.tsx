@@ -14,7 +14,7 @@ import {
   useTheme,
   Modal,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { RootState } from "../../../app/store";
@@ -26,16 +26,16 @@ import { ApplicationStatus } from "../../../app/services/enums";
 import { Pagination } from "../../../components/Pagination";
 
 export const AcceptedJobApplication = () => {
-     const navigate = useNavigate();
+  const navigate = useNavigate();
   const theme = useTheme();
   const user = useSelector((state: RootState) => state.auth);
   const [selectedCoverLetter, setSelectedCoverLetter] = useState<string | null>(null);
   const [pagination, setPagination] = useState({ pageNumber: 0, pageSize: 10 });
 
-  const { data: counts, isLoading: isCountsLoading } =
+  const { data: counts, isLoading: isCountsLoading, isError: isCountsError } =
     useGetJobApplicationCountByStatusQuery({ freelancerId: user.userId });
 
-  const { data: items, isLoading: isListLoading } =
+  const { data: items, isLoading: isListLoading, isError: isListError } =
     useGetAllJobApplicationByStatusQuery({
       pageNumber: pagination.pageNumber + 1,
       pageSize: pagination.pageSize,
@@ -45,36 +45,45 @@ export const AcceptedJobApplication = () => {
 
   const { searchQuery } = useOutletContext<{ searchQuery: string }>();
 
-  const filteredJobRoles = searchQuery
-    ? (items?.items || []).filter((option) =>
-        option.job?.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : items?.items || [];
+  // Use memoization to avoid unnecessary recalculations on search query changes
+  const filteredJobRoles = useMemo(() => {
+    return searchQuery
+      ? (items?.items || []).filter((option) =>
+          option.job?.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      : items?.items || [];
+  }, [items, searchQuery]);
 
   const showNoMatchingAlert = searchQuery && filteredJobRoles.length === 0;
   const isLoading = isCountsLoading || isListLoading;
+  const hasError = isCountsError || isListError;
 
   // Truncate text for cover letter preview
   const truncateText = (text: string, limit: number) => {
     return text.length > limit ? text.substring(0, limit) + "..." : text;
   };
 
-  const goToChat = (chatPartnerId : string) => {
-    
-    // Navigate with dynamic parameters in URL
+  const goToChat = (chatPartnerId: string) => {
     navigate(`/chat/${chatPartnerId}`);
   };
 
-
   return (
     <Box sx={{ p: 3, backgroundColor: theme.palette.background.default, minHeight: "100vh" }}>
+      {/* Error Handling */}
+      {hasError && (
+        <Alert severity="error" sx={{ m: 2 }}>
+          Something went wrong while fetching your applications. Please try again later.
+        </Alert>
+      )}
+
+      {/* Display accepted applications */}
       {!isLoading && counts?.accepted ? (
         <Grid container spacing={3} justifyContent="center">
           {filteredJobRoles.map((application) => (
             <Grid item xs={12} sm={6} md={4} key={application.id}>
               <Card
                 sx={{
-                  background: theme.palette.mode === "dark" ? "#333" : theme.palette.background.paper, // Light black in dark mode
+                  background: theme.palette.mode === "dark" ? "#333" : theme.palette.background.paper,
                   boxShadow: 3,
                   borderRadius: 2,
                   p: 2,
@@ -98,10 +107,9 @@ export const AcceptedJobApplication = () => {
                     <Typography
                       variant="body2"
                       sx={{ display: "inline", fontSize: "0.9rem", color: "text.secondary" }}
-                      dangerouslySetInnerHTML={{ __html: truncateText(application.coverLetter || "", 60)}}
+                      dangerouslySetInnerHTML={{ __html: truncateText(application.coverLetter || "", 60) }}
                     />
-                      
-                      
+
                     {application.coverLetter && application.coverLetter.length > 60 && (
                       <Typography
                         component="span"
@@ -153,8 +161,10 @@ export const AcceptedJobApplication = () => {
                     color: "white",
                     fontWeight: "bold",
                   }}
-                  onClick={() =>  application.employerId && goToChat(application.employerId ?? undefined)}
-                >  
+                  onClick={() =>
+                    application.employerId && goToChat(application.employerId ?? undefined)
+                  }
+                >
                   Message
                 </Button>
               </Card>
@@ -167,12 +177,14 @@ export const AcceptedJobApplication = () => {
         </Typography>
       )}
 
+      {/* No Matching Results Alert */}
       {showNoMatchingAlert && (
         <Alert severity="info" sx={{ m: 2 }}>
           No Approved Job Role found with name "{searchQuery}"!
         </Alert>
       )}
 
+      {/* Pagination */}
       <Pagination
         pageNumber={pagination.pageNumber}
         pageSize={pagination.pageSize}

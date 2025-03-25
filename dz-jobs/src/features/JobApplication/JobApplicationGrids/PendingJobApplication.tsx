@@ -75,8 +75,8 @@ export const PendingJobApplication = () => {
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
-                  height: "100%", // Make sure it takes equal height for all cards
-                  minHeight: 350, // Set a minimum height to make sure they are consistent
+                  height: "100%", // Ensure equal height for all cards
+                  minHeight: 350, // Set minimum height for consistency
                   transition: "all 0.3s ease-in-out",
                   "&:hover": {
                     boxShadow: 4,
@@ -93,7 +93,6 @@ export const PendingJobApplication = () => {
                     gap: 1,
                     color: theme.palette.primary.main,
                     cursor: "pointer",
-                    flexGrow: 0, // Ensures title doesn't take up too much space
                   }}
                 >
                   <WorkIcon /> {application.job}
@@ -104,20 +103,18 @@ export const PendingJobApplication = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    mt: 1.5,
-                    flexGrow: 0, // Prevent this from growing too large and distorting height
-                    overflow: "hidden", // Ensures text doesn't overflow beyond the card
+                    mt: 0,
+                    overflow: "hidden", // Prevent overflow beyond the card
                   }}
                 >
                   <div dangerouslySetInnerHTML={{ __html: truncateCoverLetter(application.coverLetter || "") }} />
                 </Typography>
 
-                {/* More Link for Cover Letter */}
                 {application.coverLetter && (
                   <Link
                     onClick={() => handleDialogOpen(application.coverLetter || "")}
                     sx={{
-                      mt: 1,
+                      mt: 0,
                       fontSize: "0.875rem",
                       textDecoration: "underline",
                       color: theme.palette.primary.main,
@@ -128,16 +125,10 @@ export const PendingJobApplication = () => {
                   </Link>
                 )}
 
-                <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 0 }}>
                   <MonetizationOnIcon sx={{ mr: 1 }} /> ${application.proposedSalary}
                   <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {application.createdAt}
-
                 </Typography>
-
-
-
-             
-             
               </Box>
             </Grid>
           ))}
@@ -152,7 +143,7 @@ export const PendingJobApplication = () => {
 
       <Divider sx={{ my: 1 }} />
 
-      <Box sx={{ display: "flex", justifyContent: "center", width: "100%", mt: 1 }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", mt: 1 }}>
         <Pagination
           pageNumber={pagination.pageNumber}
           pageSize={pagination.pageSize}

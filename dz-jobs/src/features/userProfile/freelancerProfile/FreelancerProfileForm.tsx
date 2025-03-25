@@ -1,14 +1,16 @@
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { Box, Button, Grid, IconButton, InputAdornment } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  InputAdornment,
+  Link,
+} from "@mui/material";
 import { Form, Formik } from "formik";
-import { useCallback, useState } from "react";
 import * as yup from "yup";
-import { FreelancerProfileDto } from '../../../app/services/DZJobsApi';
-import { YupShape } from '../../../../utils';
-import { Errors } from '../../../components/Errors';
-import { FormTextField } from '../../../components/form-controls';
-
+import { FreelancerProfileDto } from "../../../app/services/DZJobsApi";
+import { YupShape } from "../../../../utils";
+import { Errors } from "../../../components/Errors";
+import { FormTextField } from "../../../components/form-controls";
 
 const initialValues: FreelancerProfileDto = {
   bio: "",
@@ -38,28 +40,14 @@ interface Props {
 }
 
 export const FreelancerProfileForm = ({ onCancel, onSubmit, errors }: Props) => {
-  const [showPortfolio, setShowPortfolio] = useState(false);
-  const handleClickShowPortfolio = () => setShowPortfolio((prev) => !prev);
-  const handleMouseDownPortfolio = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleSubmit = async (values: FreelancerProfileDto) => {
+    console.log("Submitting form with values:", values);
+    onSubmit(values);
   };
 
-  const handleSubmit = useCallback(
-    async (values: FreelancerProfileDto) => {
-      console.log("Submitting form with values:", values);
-      onSubmit(values);
-    },
-    [onSubmit]
-  );
-
   return (
-    <Formik
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-      validationSchema={validationSchema}
-      validateOnChange={true}
-    >
-      {({ isSubmitting }) => (
+    <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
+      {({ isSubmitting, values }) => (
         <Form>
           <Grid container spacing={3}>
             {errors && (
@@ -68,96 +56,42 @@ export const FreelancerProfileForm = ({ onCancel, onSubmit, errors }: Props) => 
               </Grid>
             )}
             <Grid item xs={12}>
-              <FormTextField
-                name="bio"
-                type="text"
-                placeholder="Bio"
-                label="Bio"
-                fullWidth
-              />
+              <FormTextField name="bio" label="Bio" fullWidth />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField
-                name="skills"
-                type="text"
-                placeholder="Skills"
-                label="Skills"
-                fullWidth
-              />
+              <FormTextField name="skills" label="Skills" fullWidth />
             </Grid>
             <Grid item xs={12}>
               <FormTextField
                 name="portfolio"
-                type={showPortfolio ? "text" : "password"}
                 label="Portfolio Link"
                 fullWidth
                 InputProps={{
-                  endAdornment: (
+                  endAdornment: values.portfolio ? (
                     <InputAdornment position="end">
-                      <IconButton
-                        onClick={handleClickShowPortfolio}
-                        onMouseDown={handleMouseDownPortfolio}
-                        edge="end"
-                      >
-                        {showPortfolio ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
+                      <Link href={values.portfolio} target="_blank" rel="noopener noreferrer">
+                        View
+                      </Link>
                     </InputAdornment>
-                  ),
+                  ) : null,
                 }}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField
-                name="rating"
-                type="number"
-                placeholder="Rating (0-5)"
-                label="Rating"
-                fullWidth
-              />
+              <FormTextField name="hourlyRate" type="number" label="Hourly Rate" fullWidth />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField
-                name="experience"
-                type="number"
-                placeholder="Experience (in years)"
-                label="Experience"
-                fullWidth
-              />
+              <FormTextField name="location" label="Location" fullWidth />
             </Grid>
             <Grid item xs={12}>
-              <FormTextField
-                name="hourlyRate"
-                type="number"
-                placeholder="Hourly Rate"
-                label="Hourly Rate"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormTextField
-                name="location"
-                type="text"
-                placeholder="Location"
-                label="Location"
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button
-                color="primary"
-                variant="contained"
-                type="submit"
-                disabled={isSubmitting}
-                fullWidth
-                sx={{ textTransform: "none", padding: "10px" }}
-              >
+              <Button color="primary" variant="contained" type="submit" disabled={isSubmitting} fullWidth>
                 Create Profile
               </Button>
             </Grid>
             {onCancel && (
               <Grid item xs={12}>
-                <Box sx={{ mt: 2, textAlign: "center" }}>
-                  <Button onClick={onCancel} color="secondary" sx={{ textTransform: "none" }}>
+                <Box textAlign="center">
+                  <Button onClick={onCancel} color="secondary">
                     Cancel
                   </Button>
                 </Box>
