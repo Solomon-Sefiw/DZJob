@@ -26,7 +26,6 @@ namespace DZJobs.Controllers.UserSkill
             return await mediator.Send(command);
         }
 
-
         [HttpDelete("remove{userSkillId}", Name = "RemoveUserSkill")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<bool>> RemoveUserSkill(int userSkillId)

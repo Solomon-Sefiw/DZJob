@@ -12,7 +12,7 @@ interface FormRichTextProps {
 export const FormRichTextField = ({
   name,
   alwaysShowError,
-  placeholder = "Enter job description...",
+  placeholder = "Enter Here...",
   ...others
 }: FormRichTextProps) => {
   const theme = useTheme(); // Access MUI theme for dynamic dark mode support

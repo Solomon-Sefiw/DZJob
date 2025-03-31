@@ -5,6 +5,8 @@ import {
     DialogActions,
     DialogContent,
     Grid,
+    Typography,
+    useTheme,
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -39,7 +41,8 @@ import { FormTextField } from "../../components/form-controls/form-text-field";
     const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();
   
     const [addJobApplication, { error: AddJobRoleError }] = useCreateJobApplicationMutation();
-  
+    const theme = useTheme();
+    const isDarkMode = theme.palette.mode === "dark";
   
     useEffect(() => {
       setJobRole({
@@ -115,11 +118,22 @@ import { FormTextField } from "../../components/form-controls/form-text-field";
                       <Errors errors={errors as any} />
                     </Grid>
                   )}
-                  <Grid item xs={12}>
-                    <Box sx={{ display: "flex", gap: 2 }}>
-                      <FormRichTextField name="coverLetter" />
-                    </Box>
-                  </Grid>
+                <Grid item xs={12}>
+                  <Box
+                    sx={{
+                      border: "1px solid #ddd",
+                      borderRadius: 2,
+                      p: 1.5,
+                      backgroundColor: isDarkMode ? theme.palette.background.default : "#fff",
+                      color: isDarkMode ? "#fff" : "#000",
+                    }}
+                  >
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                      Cover Letter
+                    </Typography>
+                    <FormRichTextField name="coverLetter" />
+                  </Box>
+                </Grid>
 
                       <Grid item xs={12}>
                 <FormTextField

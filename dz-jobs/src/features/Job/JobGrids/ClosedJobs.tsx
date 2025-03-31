@@ -1,5 +1,4 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
 import { Alert, Box, Grid, Link, Typography, Divider, useTheme, Chip } from "@mui/material";
 import { useState } from "react";
@@ -10,7 +9,8 @@ import { JobApplicantDetailsDialog } from "../JobApplicantDetailsDialog";
 import { JobDetailsDialog } from "../JobDetailsDialog";;
 import { JobDto, useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/services/DZJobsApi";
 import { Pagination } from "../../../components/Pagination";
-import { JobApplicationStatus, JobStatus } from "../../../app/services/enums";
+import { JobApplicationStatus, JobStatus, JobType } from "../../../app/services/enums";
+import { LocationOn } from "@mui/icons-material";
 
 export const ClosedJobs = () => {
   const user = useSelector((state: RootState) => state.auth);
@@ -121,24 +121,15 @@ export const ClosedJobs = () => {
                     </Link>
                   )}
 
-                  {/* Salary & Posted Date */}
-                  {/* <Typography variant="body2">
-                    <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
-                  </Typography> */}
-                  <Box display="flex" gap={2} flexWrap="wrap" mt={2}>
-                    <Chip label={job.jobCategory} color="secondary" />
-                    <Chip label={job.jobType} color="primary" />
-                    <Typography variant="body1" sx={{ display: "flex", alignItems: "center" }}>
-                      <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
-                    </Typography>
+              <Box display="flex" gap={2} flexWrap="wrap" mt={2}>
+                   <Chip icon={<LocationOn  />} label={job.location} color="secondary" />
+                    <Chip label={job.jobType && JobType[job.jobType]} color="primary" />
+                     <Chip label={`${job.salary} ETB`} color="success" />
+
                     <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
                       <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
                     </Typography>
                   </Box>
-
               
                 </Box>
               </Grid>

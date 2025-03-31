@@ -65,7 +65,6 @@ const AppRoutes = () => {
         <Route path="projects" element={<Projects />} />
         <Route path="contact" element={<Contact />} />
         <Route path="message" element={<ChatList />} />
-        <Route path="/" element={<ChatList />} />
         <Route path="/chat/:chatPartnerId" element={<ChatDetail />} />
 
         {/* <Route

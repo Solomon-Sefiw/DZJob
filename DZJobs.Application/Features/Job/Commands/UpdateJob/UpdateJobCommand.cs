@@ -9,6 +9,7 @@ namespace HCMS.Application.Jobs.Commands
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Location { get; set; }
         public JobCategory JobCategory { get; set; }
         public int JobType { get; set; } // Same note as before regarding enum conversion
         public decimal Salary { get; set; }
@@ -35,6 +36,7 @@ namespace HCMS.Application.Jobs.Commands
             job.Title = request.Title;
             job.Description = request.Description;
             job.JobCategory = request.JobCategory;
+            job.Location = request.Location;
             job.JobType = (JobType)request.JobType;
             job.Salary = request.Salary;
             job.Status = (JobStatus)request.Status;

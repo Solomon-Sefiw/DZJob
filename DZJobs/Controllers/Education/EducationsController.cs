@@ -1,4 +1,5 @@
-﻿using HCMS.Application.Educations.Commands;
+﻿using DZJobs.Application.Features.Education.Queries.GetEducationById;
+using HCMS.Application.Educations.Commands;
 using HCMS.Application.Educations.Models;
 using HCMS.Application.Educations.Queries;
 using Microsoft.AspNetCore.Http;
@@ -28,11 +29,11 @@ namespace DZJobs.Controllers.Education
         }
 
 
-        [HttpGet("getById{id:int}", Name = "GetEducationById")]
+        [HttpGet("getByUserId", Name = "GetEducationByUserId")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<EducationDto>> GetEducationById(int id)
+        public async Task<ActionResult<List<EducationDto>>> GetEducationByUserId(string id)
         {
-            var education = await mediator.Send(new GetEducationByIdQuery(id));
+            var education = await mediator.Send(new GetEducationByUserIdQuery(id));
             return Ok(education);
         }
 

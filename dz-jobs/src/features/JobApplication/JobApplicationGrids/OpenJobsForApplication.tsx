@@ -1,5 +1,4 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
 import { Alert, Box, Button, Grid, Link, Typography, Divider, useTheme, Chip, CircularProgress } from "@mui/material";
 import { useState } from "react";
@@ -10,7 +9,8 @@ import { JobDto, useGetAllOpenJobByStatusQuery } from "../../../app/services/DZJ
 import { Pagination } from "../../../components/Pagination";
 import { JobDetailsDialog } from "../../Job/JobDetailsDialog";
 import { ApplayforJobDialog } from "../ApplayforJobDialog";
-import { JobApplicationStatus } from "../../../app/services/enums";
+import { JobApplicationStatus, JobType } from "../../../app/services/enums";
+import { LocationOn } from "@mui/icons-material";
 
 export const OpenJobsForApplication = () => {
   const user = useSelector((state: RootState) => state.auth);
@@ -62,9 +62,9 @@ export const OpenJobsForApplication = () => {
       ) : (
         <>
           {items?.totalCount ? (
-            <Grid container spacing={2} sx={{ display: 'grid', gridTemplateColumns: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr', gap: 2 }}>
+            <Grid container spacing={2}>
               {filteredJobRoles.map((job) => (
-                <Grid item xs={12} sm={6} md={4} key={job.id}>
+                <Grid item xs={12} sm={6} md={4} lg={4} xl={4} key={job.id}>
                   <Box
                     sx={{
                       p: 2,
@@ -117,16 +117,15 @@ export const OpenJobsForApplication = () => {
                       </Link>
                     )}
 
-                    <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
-                      <Chip label={job.jobCategory || "Unknown"} color="secondary" size="small" />
-                      <Chip label={job.jobType || "Unknown"} color="primary" size="small" />
-                      <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                        <MonetizationOnIcon sx={{ mr: 0.5 }} /> ${job.salary}
-                      </Typography>
-                      <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
-                        <CalendarTodayIcon sx={{ mr: 0.5 }} /> Posted on {job.postedDate}
-                      </Typography>
-                    </Box>
+             <Box display="flex" gap={2} flexWrap="wrap" mt={2}>
+                   <Chip icon={<LocationOn  />} label={job.location} color="secondary" />
+                    <Chip label={job.jobType && JobType[job.jobType]} color="primary" />
+                     <Chip label={`${job.salary} ETB`} color="success" />
+
+                    <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                      <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
+                    </Typography>
+                  </Box>
 
                     <Button
                       variant="contained"

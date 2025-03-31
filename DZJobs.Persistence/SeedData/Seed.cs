@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 
 
 
-namespace HCMS.Persistance.SeedData
+namespace DZJobs.Persistence.SeedData
 {
     public class Seed
     {

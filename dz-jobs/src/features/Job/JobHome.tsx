@@ -114,20 +114,6 @@ export const JobHome = () => {
         <Outlet context={{ searchQuery }} />
       </Paper>
 
-      {/* Back Button */}
-      {/* <Box sx={{ position: "fixed", bottom: 16, left: 16 }}>
-        <Button
-          startIcon={<ArrowBackIosNew />}
-          onClick={() => navigate("/dashboard")}
-          variant="contained"
-          sx={{
-            backgroundColor: "#1976d2",
-            "&:hover": { backgroundColor: "#115293" },
-          }}
-        >
-          Back
-        </Button>
-      </Box> */}
 
       {/* Job Dialog */}
       {dialogOpened && (

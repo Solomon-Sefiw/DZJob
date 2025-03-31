@@ -5,6 +5,8 @@ import {
   DialogActions,
   DialogContent,
   Grid,
+  Typography,
+  useTheme,
 } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
@@ -24,6 +26,7 @@ import { Errors } from "../../components/Errors";
 import { FormTextField } from "../../components/form-controls/form-text-field";
 import { FormSelectField } from "../../components/form-controls/form-select";
 import { JobCategory, JobType } from "../../app/services/enums";
+import { getEnumOptions } from "../../components/form-controls/get-enum-list";
 
 const emptyjobData: JobDto = {
   title: "",
@@ -44,6 +47,9 @@ export const JobDialog = ({
   job?: JobDto | null;
   title: string;
 }) => {
+  const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
+
   const [jobData, setJobData] = useState<JobDto>();
   const [message, setMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();
@@ -99,24 +105,28 @@ export const JobDialog = ({
       maxWidth="md"
       open
       fullWidth
+      sx={{
+        "& .MuiDialog-paper": {
+          borderRadius: 3,
+          boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+        },
+      }}
     >
-      {!!jobData && (
+      {jobData && (
         <Formik
           initialValues={jobData}
           enableReinitialize
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
-          validateOnChange
-          validateOnBlur
-          validateOnSubmit
         >
           <Form>
             <DialogHeader title={title} onClose={onClose} />
             <DialogContent dividers>
               <Grid container spacing={2}>
+                {/* Success / Error Message */}
                 {message && (
                   <Grid item xs={12}>
-                    <Alert severity={alertSeverity} onClose={() => setMessage(null)}>
+                    <Alert severity={alertSeverity} onClose={() => setMessage(null)} sx={{ borderRadius: 2 }}>
                       <AlertTitle>{alertSeverity === "success" ? "Success" : "Error"}</AlertTitle>
                       {message}
                     </Alert>
@@ -131,12 +141,23 @@ export const JobDialog = ({
 
                 {/* Job Title */}
                 <Grid item xs={12}>
-                  <FormTextField name="title" label="Job Title" type="text" fullWidth />
+                  <FormTextField name="title" label="Job Title" fullWidth />
                 </Grid>
 
-                {/* Job Description - Improved Styling */}
+                {/* Job Description */}
                 <Grid item xs={12}>
-                  <Box sx={{ border: "1px solid #ccc", borderRadius: 2, p: 1 }}>
+                  <Box
+                    sx={{
+                      border: "1px solid #ddd",
+                      borderRadius: 2,
+                      p: 1.5,
+                      backgroundColor: isDarkMode ? theme.palette.background.default : "#fff",
+                      color: isDarkMode ? "#fff" : "#000",
+                    }}
+                  >
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                      Job Description
+                    </Typography>
                     <FormRichTextField name="description" />
                   </Box>
                 </Grid>
@@ -146,10 +167,7 @@ export const JobDialog = ({
                   <FormSelectField
                     name="jobCategory"
                     label="Job Category"
-                    options={[
-                      { label: "IT", value: JobCategory.IT },
-                      { label: "Consulting", value: JobCategory.Consulting },
-                    ]}
+                    options={getEnumOptions(JobCategory)}
                     fullWidth
                   />
                 </Grid>
@@ -159,26 +177,37 @@ export const JobDialog = ({
                   <FormSelectField
                     name="jobType"
                     label="Job Type"
-                    options={[
-                      { label: "Full-Time", value: JobType.FullTime },
-                      { label: "Part-Time", value: JobType.PartTime },
-                      { label: "Contract", value: JobType.Contract },
-                      { label: "Freelance", value: JobType.Freelance },
-                    ]}
+                    options={getEnumOptions(JobType)}
                     fullWidth
                   />
                 </Grid>
 
                 {/* Salary */}
-                <Grid item xs={12}>
+                <Grid item xs={6}>
                   <FormTextField name="salary" type="number" label="Salary" fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                <FormTextField name="location" label="Location" fullWidth />
                 </Grid>
               </Grid>
             </DialogContent>
+
             <DialogActions sx={{ p: 2 }}>
               <Button onClick={onClose}>Cancel</Button>
-              <Button color="primary" variant="outlined" type="submit">
-                Save
+              <Button
+                color="primary"
+                variant="contained"
+                type="submit"
+                sx={{
+                  borderRadius: 2,
+                  background: "linear-gradient(90deg, rgba(33,150,243,1) 0%, rgba(30,136,229,1) 100%)",
+                  transition: "0.3s",
+                  "&:hover": {
+                    background: "linear-gradient(90deg, rgba(30,136,229,1) 0%, rgba(25,118,210,1) 100%)",
+                  },
+                }}
+              >
+                Save Job
               </Button>
             </DialogActions>
           </Form>

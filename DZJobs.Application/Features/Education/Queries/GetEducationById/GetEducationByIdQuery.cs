@@ -1,46 +1,49 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using HCMS.Application.Educations.Models;
 using HCMS.Services.DataService;
+using MediatR;
 
-namespace HCMS.Application.Educations.Queries
+
+namespace DZJobs.Application.Features.Education.Queries.GetEducationById
 {
-    public class GetEducationByIdQuery : IRequest<EducationDto>
+    // Query Definition
+    public class GetEducationByUserIdQuery : IRequest<List<EducationDto>>
     {
-        public int Id { get; set; }
-        public GetEducationByIdQuery(int id) => Id = id;
+        public string UserId { get; }
+
+        public GetEducationByUserIdQuery(string userId) => UserId = userId;
     }
 
-    public class GetEducationByIdQueryHandler : IRequestHandler<GetEducationByIdQuery, EducationDto>
+    // Query Handler
+    public class GetEducationByUserIdQueryHandler : IRequestHandler<GetEducationByUserIdQuery, List<EducationDto>>
     {
         private readonly IDataService _context;
 
-        public GetEducationByIdQueryHandler(IDataService context)
+        public GetEducationByUserIdQueryHandler(IDataService context)
         {
             _context = context;
         }
 
-        public async Task<EducationDto> Handle(GetEducationByIdQuery request, CancellationToken cancellationToken)
+        public async Task<List<EducationDto>> Handle(GetEducationByUserIdQuery request, CancellationToken cancellationToken)
         {
-            var education = await _context.Educations
+            var educationList = await _context.Educations
                 .AsNoTracking()
-                .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
+                .Where(e => e.UserId == request.UserId)
+                .Select(e => new EducationDto
+                {
+                    Id = e.Id,
+                    UserId = e.UserId,
+                    EducationLevel = e.EducationLevel,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    SchoolName = e.SchoolName,
+                    SchoolCity = e.SchoolCity,
+                    FieldOfStudy = e.FieldOfStudy,
+                    GraduationDate = e.GraduationDate
+                })
+                .ToListAsync(cancellationToken);
 
-            if (education == null)
-                throw new KeyNotFoundException("Education record not found.");
-
-            return new EducationDto
-            {
-                Id = education.Id,
-                UserId = education.UserId,
-                EducationLevel = education.EducationLevel,
-                StartDate = education.StartDate,
-                EndDate = education.EndDate,
-                SchoolName = education.SchoolName,
-                SchoolCity = education.SchoolCity,
-                FieldOfStudy = education.FieldOfStudy,
-                GraduationDate = education.GraduationDate
-            };
+            return educationList; // Returns an empty list if no records are found
         }
     }
 }

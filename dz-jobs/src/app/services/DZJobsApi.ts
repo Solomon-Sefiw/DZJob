@@ -304,11 +304,14 @@ const injectedRtkApi = api.injectEndpoints({
         body: queryArg.updateEducationCommand,
       }),
     }),
-    getEducationById: build.query<
-      GetEducationByIdApiResponse,
-      GetEducationByIdApiArg
+    getEducationByUserId: build.query<
+      GetEducationByUserIdApiResponse,
+      GetEducationByUserIdApiArg
     >({
-      query: (queryArg) => ({ url: `/api/Educations/getById${queryArg.id}` }),
+      query: (queryArg) => ({
+        url: `/api/Educations/getByUserId`,
+        params: { id: queryArg.id },
+      }),
     }),
     getAllEducation: build.query<
       GetAllEducationApiResponse,
@@ -401,6 +404,15 @@ const injectedRtkApi = api.injectEndpoints({
     >({
       query: (queryArg) => ({
         url: `/api/FreelancerProfile/getById${queryArg.id}`,
+      }),
+    }),
+    getFreelancerProfileByFreelancerId: build.query<
+      GetFreelancerProfileByFreelancerIdApiResponse,
+      GetFreelancerProfileByFreelancerIdApiArg
+    >({
+      query: (queryArg) => ({
+        url: `/api/FreelancerProfile/getByFreelancerId`,
+        params: { id: queryArg.id },
       }),
     }),
     getAllFreelancerProfiles: build.query<
@@ -903,9 +915,10 @@ export type UpdateEducationApiResponse = /** status 200 OK */ number;
 export type UpdateEducationApiArg = {
   updateEducationCommand: UpdateEducationCommand;
 };
-export type GetEducationByIdApiResponse = /** status 200 OK */ EducationDto;
-export type GetEducationByIdApiArg = {
-  id: number;
+export type GetEducationByUserIdApiResponse =
+  /** status 200 OK */ EducationDto[];
+export type GetEducationByUserIdApiArg = {
+  id?: string;
 };
 export type GetAllEducationApiResponse = /** status 200 OK */ EducationDto[];
 export type GetAllEducationApiArg = void;
@@ -950,6 +963,11 @@ export type GetFreelancerProfileByIdApiResponse =
   /** status 200 OK */ FreelancerProfileDto;
 export type GetFreelancerProfileByIdApiArg = {
   id: number;
+};
+export type GetFreelancerProfileByFreelancerIdApiResponse =
+  /** status 200 OK */ FreelancerProfileDto;
+export type GetFreelancerProfileByFreelancerIdApiArg = {
+  id?: string;
 };
 export type GetAllFreelancerProfilesApiResponse =
   /** status 200 OK */ FreelancerProfileDto[];
@@ -1610,6 +1628,7 @@ export type CreateJobCommand = {
   jobType?: JobType;
   salary?: number;
   employerId?: string | null;
+  location?: string | null;
 };
 export type JobDto = {
   id?: number;
@@ -1619,6 +1638,7 @@ export type JobDto = {
   jobType?: JobType;
   salary?: number;
   postedDate?: string;
+  location?: string | null;
   employerId?: string | null;
   employerName?: string | null;
   status?: JobStatus;
@@ -1627,6 +1647,7 @@ export type UpdateJobCommand = {
   id?: number;
   title?: string | null;
   description?: string | null;
+  location?: string | null;
   jobCategory?: JobCategory;
   jobType?: number;
   salary?: number;
@@ -1836,8 +1857,8 @@ export const {
   useLazyDownloadDocumentQuery,
   useCreateEducationMutation,
   useUpdateEducationMutation,
-  useGetEducationByIdQuery,
-  useLazyGetEducationByIdQuery,
+  useGetEducationByUserIdQuery,
+  useLazyGetEducationByUserIdQuery,
   useGetAllEducationQuery,
   useLazyGetAllEducationQuery,
   useCreateEmployerProfileMutation,
@@ -1855,6 +1876,8 @@ export const {
   useCreateFreelancerProfileMutation,
   useGetFreelancerProfileByIdQuery,
   useLazyGetFreelancerProfileByIdQuery,
+  useGetFreelancerProfileByFreelancerIdQuery,
+  useLazyGetFreelancerProfileByFreelancerIdQuery,
   useGetAllFreelancerProfilesQuery,
   useLazyGetAllFreelancerProfilesQuery,
   useUpdateFreelancerProfileMutation,

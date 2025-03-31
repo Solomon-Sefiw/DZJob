@@ -1,158 +1,145 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
-import {
-  Alert,
-  Box,
-  Button,
-  Card,
-  CardContent,
+import { 
+  Box, Grid, Typography, Divider, useTheme, Alert, Dialog, DialogContent, 
+  DialogTitle, IconButton, Link, 
   Chip,
-  Grid,
-  Typography,
-  useTheme,
-  Modal,
+  Button
 } from "@mui/material";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import { RootState } from "../../../app/store";
-import {
-  useGetAllJobApplicationByStatusQuery,
-  useGetJobApplicationCountByStatusQuery,
-} from "../../../app/services/DZJobsApi";
 import { ApplicationStatus } from "../../../app/services/enums";
 import { Pagination } from "../../../components/Pagination";
+import { 
+  useGetAllJobApplicationByStatusQuery, 
+  useGetJobApplicationCountByStatusQuery 
+} from "../../../app/services/DZJobsApi";
+import CloseIcon from "@mui/icons-material/Close";
 
 export const AcceptedJobApplication = () => {
-  const navigate = useNavigate();
-  const theme = useTheme();
   const user = useSelector((state: RootState) => state.auth);
+  const navigate = useNavigate();
+  const [pagination, setPagination] = useState<{ pageNumber: number; pageSize?: number }>({
+    pageNumber: 0,
+    pageSize: 10,
+  });
+
+  const [openCoverLetterDialog, setOpenCoverLetterDialog] = useState<boolean>(false);
   const [selectedCoverLetter, setSelectedCoverLetter] = useState<string | null>(null);
-  const [pagination, setPagination] = useState({ pageNumber: 0, pageSize: 10 });
 
-  const { data: counts, isLoading: isCountsLoading, isError: isCountsError } =
-    useGetJobApplicationCountByStatusQuery({ freelancerId: user.userId });
+  const { data: counts, isLoading: isCountsLoading } = useGetJobApplicationCountByStatusQuery({
+    freelancerId: user.userId,
+  });
 
-  const { data: items, isLoading: isListLoading, isError: isListError } =
-    useGetAllJobApplicationByStatusQuery({
-      pageNumber: pagination.pageNumber + 1,
-      pageSize: pagination.pageSize,
-      status: ApplicationStatus.Accepted,
-      freelancerId: user.userId,
-    });
+  const { data: items, isLoading: isListLoading } = useGetAllJobApplicationByStatusQuery({
+    pageNumber: pagination.pageNumber + 1,
+    pageSize: pagination.pageSize,
+    status: ApplicationStatus.Accepted,
+    freelancerId: user.userId,
+  });
 
   const { searchQuery } = useOutletContext<{ searchQuery: string }>();
-
-  // Use memoization to avoid unnecessary recalculations on search query changes
-  const filteredJobRoles = useMemo(() => {
-    return searchQuery
-      ? (items?.items || []).filter((option) =>
-          option.job?.toLowerCase().includes(searchQuery.toLowerCase())
-        )
-      : items?.items || [];
-  }, [items, searchQuery]);
+  const filteredJobRoles = searchQuery
+    ? (items?.items || []).filter((option) =>
+        option.job?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : items?.items || [];
 
   const showNoMatchingAlert = searchQuery && filteredJobRoles.length === 0;
   const isLoading = isCountsLoading || isListLoading;
-  const hasError = isCountsError || isListError;
 
-  // Truncate text for cover letter preview
-  const truncateText = (text: string, limit: number) => {
-    return text.length > limit ? text.substring(0, limit) + "..." : text;
+  const theme = useTheme();
+
+  const handleDialogOpen = (coverLetter: string) => {
+    setSelectedCoverLetter(coverLetter);
+    setOpenCoverLetterDialog(true);
   };
 
+  const handleDialogClose = () => {
+    setOpenCoverLetterDialog(false);
+    setSelectedCoverLetter(null);
+  };
+
+  // Function to truncate the cover letter to a certain length
   const goToChat = (chatPartnerId: string) => {
     navigate(`/chat/${chatPartnerId}`);
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: theme.palette.background.default, minHeight: "100vh" }}>
-      {/* Error Handling */}
-      {hasError && (
-        <Alert severity="error" sx={{ m: 2 }}>
-          Something went wrong while fetching your applications. Please try again later.
-        </Alert>
-      )}
-
-      {/* Display accepted applications */}
-      {!isLoading && counts?.accepted ? (
-        <Grid container spacing={3} justifyContent="center">
-          {filteredJobRoles.map((application) => (
+    <Box sx={{ p: 2, backgroundColor: theme.palette.background.default, minHeight: "10vh" }}>
+      {!isLoading && !!counts?.accepted && (
+        <Grid container spacing={2}>
+          {filteredJobRoles?.map((application) => (
             <Grid item xs={12} sm={6} md={4} key={application.id}>
-              <Card
-                sx={{
-                  background: theme.palette.mode === "dark" ? "#333" : theme.palette.background.paper,
-                  boxShadow: 3,
-                  borderRadius: 2,
-                  p: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  minHeight: 250,
-                }}
+            <Box
+              sx={{
+                p: 2,
+                backgroundColor: theme.palette.mode === "dark" ? "#2c2c2c" : "white",
+                borderRadius: 2,
+                boxShadow: 2,
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  boxShadow: 4,
+                  backgroundColor: theme.palette.mode === "dark" ? "#444" : "#f9f9f9",
+                },
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ cursor: "pointer", color: theme.palette.primary.main }}
+              
               >
-                <CardContent>
-                  <Typography
-                    variant="h6"
-                    fontWeight="bold"
-                    sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                <WorkIcon sx={{ mr: 1 }} /> {application.job}
+              </Typography>
+
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{
+                  flexGrow: 1,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 5,
+                  WebkitBoxOrient: "vertical",
+                }}
+                dangerouslySetInnerHTML={{ __html: application.coverLetter || "No Cover Letter available" }}
+              />
+
+                 {application.coverLetter && (
+                  <Link
+                    onClick={() => handleDialogOpen(application.coverLetter || "")}
+                    sx={{
+                      fontSize: "0.875rem",
+                      textDecoration: "underline",
+                      color: theme.palette.primary.main,
+                      cursor: "pointer",
+                      mt: 0, // Remove extra spacing before "More"
+                    }}
                   >
-                    <WorkIcon sx={{ color: theme.palette.primary.main }} /> {application.job}
-                  </Typography>
+                    More
+                  </Link>
+                )}
 
-                  {/* Cover Letter with "Read More" */}
-                  <Box mt={1}>
-                    <Typography
-                      variant="body2"
-                      sx={{ display: "inline", fontSize: "0.9rem", color: "text.secondary" }}
-                      dangerouslySetInnerHTML={{ __html: truncateText(application.coverLetter || "", 60) }}
-                    />
-
-                    {application.coverLetter && application.coverLetter.length > 60 && (
-                      <Typography
-                        component="span"
-                        sx={{
-                          color: theme.palette.primary.main,
-                          cursor: "pointer",
-                          textDecoration: "underline",
-                          fontSize: "0.85rem",
-                          ml: 1,
-                        }}
-                        onClick={() => setSelectedCoverLetter(application.coverLetter ?? null)}
-                      >
-                        Read More
-                      </Typography>
-                    )}
-                  </Box>
-
-                  {/* Freelancer Name */}
-                  <Chip
-                    label={application.freelancer}
-                    color="primary"
-                    sx={{ mt: 1, fontSize: "0.8rem" }}
-                  />
-
-                  {/* Job Details */}
-                  <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 2 }}>
-                    <LocationOnIcon sx={{ mr: 1, fontSize: 18, color: "text.secondary" }} />
-                    {application.appliedDate}
-                  </Typography>
-
-                  <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-                    <MonetizationOnIcon sx={{ mr: 1, fontSize: 18, color: "text.secondary" }} />
-                    ${application.proposedSalary}
-                  </Typography>
-
-                  <Typography variant="body2" sx={{ display: "flex", alignItems: "center", mt: 1 }}>
-                    <CalendarTodayIcon sx={{ mr: 1, fontSize: 18, color: "text.secondary" }} />
-                    Posted on {application.createdAt}
-                  </Typography>
-                </CardContent>
-
-                {/* Apply Now Button */}
-                <Button
+              <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
+                <Chip label={application.proposedSalary + " ETB"  || "Unknown"} color="secondary" size="small" />
+              </Box>
+              <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
+              <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                  <CalendarTodayIcon sx={{ mr: 0.5 }} /> Posted on {application.createdAt}
+                </Typography>
+                <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                  <CalendarTodayIcon sx={{ mr: 0.5 }} /> Applayed on {application.appliedDate}
+                </Typography>
+              </Box>
+                              {/* Apply Now Button */}
+                              <Button
                   variant="contained"
                   fullWidth
                   sx={{
@@ -167,69 +154,47 @@ export const AcceptedJobApplication = () => {
                 >
                   Message
                 </Button>
-              </Card>
-            </Grid>
+              
+
+              
+            </Box>
+          </Grid>
           ))}
         </Grid>
-      ) : (
-        <Typography variant="h6" sx={{ textAlign: "center", mt: 5 }}>
-          {isLoading ? "Loading..." : "No Accepted Applications Found"}
-        </Typography>
       )}
 
-      {/* No Matching Results Alert */}
       {showNoMatchingAlert && (
         <Alert severity="info" sx={{ m: 2 }}>
-          No Approved Job Role found with name "{searchQuery}"!
+          No Approved Job Role found with name {searchQuery}!!
         </Alert>
       )}
 
-      {/* Pagination */}
-      <Pagination
-        pageNumber={pagination.pageNumber}
-        pageSize={pagination.pageSize}
-        onChange={setPagination}
-        totalRowsCount={counts?.accepted}
-        rowsPerPageOptions={[10, 20, 50]}
-      />
+      <Divider sx={{ my: 1 }} />
 
-      {/* Cover Letter Modal */}
-      <Modal open={!!selectedCoverLetter} onClose={() => setSelectedCoverLetter(null)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "90%",
-            maxWidth: 500,
-            bgcolor: theme.palette.background.paper,
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-            maxHeight: "80vh",
-            overflowY: "auto",
-          }}
-        >
-          <Typography variant="h6" fontWeight="bold">
-            Cover Letter
+      <Box sx={{ display: "flex", justifyContent: "flex-end", width: "100%", mt: 1 }}>
+        <Pagination
+          pageNumber={pagination.pageNumber}
+          pageSize={pagination.pageSize}
+          onChange={setPagination}
+          totalRowsCount={counts?.accepted}
+          rowsPerPageOptions={[10, 20, 50]}
+        />
+      </Box>
+
+      {/* Cover Letter Dialog */}
+      <Dialog open={openCoverLetterDialog} onClose={handleDialogClose} maxWidth="md" fullWidth>
+        <DialogTitle sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          Application Cover Letter
+          <IconButton onClick={handleDialogClose}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            <div dangerouslySetInnerHTML={{ __html: selectedCoverLetter || "" }} />
           </Typography>
-          <Typography variant="body1" sx={{ mt: 2 }}>
-            <span dangerouslySetInnerHTML={{ __html: selectedCoverLetter || "" }} />
-          </Typography>
-          <Button
-            onClick={() => setSelectedCoverLetter(null)}
-            sx={{
-              mt: 3,
-              width: "100%",
-              color: "white",
-              backgroundColor: theme.palette.primary.main,
-            }}
-          >
-            Close
-          </Button>
-        </Box>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

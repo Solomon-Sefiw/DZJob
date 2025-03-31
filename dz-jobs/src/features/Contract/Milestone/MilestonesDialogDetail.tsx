@@ -12,7 +12,7 @@ import {
   Link,
   Chip,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ContractDto,
   MilestoneDto,
@@ -40,11 +40,12 @@ export const MilestonesDialogDetail: React.FC<MilestonesDialogDetailProps> = ({
   const user = useSelector((state: RootState) => state.auth);
 
   // Fetch milestones
-  const { data: milestonesData, isLoading } = useGetMilestonesByContractIdQuery(
+  const { data: milestonesData, isLoading, refetch } = useGetMilestonesByContractIdQuery(
     { contractId: contract?.id || 0 },
     { skip: !contract }
   );
   const [selectedMilestone, setSelectedMilestone] = useState<number | null>(null);
+
   // State for managing milestone dialog (Add / Update)
   const [milestoneDialog, setMilestoneDialog] = useState<{
     open: boolean;
@@ -56,49 +57,48 @@ export const MilestonesDialogDetail: React.FC<MilestonesDialogDetailProps> = ({
     open: false,
     description: "",
   });
-    const [dialogState, setDialogState] = useState<{ approveMilestone: boolean; }>({
-      approveMilestone: false,
-    });
 
-    // const handleCloseClick = (applicantId: number) => {
-    //   setSelectedMilestone(applicantId);
-    //   setDialogState({ submitContract: true,});
-    // };
-    const handleApproveMilestone = async (milestoneId: number) => {
-      setSelectedMilestone(milestoneId);
-      setDialogState({ approveMilestone: true,});
- 
-    };
-    const handleCloseDialogs = () => {
-      setSelectedMilestone(null);
-     // setOpenJobDialog(false);
-      setDialogState({ approveMilestone: false });
-    };
+  const [dialogState, setDialogState] = useState<{ approveMilestone: boolean; }>({
+    approveMilestone: false,
+  });
 
-  // Open Add/Edit milestone dialog
+  const handleApproveMilestone = async (milestoneId: number) => {
+    setSelectedMilestone(milestoneId);
+    setDialogState({ approveMilestone: true });
+
+    // After approving, refetch the milestones to reflect the change in status
+    await refetch();
+  };
+
+  const handleCloseDialogs = () => {
+    setSelectedMilestone(null);
+    setDialogState({ approveMilestone: false });
+  };
+
   const handleMilestoneDialog = (milestone?: MilestoneDto | null) => {
     setMilestoneDialog({ open: true, milestone: milestone ?? null });
   };
 
-  // Close milestone dialog
   const handleCloseMilestoneDialog = () => {
     setMilestoneDialog({ open: false, milestone: null });
   };
 
-
-  // Open description dialog
   const handleMoreClick = (description: string) => {
     setDescriptionDialog({ open: true, description });
   };
 
-  // Close description dialog
   const handleCloseDescriptionDialog = () => {
     setDescriptionDialog({ open: false, description: "" });
   };
 
-
-  // Handle milestone approval
-
+  // Handle milestone approval (to trigger the status change effect)
+  useEffect(() => {
+    // Automatically refresh milestones when the milestone approval state changes
+    if (dialogState.approveMilestone) {
+      // Trigger the API refetch when approval is confirmed
+      refetch();
+    }
+  }, [dialogState.approveMilestone, refetch]);
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -163,27 +163,29 @@ export const MilestonesDialogDetail: React.FC<MilestonesDialogDetailProps> = ({
                   <CardActions sx={{ justifyContent: "center", padding: 2 }}>
                     {approvalStatus === ContractStatus.Active && (
                       <>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        color="success"
-                        onClick={() => milestone.id !== undefined && handleApproveMilestone(milestone.id)}
-                      >
-                        Approve
-                      </Button>
-                      <Button
-                        fullWidth
-                        variant="contained"
-                        color="error"
-                        onClick={() => milestone.id !== undefined && handleApproveMilestone(milestone.id)}
-                      >
-                        Reject
-                      </Button>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="success"
+                          onClick={() => milestone.id !== undefined && handleApproveMilestone(milestone.id)}
+                        >
+                          Approve
+                        </Button>
+                        <Button
+                          fullWidth
+                          variant="contained"
+                          color="error"
+                          onClick={() => milestone.id !== undefined && handleApproveMilestone(milestone.id)}
+                        >
+                          Reject
+                        </Button>
                       </>
                     )}
-                 {user.role === UserRole.EMPLOYER&& approvalStatus === ContractStatus.Pending && ( <Button fullWidth variant="outlined" color="primary" onClick={() => handleMilestoneDialog(milestone)}>
-                      Update
-                    </Button>)}
+                    {user.role === UserRole.EMPLOYER && approvalStatus === ContractStatus.Pending && (
+                      <Button fullWidth variant="outlined" color="primary" onClick={() => handleMilestoneDialog(milestone)}>
+                        Update
+                      </Button>
+                    )}
                   </CardActions>
                 </Card>
               </Grid>
@@ -208,13 +210,12 @@ export const MilestonesDialogDetail: React.FC<MilestonesDialogDetailProps> = ({
           milestone={milestoneDialog.milestone}
         />
       )}
-                  {selectedMilestone && (
-                    <>
-                      <CompleteMilestoneDialog open={dialogState.approveMilestone} onClose={handleCloseDialogs} milestoneId={selectedMilestone}  />
-                      {/* <ClosingDialog open={dialogState.closingOpen} onClose={handleCloseDialog} applicantId={selectedApplicant} jobId={job?.id || 0} />
-                      <RejectDialog open={dialogState.rejectingOpen} onClose={handleCloseDialog} applicantId={selectedApplicant} jobId={job?.id || 0} /> */}
-                    </>
-                  )}
+
+      {selectedMilestone && (
+        <>
+          <CompleteMilestoneDialog open={dialogState.approveMilestone} onClose={handleCloseDialogs} milestoneId={selectedMilestone} />
+        </>
+      )}
 
       {/* Full Description Dialog */}
       <Dialog open={descriptionDialog.open} onClose={handleCloseDescriptionDialog} fullWidth maxWidth="sm">

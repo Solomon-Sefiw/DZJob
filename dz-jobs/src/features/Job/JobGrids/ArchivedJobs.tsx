@@ -1,16 +1,17 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
-import { Alert, Box, Grid, Link, Typography, Divider, useTheme, Chip } from "@mui/material";
+import { Alert, Box, Button, Grid, Link, Typography, Divider, useTheme, Chip } from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { RootState } from "../../../app/store";
 import { JobApplicantDetailsDialog } from "../JobApplicantDetailsDialog";
-import { JobDetailsDialog } from "../JobDetailsDialog";;
+import { JobDetailsDialog } from "../JobDetailsDialog";
+import { JobDialog } from "../JobDialog";
 import { JobDto, useGetAllJobByStatusQuery, useGetJobCountByStatusQuery } from "../../../app/services/DZJobsApi";
 import { Pagination } from "../../../components/Pagination";
-import { JobApplicationStatus, JobStatus } from "../../../app/services/enums";
+import { JobApplicationStatus, JobStatus, JobType } from "../../../app/services/enums";
+import { LocationOn } from "@mui/icons-material";
 
 export const ArchivedJobs = () => {
   const user = useSelector((state: RootState) => state.auth);
@@ -37,6 +38,9 @@ export const ArchivedJobs = () => {
   const [openJobDetailsDialog, setOpenJobDetailsDialog] = useState(false);
   const [selectedJobDetails, setSelectedJobDetails] = useState<JobDto | null>(null);
 
+  const [openJobDialog, setOpenJobDialog] = useState(false);
+  const [selectedJob, setSelectedJob] = useState<JobDto | null>(null);
+
   const [expandedJobId, setExpandedJobId] = useState<number | null>(null);
 
   const theme = useTheme(); // Access the current theme
@@ -51,13 +55,18 @@ export const ArchivedJobs = () => {
     setOpenJobDetailsDialog(true);
   };
 
+  const handleOpenJobDialog = (job: JobDto) => {
+    setSelectedJob(job);
+    setOpenJobDialog(true);
+  };
 
   const handleCloseDialogs = () => {
     setOpenJobApplicantDialog(false);
     setOpenJobDetailsDialog(false);
-
+    setOpenJobDialog(false);
     setSelectedJobApplicant(null);
     setSelectedJobDetails(null);
+    setSelectedJob(null);
   };
 
   return (
@@ -121,25 +130,33 @@ export const ArchivedJobs = () => {
                     </Link>
                   )}
 
-                  {/* Salary & Posted Date */}
-                  {/* <Typography variant="body2">
-                    <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
-                  </Typography>
-                  <Typography variant="body2" color="textSecondary">
-                    <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
-                  </Typography> */}
+                  
+                                    
                   <Box display="flex" gap={2} flexWrap="wrap" mt={2}>
-                    <Chip label={job.jobCategory} color="secondary" />
-                    <Chip label={job.jobType} color="primary" />
-                    <Typography variant="body1" sx={{ display: "flex", alignItems: "center" }}>
-                      <MonetizationOnIcon sx={{ mr: 1 }} /> ${job.salary}
-                    </Typography>
+                   <Chip icon={<LocationOn  />} label={job.location} color="secondary" />
+                    <Chip label={job.jobType && JobType[job.jobType]} color="primary" />
+                     <Chip label={`${job.salary} ETB`} color="success" />
+
                     <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
                       <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {job.postedDate}
                     </Typography>
                   </Box>
 
-              
+                  {/* Update Button */}
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                      mt: 2,
+                      alignSelf: "center",
+                      width: "100%",
+                      transition: "0.3s",
+                      "&:hover": { backgroundColor: "#1976d2" },
+                    }}
+                    onClick={() => handleOpenJobDialog(job)}
+                  >
+                    Update
+                  </Button>
                 </Box>
               </Grid>
             );
@@ -169,10 +186,13 @@ export const ArchivedJobs = () => {
 
       {/* Job Dialogs */}
       {openJobApplicantDialog && (
-        <JobApplicantDetailsDialog open={openJobApplicantDialog} onClose={handleCloseDialogs} job={selectedJobApplicant} approvalStatus={JobApplicationStatus.Accepted}/>
+        <JobApplicantDetailsDialog open={openJobApplicantDialog} onClose={handleCloseDialogs} job={selectedJobApplicant} approvalStatus ={JobApplicationStatus.Pending}/>
       )}
       {openJobDetailsDialog && (
         <JobDetailsDialog open={openJobDetailsDialog} onClose={handleCloseDialogs} job={selectedJobDetails} />
+      )}
+      {openJobDialog && (
+        <JobDialog onClose={handleCloseDialogs} employerId={user.userId} job={selectedJob} title="Update Job" />
       )}
     </Box>
   );

@@ -1,4 +1,5 @@
 ﻿using DZJobs.Application.Features.FreelancerProfile.Models;
+using DZJobs.Application.Features.FreelancerProfile.Queries.GetFreelancerProfileByFreelancerId;
 using HCMS.Application.FreelancerProfiles.Commands;
 using HCMS.Application.FreelancerProfiles.Queries;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +28,13 @@ namespace DZJobs.Controllers.FreelancerProfile
             var profile = await mediator.Send(new GetFreelancerProfileByIdQuery(id));
             return Ok(profile);
         }
-
+        [HttpGet("getByFreelancerId", Name = "GetFreelancerProfileByFreelancerId")]
+        [ProducesResponseType(200)]
+        public async Task<ActionResult<FreelancerProfileDto>> GetFreelancerProfileByFreelancerId(string id)
+        {
+            var profile = await mediator.Send(new GetFreelancerProfileByFreelancerIdQuery(id));
+            return Ok(profile);
+        }
         [HttpGet("all", Name = "GetAllFreelancerProfiles")]
         [ProducesResponseType(200)]
         public async Task<ActionResult<List<FreelancerProfileDto>>> GetAllFreelancerProfiles()

@@ -1,6 +1,6 @@
 ﻿
 using DZJobs.Persistence.DBContext;
-using HCMS.Persistance.SeedData;
+using DZJobs.Persistence.SeedData;
 using Microsoft.AspNetCore.Identity;
 
 namespace HCMS.Api

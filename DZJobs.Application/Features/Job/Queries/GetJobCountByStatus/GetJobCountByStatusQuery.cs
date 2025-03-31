@@ -26,7 +26,7 @@ namespace DZJobs.Application.Features.Job.Queries.GetJobCountByStatus
         public async Task<JobCountsByStatus> Handle(GetJobCountByStatusQuery request, CancellationToken cancellationToken)
         {
             var closed = await dataService.Jobs.Where(JR => JR.Status == JobStatus.Approved && JR.EmployerId == request.EmployerId).CountAsync();
-            var inProgress = await dataService.Jobs.Where(JR => JR.Status == JobStatus.InProgress && JR.EmployerId == request.EmployerId).CountAsync();
+            var inProgress = await dataService.Jobs.Where(JR => (JR.Status == JobStatus.InProgress || JR.Status == JobStatus.Approved) && JR.EmployerId == request.EmployerId).CountAsync();
             var approved = await dataService.Jobs.Where(JR => JR.Status == JobStatus.Approved && JR.EmployerId == request.EmployerId).CountAsync();
             var archived =  await dataService.Jobs.Where(JR => JR.Status == JobStatus.Archived && JR.EmployerId == request.EmployerId).CountAsync();
             var open = await dataService.Jobs.Where(JR => (JR.Status == JobStatus.Open || JR.Status == JobStatus.InProgress) && JR.EmployerId == request.EmployerId).CountAsync();

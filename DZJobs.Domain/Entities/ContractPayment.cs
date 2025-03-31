@@ -18,5 +18,5 @@ public class ContractPayment : BaseEntity
     public decimal Amount { get; set; }
     public DateTime PaymentDate { get; set; }
     public PaymentStatus Status { get; set; } // Enum: Pending, Completed, Failed
-    public string TransactionId { get; set; } // From Payment Gateway
+    public string? TransactionId { get; set; } // From Payment Gateway
 }

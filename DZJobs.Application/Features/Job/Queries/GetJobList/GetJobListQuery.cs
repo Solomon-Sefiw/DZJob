@@ -39,19 +39,20 @@ namespace DZJobs.Application.Features.Job.Queries.GetJobList
                 JobType = job.JobType,
                 Salary = job.Salary,
                 PostedDate = job.PostedDate,
+                Location = job.Location,
                 EmployerId = job.EmployerId,
                 EmployerName = job.Employer?.UserName ?? "Unknown",
                 Status = job.Status
             }).ToList();
             if (request.Status == JobStatus.InProgress)
             {
-                var result = joblist.Where(JR => JR.Status == JobStatus.InProgress && JR.EmployerId == request.EmployerId)
+                var result = joblist.Where(JR => (JR.Status == JobStatus.InProgress || JR.Status == JobStatus.Approved) && JR.EmployerId == request.EmployerId)
                                                 .Skip((request.PageNumber - 1) * request.PageSize)
                                                 .Take(request.PageSize)
                                                 .ToList();
 
                 var count = await dataService.
-                    Jobs.Where(JR => JR.Status == JobStatus.InProgress && JR.EmployerId == request.EmployerId).CountAsync();
+                    Jobs.Where(JR => (JR.Status == JobStatus.InProgress || JR.Status == JobStatus.Approved) && JR.EmployerId == request.EmployerId).CountAsync();
                 return new(result, count);
             }
             else if (request.Status == JobStatus.Archived)

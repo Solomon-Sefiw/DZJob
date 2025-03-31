@@ -67,10 +67,7 @@ export const CompletedFreelancerContract = () => {
   const [dialogState, setDialogState] = useState<{ submitContract: boolean; }>({
     submitContract: false,
   });
-  const handleCloseClick = (applicantId: number) => {
-    setSelectedContract(applicantId);
-    setDialogState({ submitContract: true,});
-  };
+
   const handleOpenJobDialog = (job: ContractDto) => {
     setSelectedJob(job);
     setOpenJobDialog(true);
@@ -160,18 +157,7 @@ export const CompletedFreelancerContract = () => {
                         View Milestones
                       </Button>
                     </TableCell>
-                    <TableCell>
-                    <Tooltip title="Submit to Applicant for Approving all milestons and going to Start the contract">
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="small"
-                        onClick={() => job.id !== undefined && handleCloseClick(job.id)}
-                      >
-                        Accept {job.employer}'s Contract
-                      </Button>
-                      </Tooltip>
-                    </TableCell>
+
                   </TableRow>
                 ))}
               </TableBody>

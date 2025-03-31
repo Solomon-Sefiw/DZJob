@@ -10,4 +10,5 @@ public class CreateJobCommand : IRequest<int>
     public JobType JobType { get; set; }
     public decimal Salary { get; set; }
     public string EmployerId { get; set; }
+    public string Location { get; set; }
 }

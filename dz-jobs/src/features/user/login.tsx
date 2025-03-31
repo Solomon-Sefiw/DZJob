@@ -52,6 +52,7 @@ export const Login = () => {
         .then((response) => {
           if (response.status) {
             localStorage.setItem("email", values.email);
+            console.log(response)
             navigate("/verify");
           } else {
             window.location.reload();

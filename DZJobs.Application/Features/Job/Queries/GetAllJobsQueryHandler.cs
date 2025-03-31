@@ -32,6 +32,7 @@ namespace DZJobs.Application.Jobs.Queries
                 JobType = job.JobType,
                 Salary = job.Salary,
                 PostedDate = job.PostedDate,
+                Location = job.Location,
                 EmployerId = job.EmployerId,
                 EmployerName = job.Employer?.UserName ?? "Unknown",
                 Status = job.Status

@@ -21,10 +21,10 @@ import {
   Brightness7,
   AccountCircle,
   Work,
-  Phone,
   PinDropRounded,
   Edit,
   Logout,
+  Message,
 } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { toggleDarkMode } from "../../app/slicies/themeSlice";
@@ -34,7 +34,7 @@ import { RootState } from "../../app/store";
 import { UserRole } from "../../app/services/enums";
 
 const Header: React.FC = () => {
-  const darkMode = useAppSelector((state) => state.theme.darkMode);
+  const darkMode = useAppSelector((state: RootState) => state.theme.darkMode);
   const user = useSelector((state: RootState) => state.auth); 
 
   const dispatch = useAppDispatch();
@@ -44,16 +44,10 @@ const Header: React.FC = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
 
   const menuItems = [
-    // { label: "About Me", href: "/about", icon: <AccountCircle /> },
-    // { label: "Skills", href: "/skills", icon: <Work /> },
-    // { label: "Projects", href: "/projects", icon: <PinDropRounded /> },
-    // { label: "Contact", href: "/contact", icon: <Phone /> },
-    {
-      label: "Jobs",
-      href: user.role === UserRole.EMPLOYER ? "/employer-dashboard" : "/freelancer-dashboard",icon: <AccountCircle />},
+    { label: "Jobs", href: user.role === UserRole.EMPLOYER ? "/employer-dashboard" : "/freelancer-dashboard",icon: <Work />},
     { label: "Contracts", href: user.role === UserRole.EMPLOYER ? "/employer-Contract" : "/freelancer-Contract", icon: <Work /> },
     { label: "My Work", href: "#", icon: <PinDropRounded /> },
-    { label: "Message", href: "/message", icon: <Phone /> },
+    { label: "Message", href: "/message", icon: <Message /> },
   ];
 
   const currentIndex = menuItems.findIndex((item) => item.href === location.pathname);
@@ -220,12 +214,12 @@ export default Header;
 //   Brightness7,
 //   AccountCircle,
 //   Work,
-//   Phone,
 //   PinDropRounded,
 //   Edit,
 //   Logout,
 //   Menu as MenuIcon,
-//   ChevronLeft as ChevronLeftIcon
+//   ChevronLeft as ChevronLeftIcon,
+//   Message
 // } from "@mui/icons-material";
 // import { useAppDispatch, useAppSelector } from "../../app/hooks";
 // import { toggleDarkMode } from "../../app/slicies/themeSlice";
@@ -250,10 +244,10 @@ export default Header;
 //   const [isProfileOpen, setProfileOpen] = useState(false);
 
 //   const menuItems = [
-//     { label: "Jobs", href: user.role === UserRole.EMPLOYER ? "/employer-dashboard" : "/freelancer-dashboard", icon: <Work /> },
-//     { label: "Contracts", href: "#", icon: <Work /> },
+//     { label: "Jobs", href: user.role === UserRole.EMPLOYER ? "/employer-dashboard" : "/freelancer-dashboard",icon: <Work />},
+//     { label: "Contracts", href: user.role === UserRole.EMPLOYER ? "/employer-Contract" : "/freelancer-Contract", icon: <Work /> },
 //     { label: "My Work", href: "#", icon: <PinDropRounded /> },
-//     { label: "Message", href: "#", icon: <Phone /> },
+//     { label: "Message", href: "/message", icon: <Message /> },
 //   ];
 
 //   const currentIndex = menuItems.findIndex((item) => item.href === location.pathname);

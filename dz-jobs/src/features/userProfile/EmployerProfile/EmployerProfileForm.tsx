@@ -20,7 +20,7 @@ const initialValues: EmployerProfileDto = {
 const validationSchema = yup.object<YupShape<EmployerProfileDto>>({
   companyName: yup.string().required("Company Name is required"),
   companyDescription: yup.string().required("Company Description is required"),
-  logo: yup.string().url("Must be a valid URL").required("Company Logo URL is required"),
+  logo: yup.string().required("Company Logo URL is required"),
   jobHistoryCount: yup.number().min(0).required("Job History Count is required"),
   averageRating: yup.number().min(0).max(5).required("Average Rating is required"),
 });

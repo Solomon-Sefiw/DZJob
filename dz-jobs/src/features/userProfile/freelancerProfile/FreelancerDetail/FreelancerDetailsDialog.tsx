@@ -2,15 +2,18 @@ import { GitHub, LinkedIn, Web } from "@mui/icons-material";
 import {
   Box,
   Button,
-  Chip,
   Dialog, DialogActions, DialogContent, DialogTitle,
   Divider,
   IconButton, Link,
   List, ListItem, ListItemText, 
   Typography
 } from "@mui/material";
-import { useGetUserByIdQuery } from "../../../app/services/DZJobsApi";
-import { UserPhoto } from "../UserPhoto";
+import { useGetUserByIdQuery } from "../../../../app/services/DZJobsApi";
+import { FreelancerHeader } from "./FreelancerHeader";
+import { FreelancerEducation } from "./FreelancerEduction";
+import { FreelancerSkills } from "./FreelancerSkills";
+import { FreelancerContracts } from "./FreelancerContracts";
+
 
 interface FreelancerDetailsDialogProps {
   open: boolean;
@@ -62,41 +65,17 @@ export const FreelancerDetailsDialog: React.FC<FreelancerDetailsDialogProps> = (
         ) : freelancer ? (
           <>
             {/* Profile Photo & Basic Details */}
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", mb: 2 }}>
-              <UserPhoto user={freelancer} />
-              
-              <Typography variant="h6" fontWeight="bold">
-                {demoData.firstName} {demoData.lastName}
-              </Typography>
-              <Typography variant="body2">{demoData.location}</Typography>
-              <Typography variant="body2"><strong>Email:</strong> {demoData.email}</Typography>
-              <Typography variant="body2"><strong>Experience:</strong> {demoData.experienceYears} years</Typography>
-              {/* Fixed the unescaped quote issue */}
-              <Typography 
-                variant="body2" 
-                sx={{ mt: 1, textAlign: "center", fontStyle: "italic" }}
-                component="span"
-              >
-                {demoData.bio || "No bio available."}
-              </Typography>
-            </Box>
-
+            <FreelancerHeader freelancer={freelancer}/>
             <Divider sx={{ my: 2 }} />
 
             {/* Education */}
-            <Typography variant="h6" fontWeight="bold">Education</Typography>
-            <Typography variant="body2">{demoData.education}</Typography>
+            <FreelancerEducation freelancer={freelancer}/>
 
             <Divider sx={{ my: 2 }} />
 
             {/* Skills */}
-            <Typography variant="h6" fontWeight="bold">Skills</Typography>
-            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-              {demoData.skills.map((skill, index) => (
-                <Chip key={index} label={skill} color="primary" />
-              ))}
-            </Box>
-
+              <FreelancerSkills freelancer={freelancer}/>
+            
             <Divider sx={{ my: 2 }} />
 
             {/* Work Experience */}
@@ -115,17 +94,9 @@ export const FreelancerDetailsDialog: React.FC<FreelancerDetailsDialogProps> = (
             <Divider sx={{ my: 2 }} />
 
             {/* Completed Contracts */}
-            <Typography variant="h6" fontWeight="bold">Completed Contracts</Typography>
-            <List>
-              {demoData.completedContracts.map((contract, index) => (
-                <ListItem key={index}>
-                  <ListItemText
-                    primary={contract.contractTitle}
-                    secondary={`Client: ${contract.client} | Date: ${contract.date}`}
-                  />
-                </ListItem>
-              ))}
-            </List>
+            <FreelancerContracts freelancer={freelancer}/>
+
+                
 
             <Divider sx={{ my: 2 }} />
 

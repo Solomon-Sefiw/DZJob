@@ -11,6 +11,7 @@ namespace DZJobs.Application.Jobs.DTOs
         public JobType JobType { get; set; }  // Enum as string
         public decimal Salary { get; set; }
         public DateTime PostedDate { get; set; }
+        public string Location { get; set; }
         public string EmployerId { get; set; }
         public string EmployerName { get; set; }  // Extra info about employer
         public JobStatus Status { get; set; }  // Enum as string

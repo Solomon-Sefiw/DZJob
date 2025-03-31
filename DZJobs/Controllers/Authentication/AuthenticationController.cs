@@ -130,8 +130,8 @@ namespace ANCIA.Controllers
             var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
-                var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
-                _emailService.SendEmail(message);
+                //var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+                //_emailService.SendEmail(message);
 
             }
             return Ok(response);

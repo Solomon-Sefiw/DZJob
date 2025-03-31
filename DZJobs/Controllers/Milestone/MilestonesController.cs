@@ -1,7 +1,5 @@
-﻿using DZJobs.Application.Features.Contract.Commands.ActiveContract;
-using DZJobs.Application.Features.Milestone.Commands.CompletedMilestone;
+﻿
 using DZJobs.Application.Features.Milestone.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DZJobs.Controllers.Milestone

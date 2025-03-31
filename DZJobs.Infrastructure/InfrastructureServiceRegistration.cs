@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using DZJobs.Domain.User;
+using DZJobs.Application.Interfaces;
 using DZJobs.Persistence.DBContext;
 using HCMS.Application.Contrats;
 using HCMS.Infrastructure;
@@ -22,6 +22,9 @@ public static class InfrastructureServiceRegistration
     public static IServiceCollection AddInfrastructureService(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IUserAccontService, UserAccountService>();
+       services.AddHttpClient<IBankService, BankService>();
+
+
         services.AddScoped<IEmailServices, EmailServices>();
         services.AddScoped<IDocumentUploadService, DocumentUploadService>();
         services.AddAuthentication(options =>

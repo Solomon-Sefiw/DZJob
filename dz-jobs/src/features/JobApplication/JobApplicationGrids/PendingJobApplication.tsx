@@ -1,14 +1,20 @@
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WorkIcon from "@mui/icons-material/Work";
-import { Box, Grid, Typography, Divider, useTheme, Alert, Dialog, DialogContent, DialogTitle, IconButton, Link } from "@mui/material";
+import { 
+  Box, Grid, Typography, Divider, useTheme, Alert, Dialog, DialogContent, 
+  DialogTitle, IconButton, Link, 
+  Chip
+} from "@mui/material";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useOutletContext } from "react-router-dom";
 import { RootState } from "../../../app/store";
 import { ApplicationStatus } from "../../../app/services/enums";
 import { Pagination } from "../../../components/Pagination";
-import { useGetAllJobApplicationByStatusQuery, useGetJobApplicationCountByStatusQuery } from "../../../app/services/DZJobsApi";
+import { 
+  useGetAllJobApplicationByStatusQuery, 
+  useGetJobApplicationCountByStatusQuery 
+} from "../../../app/services/DZJobsApi";
 import CloseIcon from "@mui/icons-material/Close";
 
 export const PendingJobApplication = () => {
@@ -55,10 +61,6 @@ export const PendingJobApplication = () => {
   };
 
   // Function to truncate the cover letter to a certain length
-  const truncateCoverLetter = (text: string, maxLength: number = 150) => {
-    if (!text) return "";
-    return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
-  };
 
   return (
     <Box sx={{ p: 2, backgroundColor: theme.palette.background.default, minHeight: "10vh" }}>
@@ -66,71 +68,76 @@ export const PendingJobApplication = () => {
         <Grid container spacing={2}>
           {filteredJobRoles?.map((application) => (
             <Grid item xs={12} sm={6} md={4} key={application.id}>
-              <Box
-                sx={{
-                  p: 2,
-                  backgroundColor: theme.palette.mode === "dark" ? "#2c2c2c" : "white",
-                  borderRadius: 2,
-                  boxShadow: 2,
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                  height: "100%", // Ensure equal height for all cards
-                  minHeight: 350, // Set minimum height for consistency
-                  transition: "all 0.3s ease-in-out",
-                  "&:hover": {
-                    boxShadow: 4,
-                    backgroundColor: theme.palette.mode === "dark" ? "#444" : "#f9f9f9",
-                  },
-                }}
+            <Box
+              sx={{
+                p: 2,
+                backgroundColor: theme.palette.mode === "dark" ? "#2c2c2c" : "white",
+                borderRadius: 2,
+                boxShadow: 2,
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                  boxShadow: 4,
+                  backgroundColor: theme.palette.mode === "dark" ? "#444" : "#f9f9f9",
+                },
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ cursor: "pointer", color: theme.palette.primary.main }}
+              
               >
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    color: theme.palette.primary.main,
-                    cursor: "pointer",
-                  }}
-                >
-                  <WorkIcon /> {application.job}
-                </Typography>
+                <WorkIcon sx={{ mr: 1 }} /> {application.job}
+              </Typography>
 
-                <Typography
-                  variant="body1"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mt: 0,
-                    overflow: "hidden", // Prevent overflow beyond the card
-                  }}
-                >
-                  <div dangerouslySetInnerHTML={{ __html: truncateCoverLetter(application.coverLetter || "") }} />
-                </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{
+                  flexGrow: 1,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  display: "-webkit-box",
+                  WebkitLineClamp: 5,
+                  WebkitBoxOrient: "vertical",
+                }}
+                dangerouslySetInnerHTML={{ __html: application.coverLetter || "No Cover Letter available" }}
+              />
 
-                {application.coverLetter && (
+                 {application.coverLetter && (
                   <Link
                     onClick={() => handleDialogOpen(application.coverLetter || "")}
                     sx={{
-                      mt: 0,
                       fontSize: "0.875rem",
                       textDecoration: "underline",
                       color: theme.palette.primary.main,
                       cursor: "pointer",
+                      mt: 0, // Remove extra spacing before "More"
                     }}
                   >
                     More
                   </Link>
                 )}
 
-                <Typography variant="body1" sx={{ display: "flex", alignItems: "center", mt: 0 }}>
-                  <MonetizationOnIcon sx={{ mr: 1 }} /> ${application.proposedSalary}
-                  <CalendarTodayIcon sx={{ mr: 1 }} /> Posted on {application.createdAt}
+              <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
+                <Chip label={application.proposedSalary + " ETB"  || "Unknown"} color="secondary" size="small" />
+              </Box>
+              <Box display="flex" gap={1} flexWrap="wrap" mt={1}>
+              <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                  <CalendarTodayIcon sx={{ mr: 0.5 }} /> Posted on {application.createdAt}
+                </Typography>
+                <Typography variant="body2" sx={{ display: "flex", alignItems: "center" }}>
+                  <CalendarTodayIcon sx={{ mr: 0.5 }} /> Posted on {application.appliedDate}
                 </Typography>
               </Box>
-            </Grid>
+              
+
+              
+            </Box>
+          </Grid>
           ))}
         </Grid>
       )}
