@@ -96,7 +96,7 @@ import { RootState } from "../../app/store";
             validateOnSubmit={true} // Ensure that validation happens on form submit
           >
             <Form>
-              <DialogHeader title="Add Job Role" onClose={onClose} />
+              <DialogHeader title="Add Contract" onClose={onClose} />
               <DialogContent dividers={true}>
                 <Grid container spacing={2}>
                   {message && (
