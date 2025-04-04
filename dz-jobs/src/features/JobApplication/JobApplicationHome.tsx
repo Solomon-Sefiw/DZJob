@@ -41,7 +41,7 @@ export const JobApplicationHome = () => {
   }, [searchInput]);
 
   return (
-    <Box sx={{ p: isMobile ? 2 : 4, width: "100%" }}>
+    <Box sx={{ p: isMobile ? -2 : 4, width: "100%" }}>
       {/* Header */}
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <PageHeader
