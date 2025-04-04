@@ -129,11 +129,11 @@ export const UserRegistrationForm = ({ onCancel, user, onSubmit, errors }: Props
             <Grid item xs={12}>
               <Typography variant="body2" color="textSecondary">
                 By clicking “Sign Up”, you agree to DZ-Jobs’s{" "}
-                <a href="https://www.upwork.com/legal/" target="_blank" rel="noopener noreferrer">
+                <a href="#" target="_blank" rel="noopener noreferrer">
                   Terms of Service
                 </a>{" "}
                 and{" "}
-                <a href="https://www.upwork.com/legal/privacy/" target="_blank" rel="noopener noreferrer">
+                <a href="#" target="_blank" rel="noopener noreferrer">
                   Privacy Policy
                 </a>.
               </Typography>
