@@ -205,9 +205,9 @@ export const PendingFreelancerContract = () => {
                       variant="contained"
                       color="primary"
                       size="small"
-                      onClick={() => handleOpenJobDialog(job)}
+                      onClick={() => job.id !== undefined && handleCloseClick(job.id)}
                     >
-                      View Milestones
+                       Accept Contract
                     </Button>
                   </Box>
                 </Card>
