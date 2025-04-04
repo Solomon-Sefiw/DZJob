@@ -13,13 +13,25 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // ✅ 1. Configure CORS (MUST allow credentials for WebSockets)
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowReactApp",
+//        policy => policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
+//            .AllowAnyHeader()
+//            .AllowAnyMethod()
+//            .AllowCredentials()); // ✅ Required for SignalR WebSockets
+//});
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
-        policy => policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials()); // ✅ Required for SignalR WebSockets
+        policy => policy.WithOrigins(
+            "https://dz-jobs.netlify.app",  // ✅ Add your Netlify frontend URL
+            "http://localhost:3000",  // For local development
+            "http://localhost:5173"
+        )
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .AllowCredentials()); // ✅ Required for SignalR WebSockets
 });
 
 // ✅ 2. Add services
