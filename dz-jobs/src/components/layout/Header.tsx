@@ -21,10 +21,11 @@ import {
   Brightness7,
   AccountCircle,
   Work,
-  PinDropRounded,
+  // PinDropRounded,
   Edit,
   Logout,
   Message,
+  Workspaces,
 } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { toggleDarkMode } from "../../app/slicies/themeSlice";
@@ -44,9 +45,9 @@ const Header: React.FC = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
 
   const menuItems = [
-    { label: "Jobs", href: user.role === UserRole.EMPLOYER ? "/employer-dashboard" : "/freelancer-dashboard",icon: <Work />},
     { label: "Contracts", href: user.role === UserRole.EMPLOYER ? "/employer-Contract" : "/freelancer-Contract", icon: <Work /> },
-    { label: "My Work", href: "#", icon: <PinDropRounded /> },
+    { label: "Contracts", href: user.role === UserRole.EMPLOYER ? "/employer-Contract" : "/freelancer-Contract", icon: <Workspaces /> },
+    // { label: "My Work", href: "#", icon: <PinDropRounded /> },
     { label: "Message", href: "/message", icon: <Message /> },
   ];
 
