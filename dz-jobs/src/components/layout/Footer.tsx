@@ -70,7 +70,7 @@ const Footer: React.FC = () => (
               opacity: 0.8,
             }}
           >
-            © 2025 Solomon Sefiw. All Rights Reserved.
+            © 2025 DZ Jobs. All Rights Reserved.
           </Typography>
         </Box>
       </motion.div>
