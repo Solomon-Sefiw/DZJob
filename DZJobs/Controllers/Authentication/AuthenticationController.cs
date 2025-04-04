@@ -60,8 +60,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeAdminAsync(updatePermissionDto);
             if (response.Status)
             {
-                //var message = new EmailContent([response.Email], "Congratulation", "you have Guaranted for <b>ADMIN Role</b> As Requested");
-                //_emailService.SendEmail(message);
+                var message = new EmailContent([response.Email], "Congratulation", "you have Guaranted for <b>ADMIN Role</b> As Requested");
+                _emailService.SendEmail(message);
 
                 return Ok(response);
             }
@@ -75,8 +75,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeEmployerAsync(updatePermissionDto);
             if (response.Status)
             {
-                //var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
-                //_emailService.SendEmail(message);
+                var message = new EmailContent(new string[] { response.Email }, "Congratulation ", "you have Guaranted for <b>EMPLOYER Role</b> As Requested");
+                _emailService.SendEmail(message);
                 return Ok(response);
             }
             return BadRequest(response);
@@ -107,8 +107,8 @@ namespace ANCIA.Controllers
             if (response.Status == true)
             {
                 var conformationLink = Url.Action(nameof(ConfirmEmail), "Authentication", new { token = response.Token, email = response.Email }, Request.Scheme);
-                //var message = new EmailContent(new string[] { response.Email }, " Password And Conformation Link", " <h4> Well Come to DZ-Jobs , your Password is :<H2> " + response.Password + ".</H2> <br></br>!!! Please Comfirm with this Link <b>Unless you are not conformed./b> </H4>" + conformationLink);
-                //_emailService.SendEmail(message);
+                var message = new EmailContent(new string[] { response.Email }, " Password And Conformation Link", " <h4> Well Come to DZ-Jobs , your Password is :<H2> " + response.Password + ".</H2> <br></br>!!! Please Comfirm with this Link <b>Unless you are not conformed./b> </H4>" + conformationLink);
+                _emailService.SendEmail(message);
             }
             return Ok(response);
 
@@ -130,8 +130,8 @@ namespace ANCIA.Controllers
             var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
-                //var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
-                //_emailService.SendEmail(message);
+                var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+                _emailService.SendEmail(message);
 
             }
             return Ok(response);

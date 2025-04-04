@@ -67,10 +67,7 @@ export const ActiveEmployerContract = () => {
   const [dialogState, setDialogState] = useState<{ submitContract: boolean; }>({
     submitContract: false,
   });
-  const handleCloseClick = (applicantId: number) => {
-    setSelectedContract(applicantId);
-    setDialogState({ submitContract: true,});
-  };
+
   const handleOpenJobDialog = (job: ContractDto) => {
     setSelectedJob(job);
     setOpenJobDialog(true);

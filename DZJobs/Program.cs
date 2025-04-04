@@ -8,6 +8,7 @@ using HCMS.Common;
 using HCMS.Persistance.DBContext;
 using Microsoft.AspNetCore.SignalR;
 using SMS.Api.Configurations;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,9 +17,9 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy.WithOrigins("http://localhost:3000", "http://localhost:5173")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials()); // ✅ Required for SignalR WebSockets
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()); // ✅ Required for SignalR WebSockets
 });
 
 // ✅ 2. Add services
@@ -40,10 +41,12 @@ builder.Services.AddEndpointsApiExplorer()
 var app = builder.Build();
 
 // ✅ 5. Configure Middleware (ORDER MATTERS)
+//Enable swagger in all environments.
+app.UseSwagger();
+app.UseSwaggerUI();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
     await DataSeeder.SeedData(app);
 }
 
@@ -66,3 +69,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+

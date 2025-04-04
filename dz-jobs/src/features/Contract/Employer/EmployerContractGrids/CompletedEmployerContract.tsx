@@ -30,7 +30,7 @@ import {
 import { Pagination } from "../../../../components/Pagination";
 import { ContractStatus } from "../../../../app/services/enums";
 import { MilestonesDialogDetail } from "../../Milestone/MilestonesDialogDetail";
-import { CompleteContractDialog } from "../../ContractWorkflowDialog/CompleteContractDialog";
+
 
 export const CompletedEmployerContract = () => {
   const user = useSelector((state: RootState) => state.auth);
@@ -62,15 +62,7 @@ export const CompletedEmployerContract = () => {
   const [openJobDialog, setOpenJobDialog] = useState(false);
   const [selectedJob, setSelectedJob] = useState<ContractDto | null>(null);
 
-  const [selectedContract, setSelectedContract] = useState<number | null>(null);
 
-  const [dialogState, setDialogState] = useState<{ submitContract: boolean; }>({
-    submitContract: false,
-  });
-  const handleCloseClick = (applicantId: number) => {
-    setSelectedContract(applicantId);
-    setDialogState({ submitContract: true,});
-  };
   const handleOpenJobDialog = (job: ContractDto) => {
     setSelectedJob(job);
     setOpenJobDialog(true);
@@ -81,9 +73,8 @@ export const CompletedEmployerContract = () => {
   //   setSelectedJob(null);
   // };
   const handleCloseDialogs = () => {
-    setSelectedContract(null);
+
     setOpenJobDialog(false);
-    setDialogState({ submitContract: false });
   };
 
   const handleSort = (property: keyof ContractDto) => {
