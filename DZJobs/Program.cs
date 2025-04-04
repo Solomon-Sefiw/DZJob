@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
         policy => policy.WithOrigins(
-            "https://dz-jobs.netlify.app",  // ✅ Add your Netlify frontend URL
+            "http://dz-jobs.netlify.app",  // ✅ Add your Netlify frontend URL
             "http://localhost:3000",  // For local development
             "http://localhost:5173"
         )
