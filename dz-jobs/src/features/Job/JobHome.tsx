@@ -18,19 +18,30 @@ import { RootState } from "../../app/store";
 import { JobDialog } from "./JobDialog";
 import { JobTabs } from "./JobGrids/JobTabs";
 import { PageHeader } from "../../components/PageHeader";
-import { useGetAllJobsQuery, useGetJobCountByStatusQuery } from "../../app/services/DZJobsApi";
+import {
+  useGetAllJobsQuery,
+  useGetJobCountByStatusQuery,
+} from "../../app/services/DZJobsApi";
+
 export const JobHome = () => {
   const user = useSelector((state: RootState) => state.auth);
   const [dialogOpened, setDialogOpened] = useState(false);
-  const { data: JobRoleCounts } = useGetJobCountByStatusQuery({ employerId: user.userId });
-  const { data = [] } = useGetAllJobsQuery();
+
+  // Fetch job count with refetch function
+  const {
+    data: JobRoleCounts,
+    refetch: refetchJobCounts, // Used to manually refresh job count
+  } = useGetJobCountByStatusQuery({ employerId: user.userId });
+
+  // Fetch all jobs with refetch function
+  const { data: jobs = [], refetch: refetchJobs } = useGetAllJobsQuery();
 
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
 
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm")); // Detects mobile screens
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
     if (!searchInput) {
@@ -42,7 +53,15 @@ export const JobHome = () => {
   return (
     <Box sx={{ p: isMobile ? 0 : 4 }}>
       {/* Header Section */}
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
         <PageHeader
           title={user.username}
           icon={<WorkIcon sx={{ fontSize: 18, color: "#1976d2" }} />}
@@ -65,8 +84,19 @@ export const JobHome = () => {
       </Box>
 
       {/* Search Bar */}
-      <Box sx={{ mt: 3, display: "flex", justifyContent: isMobile ? "center" : "flex-start" }}>
-        <Stack spacing={1} sx={{ width: isMobile ? "100%" : 400 }} direction="row" alignItems="center">
+      <Box
+        sx={{
+          mt: 3,
+          display: "flex",
+          justifyContent: isMobile ? "center" : "flex-start",
+        }}
+      >
+        <Stack
+          spacing={1}
+          sx={{ width: isMobile ? "100%" : 400 }}
+          direction="row"
+          alignItems="center"
+        >
           <Autocomplete
             id="searcher"
             size="small"
@@ -83,10 +113,12 @@ export const JobHome = () => {
             }}
             options={
               searchInput.length >= 3
-                ? data
+                ? jobs
                     .map((option) => option.title)
                     .filter((name, index, arr) => name && arr.indexOf(name) === index)
-                    .filter((roleName) => roleName?.toLowerCase().includes(searchInput.toLowerCase()))
+                    .filter((roleName) =>
+                      roleName?.toLowerCase().includes(searchInput.toLowerCase())
+                    )
                 : []
             }
             open={autoCompleteOpen}
@@ -114,13 +146,13 @@ export const JobHome = () => {
         <Outlet context={{ searchQuery }} />
       </Paper>
 
-
       {/* Job Dialog */}
       {dialogOpened && (
         <JobDialog
           onClose={() => {
             setDialogOpened(false);
-            window.location.reload();
+            refetchJobCounts(); // Refresh job count dynamically
+            refetchJobs(); // Refresh job list dynamically
           }}
           employerId={user.userId}
           title="Add New Job"

@@ -28,12 +28,13 @@ import { FormSelectField } from "../../components/form-controls/form-select";
 import { JobCategory, JobType } from "../../app/services/enums";
 import { getEnumOptions } from "../../components/form-controls/get-enum-list";
 
-const emptyjobData: JobDto = {
+const emptyJobData: JobDto = {
   title: "",
   description: "",
   jobCategory: 1,
   jobType: 1,
   salary: 1,
+  location: "",
 };
 
 export const JobDialog = ({
@@ -50,7 +51,7 @@ export const JobDialog = ({
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
 
-  const [jobData, setJobData] = useState<JobDto>();
+  const [jobData, setJobData] = useState<JobDto>(emptyJobData);
   const [message, setMessage] = useState<string | null>(null);
   const [alertSeverity, setAlertSeverity] = useState<"success" | "error">();
 
@@ -58,7 +59,7 @@ export const JobDialog = ({
   const [updateJob, { error: UpdateJobError }] = useUpdateJobMutation();
 
   useEffect(() => {
-    setJobData({ ...emptyjobData, ...job });
+    setJobData({ ...emptyJobData, ...job });
   }, [job]);
 
   const validationSchema = Yup.object({
@@ -69,27 +70,35 @@ export const JobDialog = ({
     salary: Yup.number()
       .required("Salary is required")
       .positive("Salary must be a positive number"),
+    location: Yup.string().required("Location is required"),
   });
 
   const handleSubmit = useCallback(
-    (values: JobDto) => {
-      values.employerId = employerId;
-      const payload = removeEmptyFields(values);
+    (values: JobDto, { setSubmitting }: { setSubmitting: (isSubmitting: boolean) => void }) => {
+      setSubmitting(true);
+      const updatedValues = { ...values, employerId };
+      const payload = removeEmptyFields(updatedValues);
 
       (job?.id
-        ? updateJob({ updateJobCommand: payload })
+        ? updateJob({ updateJobCommand: { id: job.id, ...payload } })
         : addJob({ createJobCommand: payload })
       )
         .unwrap()
         .then(() => {
           setAlertSeverity("success");
-          setMessage("Job added successfully!");
+          setMessage("Job saved successfully!");
           setTimeout(() => {
             onClose();
             window.location.reload();
           }, 500);
         })
-        .catch(console.error);
+        .catch(() => {
+          setAlertSeverity("error");
+          setMessage("Failed to save the job.");
+        })
+        .finally(() => {
+          setSubmitting(false);
+        });
     },
     [onClose, addJob, employerId, job?.id, updateJob]
   );
@@ -119,98 +128,103 @@ export const JobDialog = ({
           onSubmit={handleSubmit}
           validationSchema={validationSchema}
         >
-          <Form>
-            <DialogHeader title={title} onClose={onClose} />
-            <DialogContent dividers>
-              <Grid container spacing={2}>
-                {/* Success / Error Message */}
-                {message && (
+          {({ isSubmitting }) => (
+            <Form>
+              <DialogHeader title={title} onClose={onClose} />
+              <DialogContent dividers>
+                <Grid container spacing={2}>
+                  {/* Success / Error Message */}
+                  {message && (
+                    <Grid item xs={12}>
+                      <Alert severity={alertSeverity} onClose={() => setMessage(null)} sx={{ borderRadius: 2 }}>
+                        <AlertTitle>{alertSeverity === "success" ? "Success" : "Error"}</AlertTitle>
+                        {message}
+                      </Alert>
+                    </Grid>
+                  )}
+
+                  {errors && (
+                    <Grid item xs={12}>
+                      <Errors errors={errors} />
+                    </Grid>
+                  )}
+
+                  {/* Job Title */}
                   <Grid item xs={12}>
-                    <Alert severity={alertSeverity} onClose={() => setMessage(null)} sx={{ borderRadius: 2 }}>
-                      <AlertTitle>{alertSeverity === "success" ? "Success" : "Error"}</AlertTitle>
-                      {message}
-                    </Alert>
+                    <FormTextField name="title" label="Job Title" fullWidth />
                   </Grid>
-                )}
 
-                {errors && (
+                  {/* Job Description */}
                   <Grid item xs={12}>
-                    <Errors errors={errors} />
+                    <Box
+                      sx={{
+                        border: "1px solid #ddd",
+                        borderRadius: 2,
+                        p: 1.5,
+                        backgroundColor: isDarkMode ? theme.palette.background.default : "#fff",
+                        color: isDarkMode ? "#fff" : "#000",
+                      }}
+                    >
+                      <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                        Job Description
+                      </Typography>
+                      <FormRichTextField name="description" />
+                    </Box>
                   </Grid>
-                )}
 
-                {/* Job Title */}
-                <Grid item xs={12}>
-                  <FormTextField name="title" label="Job Title" fullWidth />
-                </Grid>
+                  {/* Job Category */}
+                  <Grid item xs={6}>
+                    <FormSelectField
+                      name="jobCategory"
+                      label="Job Category"
+                      options={getEnumOptions(JobCategory)}
+                      fullWidth
+                    />
+                  </Grid>
 
-                {/* Job Description */}
-                <Grid item xs={12}>
-                  <Box
-                    sx={{
-                      border: "1px solid #ddd",
-                      borderRadius: 2,
-                      p: 1.5,
-                      backgroundColor: isDarkMode ? theme.palette.background.default : "#fff",
-                      color: isDarkMode ? "#fff" : "#000",
-                    }}
-                  >
-                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                      Job Description
-                    </Typography>
-                    <FormRichTextField name="description" />
-                  </Box>
-                </Grid>
+                  {/* Job Type */}
+                  <Grid item xs={6}>
+                    <FormSelectField
+                      name="jobType"
+                      label="Job Type"
+                      options={getEnumOptions(JobType)}
+                      fullWidth
+                    />
+                  </Grid>
 
-                {/* Job Category */}
-                <Grid item xs={6}>
-                  <FormSelectField
-                    name="jobCategory"
-                    label="Job Category"
-                    options={getEnumOptions(JobCategory)}
-                    fullWidth
-                  />
-                </Grid>
+                  {/* Salary */}
+                  <Grid item xs={6}>
+                    <FormTextField name="salary" type="number" label="Salary" fullWidth />
+                  </Grid>
 
-                {/* Job Type */}
-                <Grid item xs={6}>
-                  <FormSelectField
-                    name="jobType"
-                    label="Job Type"
-                    options={getEnumOptions(JobType)}
-                    fullWidth
-                  />
+                  {/* Location */}
+                  <Grid item xs={6}>
+                    <FormTextField name="location" label="Location" fullWidth />
+                  </Grid>
                 </Grid>
+              </DialogContent>
 
-                {/* Salary */}
-                <Grid item xs={6}>
-                  <FormTextField name="salary" type="number" label="Salary" fullWidth />
-                </Grid>
-                <Grid item xs={6}>
-                <FormTextField name="location" label="Location" fullWidth />
-                </Grid>
-              </Grid>
-            </DialogContent>
-
-            <DialogActions sx={{ p: 2 }}>
-              <Button onClick={onClose}>Cancel</Button>
-              <Button
-                color="primary"
-                variant="contained"
-                type="submit"
-                sx={{
-                  borderRadius: 2,
-                  background: "linear-gradient(90deg, rgba(33,150,243,1) 0%, rgba(30,136,229,1) 100%)",
-                  transition: "0.3s",
-                  "&:hover": {
-                    background: "linear-gradient(90deg, rgba(30,136,229,1) 0%, rgba(25,118,210,1) 100%)",
-                  },
-                }}
-              >
-                Save Job
-              </Button>
-            </DialogActions>
-          </Form>
+              <DialogActions sx={{ p: 2 }}>
+                <Button onClick={onClose}>Cancel</Button>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  type="submit"
+                  disabled={isSubmitting}
+                  sx={{
+                    borderRadius: 2,
+                    background: "linear-gradient(90deg, rgba(33,150,243,1) 0%, rgba(30,136,229,1) 100%)",
+                    transition: "0.3s",
+                    "&:hover": {
+                      background: "linear-gradient(90deg, rgba(30,136,229,1) 0%, rgba(25,118,210,1) 100%)",
+                    },
+                  }}
+                >
+                  {isSubmitting ? "Saving..." : "Save Job"}
+                </Button>
+              </DialogActions>
+            </Form>
+          )}
         </Formik>
       )}
     </Dialog>

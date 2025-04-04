@@ -36,7 +36,7 @@ export const FreelancerContractHome = () => {
   }, [searchInput]);
 
   return (
-    <Box sx={{ p: isMobile ? 2 : 4 }}>
+    <Box sx={{ p: isMobile ? 0 : 4 }}>
       {/* Header Section */}
 
 
