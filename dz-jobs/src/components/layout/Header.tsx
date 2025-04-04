@@ -45,8 +45,8 @@ const Header: React.FC = () => {
   const [isProfileOpen, setProfileOpen] = useState(false);
 
   const menuItems = [
-    { label: "Contracts", href: user.role === UserRole.EMPLOYER ? "/employer-Contract" : "/freelancer-Contract", icon: <Work /> },
-    { label: "Contracts", href: user.role === UserRole.EMPLOYER ? "/employer-Contract" : "/freelancer-Contract", icon: <Workspaces /> },
+    { label: "Jobs", href: user.role === UserRole.EMPLOYER ? "/employer-dashboard" : "/freelancer-dashboard",icon: <Work />},
+    { label: "Contracts", href: user.role === UserRole.EMPLOYER ? "/employer-Contract" : "/freelancer-Contract", icon: <Workspaces/> },
     // { label: "My Work", href: "#", icon: <PinDropRounded /> },
     { label: "Message", href: "/message", icon: <Message /> },
   ];
