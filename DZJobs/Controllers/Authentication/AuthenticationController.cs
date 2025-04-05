@@ -45,8 +45,8 @@ namespace ANCIA.Controllers
             var response = await _userService.MakeFreelancerAsync(updatePermissionDto);
             if (response.Status)
             {
-                //var message = new EmailContent([response.Email],"Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
-                // _emailService.SendEmail(message);
+                var message = new EmailContent([response.Email], "Congratulation", "you have Guaranted for <b>FREELANCER Role</b> As Requested");
+                _emailService.SendEmail(message);
 
                 return Ok(response);
             }
@@ -130,7 +130,7 @@ namespace ANCIA.Controllers
             var response = await _userService.LoginAsync(login);
             if (response.Status == true)
             {
-                var message = new EmailContent(new string[] { response.Email }, "OTP from Sola Please Confierm it ASAP", response.Token);
+                var message = new EmailContent(new string[] { response.Email }, "OTP from <b> DZ-Jobs </b> Please Confierm it ASAP", response.Token);
                 _emailService.SendEmail(message);
 
             }

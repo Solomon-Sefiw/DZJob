@@ -30,6 +30,7 @@ export const RegisterNewUser = () => {
               username: response.username ?? "",
               firstName: response.firstName ?? "",
               lastName: response.lastName ?? "",
+              isAuthenticated : response.status ?? true
             })
           );
           setAlertMessage({

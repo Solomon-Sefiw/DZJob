@@ -8,6 +8,7 @@ interface AuthState {
   firstName: string;
   lastName: string;
   role?: string;
+  isAuthenticated : boolean
 }
 
 // Initial state
@@ -18,6 +19,7 @@ const initialState: AuthState = {
   firstName: "",
   lastName: "",
   role: "",
+  isAuthenticated : false
 };
 
 // Create the auth slice
@@ -27,13 +29,14 @@ const authSlice = createSlice({
   reducers: {
     // Action to set user details
     setUser: (state, action: PayloadAction<AuthState>) => {
-      const { userId, email, username, firstName, lastName, role } = action.payload;
+      const { userId, email, username, firstName, lastName, role,isAuthenticated } = action.payload;
       state.userId = userId;
       state.email = email;
       state.username = username;
       state.firstName = firstName;
       state.lastName = lastName;
       state.role = role;
+      state.isAuthenticated = isAuthenticated;
 
       // Save user data to local storage
       localStorage.setItem("user", JSON.stringify(state));
@@ -47,6 +50,7 @@ const authSlice = createSlice({
       state.firstName = "";
       state.lastName = "";
       state.role = "";
+      state.isAuthenticated = false
 
       // Clear user data from local storage
       localStorage.removeItem("user");

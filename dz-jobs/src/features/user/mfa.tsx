@@ -57,6 +57,7 @@ export const MFA = () => {
                         firstName: response.firstName ?? "",
                         lastName: response.lastName ?? "",
                         role: response.role ?? "",
+                        isAuthenticated : response.status ?? true
                       })
                     );
                   }

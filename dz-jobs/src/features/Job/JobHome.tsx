@@ -26,7 +26,7 @@ import {
 export const JobHome = () => {
   const user = useSelector((state: RootState) => state.auth);
   const [dialogOpened, setDialogOpened] = useState(false);
-
+console.log(user)
   // Fetch job count with refetch function
   const {
     data: JobRoleCounts,

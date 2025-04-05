@@ -14,15 +14,16 @@ import {
   useTheme,
 } from "@mui/material";
 import { Form, Formik } from "formik";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 
 import { FormTextField } from "../../components/form-controls";
 import { useForgetPasswordMutation, useLoginMutation } from "../../app/services/DZJobsApi";
-import { useDispatch } from "react-redux";
-import { logout } from "../../app/slicies/authSlice";
+import {  useSelector } from "react-redux";
 
+import { RootState } from "../../app/store";
+import { UserRole } from "../../app/services/enums";
 
 const validationSchema = yup.object({
   email: yup.string().email("Please enter a valid email address").required("Email is required"),
@@ -42,8 +43,25 @@ export const Login = () => {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  dispatch(logout());
+  const user = useSelector((state: RootState) => state.auth);
+
+  // Logout on component mount (as per your original code)
+
+  // Redirect if user is already logged in
+  useEffect(() => {
+    if (user.isAuthenticated) {
+      if (user.role === UserRole.EMPLOYER) {
+        navigate(`/employer-dashboard`);
+      } else if (user.role === UserRole.FREELANCER) {
+        navigate(`/freelancer-dashboard`);
+      } else {
+        // Handle other roles or navigate to a default dashboard
+        console.log("User logged in with unknown role:", user.role);
+        navigate("/"); // Or some default route
+      }
+
+    }
+  }, [user, navigate]);
 
   const handleSubmit = useCallback(
     (values: any) => {
@@ -52,13 +70,16 @@ export const Login = () => {
         .then((response) => {
           if (response.status) {
             localStorage.setItem("email", values.email);
-            console.log(response)
+            console.log(response);
             navigate("/verify");
           } else {
-            window.location.reload();
+            window.location.reload(); // Consider showing an error message instead of a full reload
           }
         })
-        .catch();
+        .catch((error) => {
+          // Handle login error, e.g., display an error message
+          console.error("Login failed:", error);
+        });
     },
     [login, navigate]
   );
@@ -76,12 +97,14 @@ export const Login = () => {
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#f7f7f7",
+          minHeight: "100vh", // Ensure the container takes full viewport height
         }}
       >
         <Paper
           sx={{
             padding: 3,
             width: "100%",
+            maxWidth: "400px", // Added a maximum width for better readability on larger screens
             borderRadius: 2,
             boxShadow: 3,
             textAlign: "center",
