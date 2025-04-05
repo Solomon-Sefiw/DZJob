@@ -1,6 +1,13 @@
-import { Badge, Box, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Tab,
+  Tabs,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // 👈 import useLocation
 import { JobApplicationCountsByStatus } from "../../../app/services/DZJobsApi";
 
 interface TabProps {
@@ -18,7 +25,7 @@ const getTabs = ({
   {
     label: "Open Jobs",
     href: "/freelancer-dashboard",
-    counts:0,
+    counts: 0,
     color: "success",
   },
   {
@@ -49,44 +56,42 @@ export const JobApplicationabs = ({
   const tabs = useMemo(() => getTabs(counts), [counts]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const location = useLocation(); // 👈 React Router location hook
 
-  const getCurrentTabIndex = () => {
-    const tabIndex = tabs.findIndex((t) => t.href === window.location.pathname);
+  const currentTabIndex = useMemo(() => {
+    const tabIndex = tabs.findIndex((t) => t.href === location.pathname);
     return tabIndex >= 0 ? tabIndex : 0;
-  };
+  }, [location.pathname, tabs]); // 👈 Update when location or tabs change
 
   return (
     <Box
       sx={{
         width: "100%",
-        overflowX: "auto", // Horizontal scrolling on small screens
+        overflowX: "auto",
         bgcolor: "background.paper",
-        position: "sticky", // Keeps tabs visible while scrolling
+        position: "sticky",
         top: 0,
         zIndex: 10,
       }}
     >
       <Tabs
-        value={getCurrentTabIndex()}
-        variant={isMobile ? "scrollable" : "standard"} // Horizontal scrolling for mobile
+        value={currentTabIndex}
+        variant={isMobile ? "scrollable" : "standard"}
         scrollButtons={isMobile ? "auto" : false}
         allowScrollButtonsMobile
-        sx={{
-          minHeight: isMobile ? "50px" : "auto", // Adjust height for mobile
-        }}
+        sx={{ minHeight: isMobile ? "50px" : "auto" }}
       >
         {tabs.map(({ href, color, label, counts }) => (
           <Tab
             key={label}
             component={Link}
-            color="inherit"
             to={href}
             sx={{
               minWidth: isMobile ? "auto" : 120,
               textTransform: "none",
               fontSize: isMobile ? "0.9rem" : "1rem",
               px: isMobile ? 1 : 2,
-              py: 1, // Padding for better clickability
+              py: 1,
             }}
             label={
               <Badge
@@ -94,7 +99,7 @@ export const JobApplicationabs = ({
                 color={color}
                 sx={{
                   "& .MuiBadge-badge": { fontSize: "0.75rem" },
-                  px: isMobile ? 0 : 2, // Adjust padding for mobile
+                  px: isMobile ? 0 : 2,
                 }}
               >
                 <Box>{label}</Box>
