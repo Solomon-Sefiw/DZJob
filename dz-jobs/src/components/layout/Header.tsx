@@ -33,6 +33,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { UserRole } from "../../app/services/enums";
+import { logout } from "../../app/slicies/authSlice";
 
 const Header: React.FC = () => {
   const darkMode = useAppSelector((state: RootState) => state.theme.darkMode);
@@ -41,6 +42,7 @@ const Header: React.FC = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
+
 
   const [isProfileOpen, setProfileOpen] = useState(false);
 
@@ -177,7 +179,7 @@ const Header: React.FC = () => {
             <ListItemIcon>
               <Logout />
             </ListItemIcon>
-            <ListItemText onClick={() => {navigate('/login'); window.location.reload()}} primary="Logout" />
+            <ListItemText onClick={() => {dispatch(logout()); navigate('/login'); window.location.reload()}} primary="Logout" />
           </ListItemButton>
         </List>
       </Drawer>
