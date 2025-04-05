@@ -1,6 +1,13 @@
-import { Badge, Box, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Tab,
+  Tabs,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import { useMemo } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // 👈 Added
 import { ContractCountsByFreelancer } from "../../../../app/services/DZJobsApi";
 
 interface TabProps {
@@ -11,48 +18,63 @@ interface TabProps {
 }
 
 const getTabs = ({
-  //draft,
   pending,
   active,
   completed,
-//   terminated,
-//   disputed,
 }: ContractCountsByFreelancer = {}): TabProps[] => [
-  { label: "completed", href: "/freelancer-Contract", counts: completed, color: "success" },
-  { label: "active", href: "/freelancer-Contract/active-Contract", counts: active, color: "primary" },
-  { label: "pending", href: "/freelancer-Contract/pending-Contract", counts: pending, color: "error" },
+  {
+    label: "completed",
+    href: "/freelancer-Contract",
+    counts: completed,
+    color: "success",
+  },
+  {
+    label: "active",
+    href: "/freelancer-Contract/active-Contract",
+    counts: active,
+    color: "primary",
+  },
+  {
+    label: "pending",
+    href: "/freelancer-Contract/pending-Contract",
+    counts: pending,
+    color: "error",
+  },
 ];
 
-export const FreelancerContractTabs = ({ counts }: { counts?: ContractCountsByFreelancer }) => {
+export const FreelancerContractTabs = ({
+  counts,
+}: {
+  counts?: ContractCountsByFreelancer;
+}) => {
   const tabs = useMemo(() => getTabs(counts), [counts]);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const location = useLocation(); // 👈 Use current location
 
-  const getCurrentTabIndex = () => {
-    const tabIndex = tabs.findIndex((t) => t.href === window.location.pathname);
+  const currentTabIndex = useMemo(() => {
+    const tabIndex = tabs.findIndex((t) => t.href === location.pathname);
     return tabIndex >= 0 ? tabIndex : 0;
-  };
+  }, [location.pathname, tabs]);
 
   return (
     <Box
       sx={{
         width: "100%",
-        overflowX: "auto", // Horizontal scrolling for small screens
+        overflowX: "auto",
         bgcolor: "background.paper",
-        position: "sticky", // Keeps tabs visible while scrolling
+        position: "sticky",
         top: 0,
         zIndex: 10,
-        boxShadow: isMobile ? "none" : 1, // Adds shadow for desktop
+        boxShadow: isMobile ? "none" : 1,
       }}
     >
       <Tabs
-        value={getCurrentTabIndex()}
-        variant={isMobile ? "scrollable" : "standard"} // Horizontal scroll for mobile
-        scrollButtons={isMobile ? "auto" : false} // Scroll buttons visible only on mobile
+        value={currentTabIndex}
+        variant={isMobile ? "scrollable" : "standard"}
+        scrollButtons={isMobile ? "auto" : false}
         allowScrollButtonsMobile
-        sx={{
-          minHeight: isMobile ? "50px" : "auto", // Adjust height for mobile
-        }}
+        sx={{ minHeight: isMobile ? "50px" : "auto" }}
       >
         {tabs.map(({ href, color, label, counts }) => (
           <Tab
@@ -64,7 +86,7 @@ export const FreelancerContractTabs = ({ counts }: { counts?: ContractCountsByFr
               textTransform: "none",
               fontSize: isMobile ? "0.9rem" : "1rem",
               px: isMobile ? 1 : 2,
-              py: 1, // Vertical padding for better clickability
+              py: 1,
             }}
             label={
               <Badge
