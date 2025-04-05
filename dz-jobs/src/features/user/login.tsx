@@ -97,14 +97,12 @@ export const Login = () => {
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: theme.palette.mode === "dark" ? "#121212" : "#f7f7f7",
-          minHeight: "100vh", // Ensure the container takes full viewport height
         }}
       >
         <Paper
           sx={{
             padding: 3,
             width: "100%",
-            maxWidth: "400px", // Added a maximum width for better readability on larger screens
             borderRadius: 2,
             boxShadow: 3,
             textAlign: "center",

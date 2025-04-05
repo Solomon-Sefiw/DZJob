@@ -145,7 +145,7 @@ const Header: React.FC = () => {
             boxShadow: "0 -2px 5px rgba(0,0,0,0.1)",
           }}
         >
-          {menuItems.map((item) => (
+           { user.userId &&  menuItems.map((item) => (
             <BottomNavigationAction
               key={item.label}
               label={isMobile ? "" : item.label}
