@@ -97,7 +97,7 @@ export const JobApplicationHome = () => {
       </Box>
 
       {/* Job Applications Tabs */}
-      <Paper sx={{ mt: 3, p: 2, flex: 1 }}>
+      <Paper sx={{ mt: 3, flex: 1 }}>
         <JobApplicationabs counts={JobApplicationCounts} />
         <Divider sx={{ my: 2 }} />
         <Outlet context={{ searchQuery }} />
