@@ -94,7 +94,7 @@ export const JobApplicationabs = ({
                 color={color}
                 sx={{
                   "& .MuiBadge-badge": { fontSize: "0.75rem" },
-                  px: isMobile ? 1 : 2, // Adjust padding for mobile
+                  px: isMobile ? 0 : 2, // Adjust padding for mobile
                 }}
               >
                 <Box>{label}</Box>
