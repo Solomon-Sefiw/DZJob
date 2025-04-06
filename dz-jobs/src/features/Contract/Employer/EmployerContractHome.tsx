@@ -85,7 +85,7 @@ export const EmployerContractHome = () => {
       </Box>
 
       {/* Main Content */}
-      <Paper sx={{ mt: 3, p: isMobile ? 2 : 3, borderRadius: 2 }}>
+      <Paper sx={{ mt: 3, flex:1 }}>
         <EmployerContractTabs counts={JobRoleCounts} />
         <Divider sx={{ my: 2 }} />
         <Outlet context={{ searchQuery }} />

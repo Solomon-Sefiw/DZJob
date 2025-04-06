@@ -93,7 +93,7 @@ export const PendingFreelancerContract = () => {
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: "background.default", minHeight: "10vh" }}>
+    <Box sx={{ p: 0, backgroundColor: "background.default", minHeight: "10vh" }}>
       {!isLoading && !!counts?.pending && (
         <>
           {/* Desktop view with Table */}

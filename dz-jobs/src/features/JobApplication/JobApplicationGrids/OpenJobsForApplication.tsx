@@ -54,7 +54,7 @@ export const OpenJobsForApplication = () => {
   };
 
   return (
-    <Box sx={{ p: 2, backgroundColor: theme.palette.background.default, minHeight: "10vh" }}>
+    <Box sx={{ p: 0, backgroundColor: theme.palette.background.default, minHeight: "10vh" }}>
       {isListLoading ? (
         <Box display="flex" justifyContent="center" mt={4}>
           <CircularProgress />

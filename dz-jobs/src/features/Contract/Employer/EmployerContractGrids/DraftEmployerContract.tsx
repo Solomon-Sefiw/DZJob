@@ -92,7 +92,7 @@ export const DraftEmployerContract = () => {
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: "background.default", minHeight: "10vh" }}>
+    <Box sx={{ p: 0, backgroundColor: "background.default", minHeight: "10vh" }}>
       {!isLoading && !!counts?.draft && (
         <>
           {/* Desktop view with Table */}

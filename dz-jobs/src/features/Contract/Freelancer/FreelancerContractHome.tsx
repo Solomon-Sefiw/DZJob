@@ -84,7 +84,7 @@ export const FreelancerContractHome = () => {
       </Box>
 
       {/* Main Content */}
-      <Paper sx={{ mt: 3, p: isMobile ? 2 : 3, borderRadius: 2 }}>
+      <Paper sx={{ mt: 3, flex: 1}}>
         <FreelancerContractTabs counts={freelancerCounts} />
         <Divider sx={{ my: 2 }} />
         <Outlet context={{ searchQuery }} />
