@@ -63,7 +63,7 @@ export const PendingJobApplication = () => {
   // Function to truncate the cover letter to a certain length
 
   return (
-    <Box sx={{ p: 2, backgroundColor: theme.palette.background.default, minHeight: "10vh" }}>
+    <Box sx={{ p: 0, backgroundColor: theme.palette.background.default, minHeight: "10vh" }}>
       {!isLoading && !!counts?.pending && (
         <Grid container spacing={2}>
           {filteredJobRoles?.map((application) => (

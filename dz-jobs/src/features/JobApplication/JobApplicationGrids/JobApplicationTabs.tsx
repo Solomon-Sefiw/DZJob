@@ -90,7 +90,7 @@ export const JobApplicationabs = ({
               minWidth: isMobile ? "auto" : 120,
               textTransform: "none",
               fontSize: isMobile ? "0.9rem" : "1rem",
-              // px: isMobile ? 1 : 2,
+              px: isMobile ? 1 : 2,
               py: 1,
             }}
             label={

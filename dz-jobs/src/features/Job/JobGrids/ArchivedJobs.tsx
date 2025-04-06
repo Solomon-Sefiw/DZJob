@@ -70,7 +70,7 @@ export const ArchivedJobs = () => {
   };
 
   return (
-    <Box sx={{ p: 3, backgroundColor: theme.palette.background.default, minHeight: "10vh" }} onClick={() => setExpandedJobId(null)}>
+    <Box sx={{ p: 0, backgroundColor: theme.palette.background.default, minHeight: "10vh" }} onClick={() => setExpandedJobId(null)}>
       {!isLoading && !!counts?.archived && (
         <Grid container spacing={3} sx={{ alignItems: "stretch" }}>
           {filteredJobRoles?.map((job) => {
