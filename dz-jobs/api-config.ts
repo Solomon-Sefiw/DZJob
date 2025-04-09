@@ -7,5 +7,4 @@ const config: any = {
     exportName: "DZJobsApi",                                       // Exported API name
     hooks: { queries: true, lazyQueries: true, mutations: true }, // Generate hooks
   };
-  
   export default config;
